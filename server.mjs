@@ -48,8 +48,8 @@ app.get('/form.html', (req, res) => {
 });
 
 // Serve the JavaScript file
-app.get('/embedForm.mjs', (req, res) => {
-  res.sendFile(path.join(__dirname, 'embedForm.mjs'));
+app.get('/embedForm.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'embedForm.js'));
 });
 
 // Middleware to handle API requests
