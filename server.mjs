@@ -5,6 +5,12 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
+import fileURLToPath from 'url';
+import dirname from 'path';
+
+// ES6 __dirname workaround
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config();
 
