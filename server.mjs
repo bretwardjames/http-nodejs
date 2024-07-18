@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 
 dotenv.config();
 
