@@ -42,6 +42,16 @@ const checkReferer = (req, res, next) => {
 // Apply the middleware
 app.use(checkReferer);
 
+// Serve the HTML file
+app.get('/form.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'form.html'));
+});
+
+// Serve the JavaScript file
+app.get('/embed.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'embed.js'));
+});
+
 // Middleware to handle API requests
 app.post('/proxy', async (req, res) => {
   const { apiName, endpoint, method, data, headers } = req.body;
