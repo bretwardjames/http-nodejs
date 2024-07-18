@@ -3,10 +3,22 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+
+// CORS configuration
+const corsOptions = {
+  origin: ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com'], // Replace with your allowed domain(s)
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
