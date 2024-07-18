@@ -10,6 +10,26 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Allowed domains
+const allowedDomains = ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com'];
+
+// Middleware to check referring domain
+const checkReferer = (req, res, next) => {
+  const referer = req.get('Referer');
+  const origin = req.get('Origin');
+
+  if (referer && allowedDomains.some(domain => referer.startsWith(domain))) {
+    next();
+  } else if (origin && allowedDomains.some(domain => origin.startsWith(domain))) {
+    next();
+  } else {
+    res.status(403).send('Forbidden: Invalid referring domain');
+  }
+};
+
+// Apply the middleware
+app.use(checkReferer);
+
 // Middleware to handle API requests
 app.post('/proxy', async (req, res) => {
   const { apiName, endpoint, method, data, headers } = req.body;
