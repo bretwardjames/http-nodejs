@@ -242,6 +242,10 @@ async function applyPrefillAndSkip() {
                     }
                     inputEl.value = value;
                     inputEl.readOnly = readOnly;
+                    if (readOnly) {
+                        inputEl.title = "This field is prefilled and cannot be edited.";
+                        inputEl.classList.add('tooltip-trigger'); // Add class for styling
+                    }
                 } else {
                     allDetailsProvided = false;
                 }
