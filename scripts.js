@@ -131,12 +131,12 @@ const formElements = Array.from(document.querySelectorAll('.infusion-field'))
 let formState = formElements.map(el => ({ element: el, isActive: false }));
 let currentElementIndex = 0;
 let navigationHistory = [];
-formElements.forEach(el => {
-    el.isActive = true
-    if (el.classList?.contains('noshow')) {
-        el.isActive = false
-    }
-});
+// formElements.forEach(el => {
+//     el.isActive = true
+//     if (el.classList?.contains('noshow')) {
+//         el.isActive = false
+//     }
+// });
 function checkConditions(currentElement) {
     const inputEls = currentElement.querySelectorAll('input, select, textarea');
     let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
