@@ -94,6 +94,8 @@ function showQuestion(index, firstTime = false) {
             }
         }
     });
+    console.log('Form State:', formState);
+    console.log('Updating buttons: ', index, formState.length - 1)
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
     document.getElementById('nextButton').textContent = index === formState.length - 1 ? 'Submit' : 'Next';
     document.getElementById('nextButton').type = index === formState.length - 1 ? 'submit' : 'button';
@@ -255,12 +257,12 @@ function handleSubmit() {
         inputEls.forEach(inputEl => {
             let name = inputEl.name;
             if (inputEl.name === 'inf_field_FirstName') {
-                name = 'Name';
+                name = 'name';
             } else if (inputEl.name === 'inf_field_Email') {
-                name = 'Email';
+                name = 'email';
                 soSkip = true;
             } else if (inputEl.name === 'inf_field_Phone1') {
-                name = 'Phone';
+                name = 'mobile';
             }
             if (inputEl && inputEl.value) {
                 const encodedValue = inputEl.value.replace(/\+/g, '%20');
@@ -270,6 +272,8 @@ function handleSubmit() {
     });
     if (soSkip) {
         urlParams.append('soSkip', 1);
+    } else {
+        urlParams.append('soSkip', 0);
     }
     if (contactId) {
         urlParams.append('ContactId', contactId);
