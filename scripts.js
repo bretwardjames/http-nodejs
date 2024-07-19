@@ -222,7 +222,10 @@ function applyPrefillAndSkip() {
             });
         } else {
             console.log('Not skipping prequal question');
-            formState[index].isActive = (elementName === 'contact-info' || elementName === 'entrepreneur_or_no');
+            if (elementName === 'contact-info' || elementName === 'entrepreneur_or_no') {
+                console.log('Activating element:', elementName);
+                formState[index].isActive = true;
+            }
         }
     });
 
