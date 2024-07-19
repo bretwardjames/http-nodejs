@@ -54,6 +54,16 @@ app.get('/form.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'form.html'));
 });
 
+// Serve the CSS file
+app.get('/style.css', (req, res) => {
+  res.sendFile(path.join(__dirname, 'style.css'));
+});
+
+// Serve the Scripts file
+app.get('/scripts.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'scripts.js'));
+});
+
 // Serve the JavaScript file
 app.get('/embedForm.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'embedForm.js'));

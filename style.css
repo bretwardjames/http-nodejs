@@ -1,0 +1,108 @@
+/* styles.css */
+@media (max-width: 768px) {
+    select {
+        white-space: normal;
+    }
+
+    select[multiple] {
+        height: auto;
+        white-space: normal;
+    }
+}
+
+.form-control {
+    height: 60px;
+    font-size: 20px;
+}
+
+.checkbox-button {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+    padding: 10px;
+    font-size: 20px;
+    background-color: #F1F4F8;
+    color: black;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.checkbox-button.checked {
+    background-color: #428bca;
+    border: 2px solid #357ebd;
+    border-radius: 4px;
+    color: white;
+}
+
+.checkbox-button input[type="checkbox"] {
+    display: none;
+}
+
+#button-container-describesyou .btn {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+    padding: 10px;
+    font-size: 20px;
+}
+
+#button-container .btn {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.button-container .btn {
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: left;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Add some gap between the buttons */
+}
+
+.button-container .btn-sm {
+    display: inline-block;
+    /* Ensure buttons are inline */
+    width: auto;
+    /* Ensure buttons are responsive to content */
+    flex: 1 1 auto;
+    /* Allow buttons to grow and shrink as needed */
+    margin: 5px;
+    /* Add margin to ensure space between buttons */
+}
+
+.form-range {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.range-label,
+.range-value {
+    font-size: 20px;
+    /* Increase the font size */
+    font-weight: bold;
+    /* Make the text bold */
+}
+
+.infusion-field-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Adjust the gap between buttons */
+}
