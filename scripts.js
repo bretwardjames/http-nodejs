@@ -128,7 +128,7 @@ const routingLogic = {
     },
 }
 const formElements = Array.from(document.querySelectorAll('.infusion-field'))
-let formState = formElements.map(el => ({ element: el, isActive: false }));
+let formState = formElements.forEach(el => { el.isActive = false });
 let currentElementIndex = 0;
 let navigationHistory = [];
 // formElements.forEach(el => {
