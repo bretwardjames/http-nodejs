@@ -80,7 +80,15 @@ app.post('/proxy', async (req, res) => {
   const apiKey = process.env[`${apiName}_API_KEY`]
   const apiUrl = process.env[`${apiName}_API_URL`]
 
-  const authHeader = apiName === 'KEAP' ? { 'X-KEAP-API-KEY': `${apiKey}` } : { 'Authorization': `Bearer ${apiKey}` }
+  let authHeader
+
+  if (apiName === 'KEAP') {
+    authHeader = { 'X-KEAP-API-KEY': `${apiKey}` }
+  } else if (apiName === 'NUMVERIFY') {
+    endpoint = `${endpoint}&access_key=${apiKey}`
+  } else {
+    authHeader = { 'Authorization': `Bearer ${apiKey}` }
+  }
 
   try {
     const response = await axios({

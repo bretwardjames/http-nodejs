@@ -130,7 +130,19 @@ function handleBackButton() {
     }
 }
 
-function isValidPhoneNumber(phoneNumber) {
+async function validatePhone(phoneNumber) {
+    await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, {
+        method: 'POST',
+        body: JSON.stringify({
+            apiName: 'NUMVERIFY',
+            endpoint: `validate?number=${phoneNumber}`,
+            method: 'GET'
+        })
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            return data;
+        });
     return /^\d{7,15}$/.test(phoneNumber.trim());
 }
 
@@ -143,9 +155,15 @@ async function validateCurrentElement(element) {
             if (inputEl.value.trim() === '') {
                 isValid = false;
             }
-            if (inputEl.type === 'tel' && !isValidPhoneNumber(inputEl.value.trim())) {
-                alert('Please enter a valid phone number with 7 to 15 digits.');
-                isValid = false;
+            if (inputEl.type === 'tel') {
+                const validatedPhone = await validatePhone(inputEl.value.trim());
+                if (!validated.valid) {
+                    alert('Please enter a valid phone number with 7 to 15 digits.');
+                    isValid = false;
+                } else {
+                    inputEl.value = validated.local_format;
+                }
+
             } else if (inputEl.type === 'email' && !contactId) {
                 contactId = await getContactId(inputEl.value);
             }
