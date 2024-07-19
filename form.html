@@ -252,49 +252,23 @@
                 </select>
             </div>
         </div>
-        <div class="infusion-field" id="interest_topics">
+        <div class="infusion-field">
             <label for="interest_topics" class="d-block mb-2 h3">Awesome! What topics are you interested in? *</label>
             <div class="infusion-field-input-container">
-                <div class="checkbox-button" data-value="16018">
-                    <input id="inf_option_Howtomakemoremoney" name="inf_option_Howtomakemoremoney" type="checkbox"
-                        value="16018" />
-                    <label for="inf_option_Howtomakemoremoney">How to make more money</label>
-                </div>
-                <div class="checkbox-button" data-value="16020">
-                    <input id="inf_option_Relationships" name="inf_option_Relationships" type="checkbox"
-                        value="16020" />
-                    <label for="inf_option_Relationships">Relationships</label>
-                </div>
-                <div class="checkbox-button" data-value="16022">
-                    <input id="inf_option_Health" name="inf_option_Health" type="checkbox" value="16022" />
-                    <label for="inf_option_Health">Health</label>
-                </div>
-                <div class="checkbox-button" data-value="16024">
-                    <input id="inf_option_Spirituality" name="inf_option_Spirituality" type="checkbox" value="16024" />
-                    <label for="inf_option_Spirituality">Spirituality</label>
-                </div>
-                <div class="checkbox-button" data-value="16026">
-                    <input id="inf_option_LearninghowtofacilitateDavidsframeworksforothers"
-                        name="inf_option_LearninghowtofacilitateDavidsframeworksforothers" type="checkbox"
-                        value="16026" />
-                    <label for="inf_option_LearninghowtofacilitateDavidsframeworksforothers">Learning how to facilitate
-                        David's frameworks for others</label>
-                </div>
-                <div class="checkbox-button" data-value="16028">
-                    <input id="inf_option_Parenting" name="inf_option_Parenting" type="checkbox" value="16028" />
-                    <label for="inf_option_Parenting">Parenting</label>
-                </div>
-                <div class="checkbox-button" data-value="16030">
-                    <input id="inf_option_EntrepreneurshipStartingabusiness"
-                        name="inf_option_EntrepreneurshipStartingabusiness" type="checkbox" value="16030" />
-                    <label for="inf_option_EntrepreneurshipStartingabusiness">Entrepreneurship/Starting a
-                        business</label>
-                </div>
-                <div class="checkbox-button" data-value="16032">
-                    <input id="inf_option_AttendingDavidsliveevents" name="inf_option_AttendingDavidsliveevents"
-                        type="checkbox" value="16032" />
-                    <label for="inf_option_AttendingDavidsliveevents">Attending David's live events</label>
-                </div>
+                <div id="button-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                <select style="display:none" type="hidden" id="interest_topics" name="interest_topics" multiple=''>
+                    <option value="How to make more money">How to make more money</option>
+                    <option value="Relationships">Relationships</option>
+                    <option value="Health">Health</option>
+                    <option value="Spirituality">Spirituality</option>
+                    <option value="Learning how to facilitate David's frameworks for others">Learning how to facilitate
+                        David's frameworks for others</option>
+                    <option value="Parenting">Parenting</option>
+                    <option value="Entrepreneurship/Starting a business">Entrepreneurship/Starting a
+                        business</option>
+                    <option value="Attending David's live events">Attending David's live events</option>
+                </select>
+
             </div>
         </div>
         <div id="formNavigation" style="margin-top:10px">
