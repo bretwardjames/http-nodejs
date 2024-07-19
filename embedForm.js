@@ -37,10 +37,10 @@
     console.log('Fetching from:', serverUrl + '/form.html');
 
     // Load CSS
-    loadCSS(`${serverUrl}/styles.css`);
+    loadCSS(`${serverUrl}/style.css`);
 
     // Load JavaScript
-    loadJS(`${serverUrl}/script.js`, function () {
+    loadJS(`${serverUrl}/scripts.js`, function () {
         console.log('External script loaded and executed.');
         // Place any additional initialization code here if necessary
     });
