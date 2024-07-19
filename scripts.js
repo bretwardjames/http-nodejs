@@ -1,5 +1,6 @@
 console.log('Form JavaScript executed');
 let contactId
+let nextButtonText = 'Next';
 async function getContactId(email) {
     if (contactId) return contactId
     const data = {
@@ -94,8 +95,9 @@ function showQuestion(index, firstTime = false) {
             }
         }
     });
+    nextButtonText = index === formElements.length - 1 ? 'Submit' : 'Next';
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    document.getElementById('nextButton').textContent = index === formElements.length - 1 ? 'Submit' : 'Next';
+    document.getElementById('nextButton').textContent = nextButtonText;
     document.getElementById('nextButton').type = index === formElements.length - 1 ? 'submit' : 'button';
     updateProgressBar(firstTime);
 }
@@ -112,7 +114,7 @@ function getNextIndex(currentElement) {
         nextIndex++;
     }
 
-    if (nextIndex >= formState.length) {
+    if (nextButtonText === 'Submit') {
         return 'submit';
     }
     console.log('Next index:', nextIndex);
