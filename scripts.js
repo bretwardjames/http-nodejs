@@ -64,48 +64,47 @@ const routingLogic = {
         "prefillFromUrl": true,
         "prefillParams": ["inf_field_FirstName", "inf_field_Email", "inf_field_Phone1"]
     },
+    "entrepreneur_or_no": {
+        "default": 2,
+        "answers": { // Next question
+            "I'm not a business owner and am not actively wanting to start one at this time.": 13,
+        }
+    },
     "business_type": {
-        "default": 6
+        "default": 3
     },
     "how_long_in_business": {
-        "default": 7
+        "default": 3,
     },
     "areas_for_support": {
-        "default": 8
+        "default": 4
     },
     "biggest_challenge": {
-        "default": 9
+        "default": 5
     },
     "ft_pt": {
-        "default": 10
+        "default": 6
     },
     "monthly_rev": {
-        "default": 11
+        "default": 7
     },
     "income_goal": {
-        "default": 12
+        "default": 8
     },
     "household_income": {
-        "default": 13
+        "default": 9
     },
     "resources_to_invest": {
-        "default": 14
+        "default": 10
     },
     "other_programs": {
-        "default": 15
+        "default": 11
     },
     "comitment_level": {
         "default": "submit"
     },
-    "entrepreneur_or_no": {
-        "default": 5,
-        "answers": {
-            "I'm a business owner or entrepreneur and I am currently in the process of starting, growing or scaling my business.": 5, // Next question
-            "I'm not a business owner and am not actively wanting to start one at this time.": 17,
-        }
-    },
     "urgency": {
-        "default": 16
+        "default": 12
     },
     "interest_topics": {
         "default": 'submit' // or the appropriate next question index after interest topics
@@ -407,6 +406,14 @@ async function handleNextButton() {
     });
     if (emailInvalid) {
         return;
+    }
+    if (formElements[currentElementIndex].id === 'entrepreneur_or_no' && formElements[currentElementIndex].querySelector('input').value === "I’m not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.") {
+        const toSkip = ['how_long_in_business', 'biggest_challenge', 'monthly_rev'];
+        formElements.forEach(el => {
+            if (toSkip.includes(el.id)) {
+                el.isActive = false;
+            }
+        })
     }
     const nextIndex = getNextIndex(currentElement);
     if (nextIndex === 'submit') {
