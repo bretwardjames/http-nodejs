@@ -254,12 +254,13 @@ function handleSubmit() {
     let soSkip = false;
     formElements.forEach(el => {
         const inputEls = el.querySelectorAll('input, select, textarea');
-        inputEls.forEach(inputEl => {
+        inputEls.forEach((inputEl, idx) => {
             let name = inputEl.name;
             if (inputEl.name === 'inf_field_FirstName') {
-                name = 'name';
+                name = 'Name';
+                inputEl.value += ' ' + inputEls[idx + 1].value;
             } else if (inputEl.name === 'inf_field_Email') {
-                name = 'email';
+                name = 'Email';
                 soSkip = true;
             } else if (inputEl.name === 'inf_field_Phone1') {
                 name = 'mobile';
