@@ -335,7 +335,7 @@ function applyPrefillAndSkip() {
     });
 
     if (allDetailsProvided) {
-        currentElementIndex = routingLogic['contact-info'].default;
+        currentElementIndex = 2;
     }
 
     showQuestion(currentElementIndex, firstTime = true);
