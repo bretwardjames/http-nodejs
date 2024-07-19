@@ -518,7 +518,8 @@
         console.log(formElements, index)
         formElements.forEach((el, i) => {
             const inputEl = el.querySelector('input, select, textarea');
-            if (i === index - 1) {
+            console.log(`Element ${i} is active: ${el.isActive}`);
+            if (i === index) {
                 el.style.display = '';
                 if (inputEl) {
                     inputEl.setAttribute('required', 'required');
