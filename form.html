@@ -628,21 +628,42 @@
         }
     }
     async function validateCurrentElement(element) {
-        const inputEl = element.querySelector('input, select, textarea');
-        if (inputEl && inputEl.hasAttribute('required')) {
-            if (inputEl.value.trim() === '') {
-                return false;
+        const inputEls = element.querySelectorAll('input, select, textarea');
+        let isValid = true;
+
+        inputEls.forEach(async inputEl => {
+            if (inputEl.hasAttribute('required') && !inputEl.readOnly) {
+                if (inputEl.value.trim() === '') {
+                    isValid = false;
+                }
+                if (inputEl.type === 'tel' && !/^\d{7,15}$/.test(inputEl.value.trim())) {
+                    alert('Please enter a valid phone number with 7 to 15 digits.');
+                    isValid = false;
+                } else if (inputEl.type === 'email' && !contactId) {
+                    contactId = await getContactId(inputEl.value);
+                }
             }
-            if (inputEl.type === 'tel' && !/^\d{7,15}$/.test(inputEl.value.trim())) {
-                alert('Please enter a valid phone number with 7 to 15 digits.');
-                return false;
-            } else if (inputEl.type === 'email' && !contactId) {
-                contactId = await getContactId(inputEl.value);
-            }
-        }
-        element.answered = true;
-        return true;
+        });
+
+        element.answered = isValid;
+        return isValid;
     }
+    //async function validateCurrentElement(element) {
+    //    const inputEl = element.querySelector('input, select, textarea');
+    //    if (inputEl && inputEl.hasAttribute('required')) {
+    //        if (inputEl.value.trim() === '') {
+    //            return false;
+    //        }
+    //        if (inputEl.type === 'tel' && !/^\d{7,15}$/.test(inputEl.value.trim())) {
+    //            alert('Please enter a valid phone number with 7 to 15 digits.');
+    //            return false;
+    //        } else if (inputEl.type === 'email' && !contactId) {
+    //            contactId = await getContactId(inputEl.value);
+    //        }
+    //    }
+    //    element.answered = true;
+    //    return true;
+    //}
     function roundToZeroOrWhole(number) {
         return number <= 3 ? 0 : Math.floor(number);
     }
@@ -668,41 +689,38 @@
             contactId = urlParams.get('ContactId');
         }
         const skipPrequal = urlParams.get('skipPrequal') === 'true';
+        let allDetailsProvided = true;
+
         formElements.forEach((el, index) => {
             const inputEls = el.querySelectorAll('input, select, textarea');
             const elementName = el.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
+
+            if (elementName === 'contact-info') {
+                inputEls.forEach(inputEl => {
+                    const paramName = inputEl.name;
+                    if (urlParams.has(paramName) && urlParams.get(paramName).trim() !== "") {
+                        let value = urlParams.get(paramName);
+                        if (paramName === 'inf_field_Phone1') {
+                            value = value.replace(/\D/g, ''); // Strip out non-numeric characters
+                        }
+                        inputEl.value = value;
+                        inputEl.readOnly = true;
+                    } else {
+                        allDetailsProvided = false;
+                    }
+                });
+            }
+
             if (skipPrequal && elementName === 'entrepreneur_or_no') {
                 el.isActive = false;
                 return;
             }
-            if (inputEls.length > 0) {
-                if (routingLogic[elementName] && routingLogic[elementName].prefillParams) {
-                    const prefillParams = routingLogic[elementName].prefillParams;
-                    for (let param of prefillParams) {
-                        if (urlParams.has(param) && urlParams.get(param).trim() !== "") {
-                            let value = urlParams.get(param);
-                            inputEls.forEach(inputEl => {
-                                if (inputEl.name === param) {
-                                    if (inputEl.name === 'inf_field_Phone1') {
-                                        value = value.replace(/\D/g, ''); // Strip out non-numeric characters
-                                    }
-                                    inputEl.value = value;
-                                    const nextIndex = getNextIndex(el);
-                                    if (nextIndex !== 'submit') {
-                                        el.isActive = false;
-                                        el.style.display = 'none';
-                                        currentElementIndex = nextIndex;
-                                    }
-                                }
-                            });
-                            break;
-                        }
-                    }
-                }
-            }
         });
-        currentElementIndex = formElements[currentElementIndex].isActive ? currentElementIndex : currentElementIndex + 1;
-        console.log(currentElementIndex);
+
+        if (allDetailsProvided) {
+            currentElementIndex = routingLogic['contact-info'].default;
+        }
+
         showQuestion(currentElementIndex, firstTime = true);
     }
     //function applyPrefillAndSkip() {
