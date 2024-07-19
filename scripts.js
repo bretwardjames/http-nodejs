@@ -305,7 +305,7 @@ function handleSubmit() {
     if (contactId) {
         urlParams.append('ContactId', contactId);
     }
-    let redirectUrl = 'https://davidbayercoaching.com/ss-survey-results'; // Default thank you page
+    let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
     // Add your logic to set redirectUrl based on answers here
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
     // window.location.href = `${redirectUrl}?${urlParams.toString()}`;
