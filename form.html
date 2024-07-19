@@ -595,12 +595,11 @@
     }
     function updateProgressBar(first = false) {
         const visibleElements = formElements.filter(el => el.isActive);
-        console.log('Visible elements:', visibleElements, formElements[currentElementIndex].innerText);
-        const currentIndex = visibleElements.findIndex(el => el.innerText === formElements[currentElementIndex].innerText);
+        const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
         if (currentIndex === -1) {
             return;
         }
-        const totalQuestions = visibleElements.length + (currentIndex + 1);
+        const totalQuestions = visibleElements.length;
         const progress = first ? 1 : ((currentIndex + 1) / totalQuestions) * 100;
         console.log('Visible elements:', visibleElements, 'Current index:', currentIndex, 'Total questions:', totalQuestions, 'Progress:', progress);
         const progressBar = document.getElementById('progressBar');
