@@ -349,6 +349,7 @@ const interestOptions = [
     { display: "Attending David's live events", value: "Attending David's live events" }
 ];
 
+
 const interestSelectedOptions = new Set();
 const interestButtonContainer = document.getElementById('button-container');
 const interestHiddenSelect = document.getElementById('interest_topics');
