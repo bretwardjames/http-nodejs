@@ -251,20 +251,22 @@ function handleSubmit() {
     console.log('URL Params:', urlParams);
     let soSkip = false;
     formElements.forEach(el => {
-        const inputEl = el.querySelector('input, select, textarea');
-        let name = inputEl.name;
-        if (inputEl.name === 'inf_field_FirstName') {
-            name = 'Name';
-        } else if (inputEl.name === 'inf_field_Email') {
-            name = 'Email';
-            soSkip = true;
-        } else if (inputEl.name === 'inf_field_Phone1') {
-            name = 'Phone';
-        }
-        if (inputEl && inputEl.value) {
-            const encodedValue = inputEl.value.replace(/\+/g, '%20');
-            urlParams.append(name, encodedValue);
-        }
+        const inputEls = el.querySelectorAll('input, select, textarea');
+        inputEls.forEach(inputEl => {
+            let name = inputEl.name;
+            if (inputEl.name === 'inf_field_FirstName') {
+                name = 'Name';
+            } else if (inputEl.name === 'inf_field_Email') {
+                name = 'Email';
+                soSkip = true;
+            } else if (inputEl.name === 'inf_field_Phone1') {
+                name = 'Phone';
+            }
+            if (inputEl && inputEl.value) {
+                const encodedValue = inputEl.value.replace(/\+/g, '%20');
+                urlParams.append(name, encodedValue);
+            }
+        });
     });
     if (soSkip) {
         urlParams.append('soSkip', 1);
