@@ -148,7 +148,7 @@ function roundToZeroOrWhole(number) {
 }
 
 function updateProgressBar(first = false) {
-    const visibleElements = formElements.filter(el => el.isActive);
+    const visibleElements = formState.filter(el => el.isActive);
     const answeredElements = formElements.filter(el => el.answered);
     const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
     if (currentIndex === -1) {
