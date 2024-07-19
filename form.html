@@ -515,6 +515,7 @@
         }
     });
     function showQuestion(index, firstTime = false) {
+        console.log(formElements, index)
         formElements.forEach((el, i) => {
             const inputEl = el.querySelector('input, select, textarea');
             if (i === index) {
