@@ -358,7 +358,7 @@ const interestOptions = [
 ];
 
 const interestSelectedOptions = new Set();
-const interestButtonContainer = document.getElementById('button-container');
+const interestButtonContainer = document.getElementById('button-container-interest');
 const interestHiddenSelect = document.getElementById('interest_topics');
 
 interestOptions.forEach(option => {
