@@ -1,4 +1,20 @@
 (function () {
+    function loadCSS(url) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+
+    function loadJS(url, callback) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        script.onload = callback;
+        document.body.appendChild(script);
+    }
+
     const containerId = 'embedded-form-container';
     let container = document.getElementById(containerId);
 
@@ -19,6 +35,15 @@
     const serverUrl = isLocal ? config.local : config.hosted;
 
     console.log('Fetching from:', serverUrl + '/form.html');
+
+    // Load CSS
+    loadCSS(`${serverUrl}/styles.css`);
+
+    // Load JavaScript
+    loadJS(`${serverUrl}/script.js`, function () {
+        console.log('External script loaded and executed.');
+        // Place any additional initialization code here if necessary
+    });
 
     fetch(`${serverUrl}/form.html`)
         .then(response => {
