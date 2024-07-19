@@ -231,7 +231,7 @@ function applyPrefillAndSkip() {
 
     if (allDetailsProvided) {
         console.log('All details provided, skipping contact-info');
-        currentElementIndex = 2; // Start with the first question after contact-info
+        currentElementIndex = getNextIndex(currentElementIndex); // Start with the first question after contact-info
     }
     console.log('Showing question at index: ', currentElementIndex);
     showQuestion(currentElementIndex, true);
