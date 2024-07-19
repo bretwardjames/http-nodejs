@@ -452,7 +452,7 @@ async function handleNextButton() {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
-} v
+}
 document.getElementById('nextButton').addEventListener('click', handleNextButton);
 document.getElementById('backButton').addEventListener('click', handleBackButton);
 document.querySelectorAll('.checkbox-button').forEach(button => {
