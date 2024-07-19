@@ -132,48 +132,31 @@ function isValidPhoneNumber(phoneNumber) {
     return /^\d{7,15}$/.test(phoneNumber.trim());
 }
 
-async function handleNextButton() {
-    const currentElement = formElements[currentElementIndex];
-    const valid = await validateCurrentElement(currentElement);
-    if (!valid) {
-        alert('Please fill in the required fields.');
-        return;
-    }
+async function validateCurrentElement(element) {
+    const inputEls = element.querySelectorAll('input, select, textarea');
+    let isValid = true;
 
-    const fields = currentElement.querySelectorAll('input[name], textarea[name], select[name]');
-    const emailInvalid = Array.from(fields).some(field => {
-        if (field.name.toLowerCase().includes('email')) {
-            const email = field.value;
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!regex.test(email)) {
-                alert('Please enter a valid email address.');
-                return true;
+    for (const inputEl of inputEls) {
+        if (inputEl.hasAttribute('required') && !inputEl.readOnly) {
+            if (inputEl.value.trim() === '') {
+                isValid = false;
+            }
+            if (inputEl.type === 'tel' && !isValidPhoneNumber(inputEl.value.trim())) {
+                alert('Please enter a valid phone number with 7 to 15 digits.');
+                isValid = false;
+            } else if (inputEl.type === 'email' && !contactId) {
+                contactId = await getContactId(inputEl.value);
             }
         }
-        return false;
-    });
-    if (emailInvalid) {
-        return;
     }
 
-    // Check conditions and update the state based on the current element
-    checkConditions(currentElement);
-
-    // Get the next active index
-    const nextIndex = getNextIndex(currentElement);
-    if (nextIndex === 'submit') {
-        handleSubmit();
-    } else {
-        if (navigationHistory[navigationHistory.length - 1] !== currentElementIndex) {
-            navigationHistory.push(currentElementIndex);
-        }
-        currentElementIndex = nextIndex;
-        showNextQuestion();
-        console.log(formElements, currentElementIndex, nextIndex);
-        if (window.innerWidth <= 768) {
-            document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
-        }
+    if (element.id === 'interest_topics' && selectedOptionsInterest.size === 0) {
+        alert('Please select at least one topic.');
+        isValid = false;
     }
+
+    element.answered = isValid;
+    return isValid;
 }
 
 function roundToZeroOrWhole(number) {
