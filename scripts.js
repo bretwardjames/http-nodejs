@@ -63,8 +63,11 @@ function checkConditions(currentElement) {
         const conditions = routingLogic[elementName].answers[selectedValue];
         console.log('Conditions: ', conditions)
         if (conditions && conditions.activate) {
+            console.log('Activating elements:', conditions.activate);
             conditions.activate.forEach(id => {
+                console.log('Activating element:', id);
                 const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
+                console.log('Element Index:', elIndex)
                 if (elIndex !== -1) {
                     console.log('Activating element:', id);
                     formState[elIndex].isActive = true;
@@ -76,6 +79,7 @@ function checkConditions(currentElement) {
 
 function showQuestion(index, firstTime = false) {
     console.log('Showing question:', index);
+    console.log('Form Elements: ', formElements)
     formElements.forEach((el, i) => {
         const inputEl = el.querySelector('input, select, textarea');
         if (i === index) {
