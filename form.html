@@ -599,7 +599,7 @@
         if (currentIndex === -1) {
             return;
         }
-        const totalQuestions = visibleElements.length;
+        const totalQuestions = visibleElements.length + currentIndex + 1;
         const progress = first ? 1 : ((currentIndex + 1) / totalQuestions) * 200;
         const progressBar = document.getElementById('progressBar');
         const progressPercent = document.getElementById('progress');
