@@ -217,18 +217,18 @@ async function applyPrefillAndSkip() {
     console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
 
-    formElements.forEach((el, index) => {
+    for (let el of formElements) {
         const inputEls = el.querySelectorAll('input, select, textarea');
         const elementName = el.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
 
         if (elementName === 'contact-info') {
-            inputEls.forEach(inputEl => {
+            for (let inputEl of inputEls) {
                 const paramName = inputEl.name;
                 if (urlParams.has(paramName) && urlParams.get(paramName).trim() !== "") {
                     let value = urlParams.get(paramName);
                     let readOnly = true;
                     if (paramName === 'inf_field_Phone1') {
-                        const validatedPhone = awaitvalidatePhone(value.replace(/\D/g, ''));
+                        const validatedPhone = await validatePhone(value.replace(/\D/g, ''));
                         if (validatedPhone.valid) {
                             value = validatedPhone.local_format;
                         } else {
@@ -241,7 +241,7 @@ async function applyPrefillAndSkip() {
                 } else {
                     allDetailsProvided = false;
                 }
-            });
+            }
         }
 
         if (skipPrequal) {
@@ -258,10 +258,10 @@ async function applyPrefillAndSkip() {
             console.log('Not skipping prequal question');
             if (elementName === 'contact-info' || elementName === 'entrepreneur_or_no') {
                 console.log('Activating element:', elementName);
-                formState[index].isActive = true;
+                formState[elIndex].isActive = true;
             }
         }
-    });
+    }
 
     if (allDetailsProvided) {
         console.log('All details provided, skipping contact-info');
@@ -269,6 +269,10 @@ async function applyPrefillAndSkip() {
     }
     console.log('Showing question at index: ', currentElementIndex);
     showQuestion(currentElementIndex, true);
+}
+
+function init() {
+    applyPrefillAndSkip(); // Call the function without `await`
 }
 
 function handleSubmit() {
@@ -306,7 +310,7 @@ function handleSubmit() {
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
     // Add your logic to set redirectUrl based on answers here
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
-    // window.location.href = `${redirectUrl}?${urlParams.toString()}`;
+    window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
 
 async function handleNextButton() {
@@ -543,6 +547,6 @@ selects.forEach(select => {
     parentDiv.appendChild(buttonContainer);
 });
 
-await applyPrefillAndSkip();
+init();
 
 console.log('Made it to the end of the script');
