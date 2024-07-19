@@ -131,15 +131,13 @@ function handleBackButton() {
 }
 
 async function validatePhone(phoneNumber) {
-    const response = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, {
+    const response = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/validatePhone`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            apiName: 'NUMVERIFY',
-            endpoint: `validate?number=${phoneNumber}`,
-            method: 'GET'
+            phoneNumber: phoneNumber,
         })
     });
 

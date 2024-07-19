@@ -7,6 +7,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import libphonenumber from 'google-libphonenumber';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,8 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
+
+const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 // CORS configuration
 const corsOptions = {
@@ -106,6 +109,32 @@ app.post('/proxy', async (req, res) => {
     console.error('Error making API request:', error);
     res.status(500).send('An error occurred while making the API request.');
   }
+});
+
+app.post('/validatePhone', async (req, res) => {
+  const { phoneNumber, countryCode } = req.body;
+
+  if (!phoneNumber) {
+    return res.status(400).send('Missing required parameters: phoneNumber');
+  }
+
+  try {
+    // Parse phone number with country code if provided, otherwise use default
+    const parsedNumber = phoneUtil.parseAndKeepRawInput(phoneNumber, countryCode || 'US');
+
+    // Check if the number is valid
+    if (!phoneUtil.isValidNumber(parsedNumber)) {
+      return res.status(400).json({ valid: false, message: "Invalid phone number" });
+    }
+
+    // Get the national (local) number without any formatting characters
+    const nationalNumber = parsedNumber.getNationalNumber().toString();
+    return res.json({ valid: true, local_format: nationalNumber });
+
+  } catch (e) {
+    return res.status(400).json({ valid: false, message: e.message });
+  }
+
 });
 
 const PORT = process.env.PORT || 3000;
