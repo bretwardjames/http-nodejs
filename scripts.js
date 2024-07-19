@@ -316,7 +316,10 @@ function handleSubmit() {
         urlParams.append('ContactId', contactId);
     }
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
-    // Add your logic to set redirectUrl based on answers here
+    if ((urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.") || (!urlParams.get('preQualified') === 'true' && urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." ||
+        (urlParams.get('resources_to_invest') === "$500 to $2k" && urlParams.get('household_income') === 'Less than $50k'))) {
+        redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
+    }
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
