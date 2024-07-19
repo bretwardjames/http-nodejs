@@ -163,7 +163,7 @@ async function validateCurrentElement(element) {
                     alert('Please enter a valid phone number with 7 to 15 digits.');
                     isValid = false;
                 } else {
-                    inputEl.value = validated.local_format;
+                    inputEl.value = validatedPhone.local_format;
                 }
 
             } else if (inputEl.type === 'email' && !contactId) {
