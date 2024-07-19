@@ -588,6 +588,7 @@
                 contactId = await getContactId(inputEl.value);
             }
         }
+        element.answered = true;
         return true;
     }
     function roundToZeroOrWhole(number) {
@@ -595,12 +596,13 @@
     }
     function updateProgressBar(first = false) {
         const visibleElements = formElements.filter(el => el.isActive);
+        const answeredElements = formElements.filter(el => el.answered);
         const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
         if (currentIndex === -1) {
             return;
         }
-        const totalQuestions = visibleElements.length;
-        const progress = first ? 1 : ((currentIndex + 1) / totalQuestions) * 100;
+        const totalQuestions = visibleElements.length + answeredElements.length;
+        const progress = first ? 1 : ((answeredElements.length) / totalQuestions) * 100;
         console.log('Visible elements:', visibleElements, 'Current index:', currentIndex, 'Total questions:', totalQuestions, 'Progress:', progress);
         const progressBar = document.getElementById('progressBar');
         const progressPercent = document.getElementById('progress');
