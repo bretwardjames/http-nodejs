@@ -5,6 +5,7 @@
         link.type = 'text/css';
         link.href = url;
         document.head.appendChild(link);
+        console.log('CSS loaded:', url);
     }
 
     function loadJS(url, callback) {
@@ -13,6 +14,7 @@
         script.src = url;
         script.onload = callback;
         document.body.appendChild(script);
+        console.log('JS loaded:', url);
     }
 
     const containerId = 'embedded-form-container';
@@ -37,7 +39,7 @@
     console.log('Fetching from:', serverUrl + '/form.html');
 
     // Load CSS
-    loadCSS(`${serverUrl}/styles.css`);
+    loadCSS(`${serverUrl}/style.css`);
 
     fetch(`${serverUrl}/form.html`)
         .then(response => {
@@ -47,7 +49,6 @@
             return response.text();
         })
         .then(html => {
-            console.log('Fetched HTML:', html);
             container.innerHTML = html;
 
             // Execute any inline scripts
@@ -60,7 +61,7 @@
             }
 
             // Load JavaScript after HTML is inserted
-            loadJS(`${serverUrl}/script.js`, function () {
+            loadJS(`${serverUrl}/scripts.js`, function () {
                 console.log('External script loaded and executed.');
                 // Place any additional initialization code here if necessary
             });
