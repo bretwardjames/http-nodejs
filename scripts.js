@@ -95,8 +95,8 @@ function showQuestion(index, firstTime = false) {
         }
     });
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    document.getElementById('nextButton').textContent = index === formElements.length - 1 ? 'Submit' : 'Next';
-    document.getElementById('nextButton').type = index === formElements.length - 1 ? 'submit' : 'button';
+    document.getElementById('nextButton').textContent = index === formState.length - 1 ? 'Submit' : 'Next';
+    document.getElementById('nextButton').type = index === formState.length - 1 ? 'submit' : 'button';
     updateProgressBar(firstTime);
 }
 
