@@ -30,87 +30,105 @@ async function getContactId(email) {
         return null;
     }
 }
+// const routingLogic = {
+//"inf_field_FirstName": {
+//    "default": 1,
+//    "prefillFromUrl": true,
+//    "prefillParams": [
+//        "inf_field_FirstName"
+//    ]
+//},
+//"inf_field_LastName": {
+//    "default": 2,
+//    "prefillFromUrl": true,
+//    "prefillParams": [
+//        "inf_field_LastName"
+//    ]
+//},
+//"inf_field_Email": {
+//    "default": 3,
+//    "prefillFromUrl": true,
+//    "prefillParams": [
+//        "inf_field_Email"
+//    ]
+//},
+//"inf_field_Phone1": {
+//    "default": 4,
+//    "prefillFromUrl": true,
+//    "prefillParams": [
+//        "inf_field_Phone1"
+//    ]
+//}, 
+//     "contact-info": {
+//         "default": 1,
+//         "prefillFromUrl": true,
+//         "prefillParams": ["inf_field_FirstName", "inf_field_Email", "inf_field_Phone1"]
+//     },
+//     "entrepreneur_or_no": {
+//         "default": 2,
+//         "answers": { // Next question
+//             "I'm not a business owner and am not actively wanting to start one at this time.": 13,
+//         }
+//     },
+//     "business_type": {
+//         "default": 3
+//     },
+//     "how_long_in_business": {
+//         "default": 3,
+//     },
+//     "areas_for_support": {
+//         "default": 4
+//     },
+//     "biggest_challenge": {
+//         "default": 5
+//     },
+//     "ft_pt": {
+//         "default": 6
+//     },
+//     "monthly_rev": {
+//         "default": 7
+//     },
+//     "income_goal": {
+//         "default": 8
+//     },
+//     "household_income": {
+//         "default": 9
+//     },
+//     "resources_to_invest": {
+//         "default": 10
+//     },
+//     "other_programs": {
+//         "default": 11
+//     },
+//     "comitment_level": {
+//         "default": "submit"
+//     },
+//     "urgency": {
+//         "default": 12
+//     },
+//     "interest_topics": {
+//         "default": 'submit' // or the appropriate next question index after interest topics
+//     },
+// };
 const routingLogic = {
-    //"inf_field_FirstName": {
-    //    "default": 1,
-    //    "prefillFromUrl": true,
-    //    "prefillParams": [
-    //        "inf_field_FirstName"
-    //    ]
-    //},
-    //"inf_field_LastName": {
-    //    "default": 2,
-    //    "prefillFromUrl": true,
-    //    "prefillParams": [
-    //        "inf_field_LastName"
-    //    ]
-    //},
-    //"inf_field_Email": {
-    //    "default": 3,
-    //    "prefillFromUrl": true,
-    //    "prefillParams": [
-    //        "inf_field_Email"
-    //    ]
-    //},
-    //"inf_field_Phone1": {
-    //    "default": 4,
-    //    "prefillFromUrl": true,
-    //    "prefillParams": [
-    //        "inf_field_Phone1"
-    //    ]
-    //}, 
-    "contact-info": {
-        "default": 1,
-        "prefillFromUrl": true,
-        "prefillParams": ["inf_field_FirstName", "inf_field_Email", "inf_field_Phone1"]
-    },
     "entrepreneur_or_no": {
-        "default": 2,
-        "answers": { // Next question
-            "I'm not a business owner and am not actively wanting to start one at this time.": 13,
+        "answers": {
+            "I'm not a business owner and am not actively wanting to start one at this time.": {
+                activate: ['interest_topics'],
+            },
+            "I'm a business owner or entrepreneur and I am currently in the process of starting, growing or scaling my business.": {
+                activate: ["business_type", "how_long_in_business", "areas_for_support", "biggest_challenge", "ft_pt", "monthly_rev", "income_goal", "household_income", "resources_to_invest", "other_programs", "comitment_level", "urgency"],
+                next: 3
+            },
+            "I'm not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.": {
+                activate: ['business_type', 'areas_for_support', 'ft_pt', 'income_goal', 'household_income', 'resources_to_invest', 'other_programs', 'comitment_level', 'urgency'],
+                next: 4
+            }
         }
     },
-    "business_type": {
-        "default": 3
-    },
-    "how_long_in_business": {
-        "default": 3,
-    },
-    "areas_for_support": {
-        "default": 4
-    },
-    "biggest_challenge": {
-        "default": 5
-    },
-    "ft_pt": {
-        "default": 6
-    },
-    "monthly_rev": {
-        "default": 7
-    },
-    "income_goal": {
-        "default": 8
-    },
-    "household_income": {
-        "default": 9
-    },
-    "resources_to_invest": {
-        "default": 10
-    },
-    "other_programs": {
-        "default": 11
-    },
-    "comitment_level": {
-        "default": "submit"
-    },
-    "urgency": {
-        "default": 12
-    },
-    "interest_topics": {
-        "default": 'submit' // or the appropriate next question index after interest topics
-    },
-};
+}
 const formElements = Array.from(document.querySelectorAll('.infusion-field'))
+let formState = formElements.map(el => ({ element: el, isActive: false }));
 let currentElementIndex = 0;
 let navigationHistory = [];
 formElements.forEach(el => {
@@ -119,6 +137,26 @@ formElements.forEach(el => {
         el.isActive = false
     }
 });
+function checkConditions(currentElement) {
+    const inputEls = currentElement.querySelectorAll('input, select, textarea');
+    let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
+    let selectedValue = inputEls[0].value;
+
+    if (elementName && routingLogic[elementName]) {
+        const conditions = routingLogic[elementName].answers[selectedValue];
+
+        if (conditions) {
+            if (conditions.activate) {
+                conditions.activate.forEach(id => {
+                    const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
+                    if (elIndex !== -1) {
+                        formState[elIndex].isActive = true;
+                    }
+                });
+            }
+        }
+    }
+}
 function showQuestion(index, firstTime = false) {
     console.log(formElements, index)
     formElements.forEach((el, i) => {
@@ -148,37 +186,24 @@ function encodeCurlyApostrophe(str) {
 }
 function getNextIndex(currentElement) {
     const inputEls = currentElement.querySelectorAll('input, select, textarea');
-    let elementName = null;
-
-    if (currentElement.id === 'contact-info') {
-        elementName = 'contact-info';
-    } else if (inputEls.length > 0) {
-        elementName = inputEls[0].name;
-    }
-
-    let nextIndex = elementName ? routingLogic[elementName].default : 'submit';
-    console.log(`Current element: ${elementName}, Next index: ${nextIndex}`);
+    let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
+    let nextIndex = elementName ? (routingLogic[elementName].default || 'submit') : 'submit';
 
     if (elementName && routingLogic[elementName].answers) {
         const encodedValue = encodeCurlyApostrophe(inputEls[0].value);
         if (routingLogic[elementName].answers[encodedValue]) {
-            nextIndex = routingLogic[elementName].answers[encodedValue];
+            nextIndex = routingLogic[elementName].answers[encodedValue].next || nextIndex;
         }
     }
 
-    formElements.forEach((el, index) => {
-        if (!el.isActive || (index >= currentElementIndex && index < nextIndex) || el.classList?.contains('noshow')) {
-            el.isActive = false;
-        } else {
-            el.isActive = true;
+    while (nextIndex !== 'submit' && !formState[nextIndex].isActive) {
+        nextIndex++;
+        if (nextIndex >= formState.length) {
+            nextIndex = 'submit';
+            break;
         }
-    });
-
-    while (nextIndex !== 'submit' && !formElements[nextIndex].isActive) {
-        nextIndex = getNextIndex(formElements[nextIndex]);
     }
 
-    console.log(`Next index after adjustment: ${nextIndex}`);
     return nextIndex;
 }
 //function getNextIndex(currentElement) {
@@ -409,30 +434,10 @@ async function handleNextButton() {
         return;
     }
 
-    // Check the value of entrepreneur_or_no and skip specific questions
-    const entrepreneurElement = formElements.find(el => el.id === 'entrepreneur_or_no');
-    if (entrepreneurElement) {
-        let selectedValue;
-        const selectElement = entrepreneurElement.querySelector('select');
-        const inputElement = entrepreneurElement.querySelector('input');
+    // Check conditions and update the state based on the current element
+    checkConditions(currentElement);
 
-        if (selectElement) {
-            selectedValue = selectElement.value;
-        } else if (inputElement) {
-            selectedValue = inputElement.value;
-        }
-
-        if (selectedValue === "I’m not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.") {
-            const toSkip = ['how_long_in_business', 'biggest_challenge', 'monthly_rev'];
-            formElements.forEach(el => {
-                const innerElement = el.querySelector('select, input, textarea');
-                if (innerElement && toSkip.includes(innerElement.id)) {
-                    el.isActive = false;
-                }
-            });
-        }
-    }
-
+    // Get the next active index
     const nextIndex = getNextIndex(currentElement);
     if (nextIndex === 'submit') {
         handleSubmit();
@@ -441,13 +446,13 @@ async function handleNextButton() {
             navigationHistory.push(currentElementIndex);
         }
         currentElementIndex = nextIndex;
-        showQuestion(currentElementIndex);
+        showNextQuestion();
         console.log(formElements, currentElementIndex, nextIndex);
         if (window.innerWidth <= 768) {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
-}
+} v
 document.getElementById('nextButton').addEventListener('click', handleNextButton);
 document.getElementById('backButton').addEventListener('click', handleBackButton);
 document.querySelectorAll('.checkbox-button').forEach(button => {
