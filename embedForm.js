@@ -37,13 +37,7 @@
     console.log('Fetching from:', serverUrl + '/form.html');
 
     // Load CSS
-    loadCSS(`${serverUrl}/style.css`);
-
-    // Load JavaScript
-    loadJS(`${serverUrl}/scripts.js`, function () {
-        console.log('External script loaded and executed.');
-        // Place any additional initialization code here if necessary
-    });
+    loadCSS(`${serverUrl}/styles.css`);
 
     fetch(`${serverUrl}/form.html`)
         .then(response => {
@@ -64,6 +58,12 @@
                 newScript.textContent = script.textContent;
                 document.body.appendChild(newScript);
             }
+
+            // Load JavaScript after HTML is inserted
+            loadJS(`${serverUrl}/script.js`, function () {
+                console.log('External script loaded and executed.');
+                // Place any additional initialization code here if necessary
+            });
         })
         .catch(err => console.error('Failed to load the form:', err));
 })();
