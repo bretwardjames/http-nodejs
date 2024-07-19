@@ -166,7 +166,7 @@ function updateProgressBar(first = false) {
     if (currentIndex === -1) {
         return;
     }
-    const totalQuestions = visibleElements.length + answeredElements.length;
+    const totalQuestions = visibleElements.length;
     console.log('Total questions:', totalQuestions);
     const progress = first ? 1 : ((answeredElements.length) / totalQuestions) * 100;
     console.log('Progress:', progress);
