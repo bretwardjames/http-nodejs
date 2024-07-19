@@ -113,7 +113,19 @@
 </div>
 <form accept-charset="UTF-8" class="infusion-form" id="dynamic_form">
     <div class="form-group">
-        <div class="infusion-field">
+        <div class="infusion-field" id="contact-info">
+            <label for="contact-info" class="d-block mb-2 h3">Contact Information *</label>
+            <input class="form-control form-control-lg" id="inf_field_FirstName" name="inf_field_FirstName"
+                placeholder="First Name *" type="text" required="required">
+            <input class="form-control form-control-lg" id="inf_field_LastName" name="inf_field_LastName"
+                placeholder="Last Name *" type="text">
+            <input class="form-control form-control-lg" id="inf_field_Email" name="inf_field_Email"
+                placeholder="Email *" type="email" required="required">
+            <input class="form-control form-control-lg" id="inf_field_Phone1" name="inf_field_Phone1"
+                placeholder="Phone Number *" type="tel" pattern="^\d{7,15}$"
+                title="Please enter a valid phone number with 7 to 15 digits" required="required">
+        </div>
+        <!-- <div class="infusion-field">
             <label for="inf_field_FirstName" class="d-block mb-2 h3">First Name *</label>
             <input class="form-control form-control-lg" id="inf_field_FirstName" name="inf_field_FirstName"
                 placeholder="First Name *" type="text" required="required">
@@ -133,7 +145,7 @@
             <input class="form-control form-control-lg" id="inf_field_Phone1" name="inf_field_Phone1"
                 placeholder="Phone Number *" type="tel" pattern="^\d{7,15}$"
                 title="Please enter a valid phone number with 7 to 15 digits">
-        </div>
+        </div> -->
         <div class="infusion-field">
             <label for="entrepreneur_or_no" class="d-block mb-2 h3">Which of the
                 following best describes you?</label>
@@ -430,33 +442,38 @@
         }
     }
     const routingLogic = {
-        "inf_field_FirstName": {
+        //"inf_field_FirstName": {
+        //    "default": 1,
+        //    "prefillFromUrl": true,
+        //    "prefillParams": [
+        //        "inf_field_FirstName"
+        //    ]
+        //},
+        //"inf_field_LastName": {
+        //    "default": 2,
+        //    "prefillFromUrl": true,
+        //    "prefillParams": [
+        //        "inf_field_LastName"
+        //    ]
+        //},
+        //"inf_field_Email": {
+        //    "default": 3,
+        //    "prefillFromUrl": true,
+        //    "prefillParams": [
+        //        "inf_field_Email"
+        //    ]
+        //},
+        //"inf_field_Phone1": {
+        //    "default": 4,
+        //    "prefillFromUrl": true,
+        //    "prefillParams": [
+        //        "inf_field_Phone1"
+        //    ]
+        //}, 
+        "contact-info": {
             "default": 1,
             "prefillFromUrl": true,
-            "prefillParams": [
-                "inf_field_FirstName"
-            ]
-        },
-        "inf_field_LastName": {
-            "default": 2,
-            "prefillFromUrl": true,
-            "prefillParams": [
-                "inf_field_LastName"
-            ]
-        },
-        "inf_field_Email": {
-            "default": 3,
-            "prefillFromUrl": true,
-            "prefillParams": [
-                "inf_field_Email"
-            ]
-        },
-        "inf_field_Phone1": {
-            "default": 4,
-            "prefillFromUrl": true,
-            "prefillParams": [
-                "inf_field_Phone1"
-            ]
+            "prefillParams": ["inf_field_FirstName", "inf_field_Email", "inf_field_Phone1"]
         },
         "business_type": {
             "default": 6
@@ -542,13 +559,20 @@
         return str // str.replace(/'/g, '&rsquo;');
     }
     function getNextIndex(currentElement) {
-        const inputEl = currentElement.querySelector('input, select, textarea');
-        const elementName = inputEl ? inputEl.name : null;
+        const inputEls = currentElement.querySelectorAll('input, select, textarea');
+        let elementName = null;
+
+        if (currentElement.id === 'contact-info') {
+            elementName = 'contact-info';
+        } else if (inputEls.length > 0) {
+            elementName = inputEls[0].name;
+        }
+
         let nextIndex = elementName ? routingLogic[elementName].default : 'submit';
         console.log(`Current element: ${elementName}, Next index: ${nextIndex}`);
 
         if (elementName && routingLogic[elementName].answers) {
-            const encodedValue = encodeCurlyApostrophe(inputEl.value);
+            const encodedValue = encodeCurlyApostrophe(inputEls[0].value);
             if (routingLogic[elementName].answers[encodedValue]) {
                 nextIndex = routingLogic[elementName].answers[encodedValue];
             }
@@ -569,6 +593,34 @@
         console.log(`Next index after adjustment: ${nextIndex}`);
         return nextIndex;
     }
+    //function getNextIndex(currentElement) {
+    //    const inputEl = currentElement.querySelector('input, select, textarea');
+    //    const elementName = inputEl ? inputEl.name : null;
+    //    let nextIndex = elementName ? routingLogic[elementName].default : 'submit';
+    //    console.log(`Current element: ${elementName}, Next index: ${nextIndex}`);
+
+    //    if (elementName && routingLogic[elementName].answers) {
+    //        const encodedValue = encodeCurlyApostrophe(inputEl.value);
+    //        if (routingLogic[elementName].answers[encodedValue]) {
+    //            nextIndex = routingLogic[elementName].answers[encodedValue];
+    //        }
+    //    }
+
+    //    formElements.forEach((el, index) => {
+    //        if (!el.isActive || (index >= currentElementIndex && index < nextIndex) || el.classList?.contains('noshow')) {
+    //            el.isActive = false;
+    //        } else {
+    //            el.isActive = true;
+    //        }
+    //    });
+
+    //    while (nextIndex !== 'submit' && !formElements[nextIndex].isActive) {
+    //        nextIndex = getNextIndex(formElements[nextIndex]);
+    //    }
+
+    //    console.log(`Next index after adjustment: ${nextIndex}`);
+    //    return nextIndex;
+    //}
     function handleBackButton() {
         if (navigationHistory.length > 0) {
             currentElementIndex = navigationHistory.pop();
@@ -617,28 +669,32 @@
         }
         const skipPrequal = urlParams.get('skipPrequal') === 'true';
         formElements.forEach((el, index) => {
-            const inputEl = el.querySelector('input, select, textarea');
-            const elementName = inputEl ? inputEl.name : null;
+            const inputEls = el.querySelectorAll('input, select, textarea');
+            const elementName = el.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
             if (skipPrequal && elementName === 'entrepreneur_or_no') {
                 el.isActive = false;
                 return;
             }
-            if (inputEl) {
+            if (inputEls.length > 0) {
                 if (routingLogic[elementName] && routingLogic[elementName].prefillParams) {
                     const prefillParams = routingLogic[elementName].prefillParams;
                     for (let param of prefillParams) {
                         if (urlParams.has(param) && urlParams.get(param).trim() !== "") {
                             let value = urlParams.get(param);
-                            if (elementName === 'inf_field_Phone1') {
-                                value = value.replace(/\D/g, ''); // Strip out non-numeric characters
-                            }
-                            inputEl.value = value;
-                            const nextIndex = getNextIndex(el);
-                            if (nextIndex !== 'submit') {
-                                el.isActive = false;
-                                el.style.display = 'none';
-                                currentElementIndex = nextIndex;
-                            }
+                            inputEls.forEach(inputEl => {
+                                if (inputEl.name === param) {
+                                    if (inputEl.name === 'inf_field_Phone1') {
+                                        value = value.replace(/\D/g, ''); // Strip out non-numeric characters
+                                    }
+                                    inputEl.value = value;
+                                    const nextIndex = getNextIndex(el);
+                                    if (nextIndex !== 'submit') {
+                                        el.isActive = false;
+                                        el.style.display = 'none';
+                                        currentElementIndex = nextIndex;
+                                    }
+                                }
+                            });
                             break;
                         }
                     }
@@ -646,9 +702,48 @@
             }
         });
         currentElementIndex = formElements[currentElementIndex].isActive ? currentElementIndex : currentElementIndex + 1;
-        console.log(currentElementIndex)
+        console.log(currentElementIndex);
         showQuestion(currentElementIndex, firstTime = true);
     }
+    //function applyPrefillAndSkip() {
+    //    const urlParams = new URLSearchParams(window.location.search);
+    //    if (urlParams.has('ContactId')) {
+    //        contactId = urlParams.get('ContactId');
+    //    }
+    //    const skipPrequal = urlParams.get('skipPrequal') === 'true';
+    //    formElements.forEach((el, index) => {
+    //        const inputEl = el.querySelector('input, select, textarea');
+    //        const elementName = inputEl ? inputEl.name : null;
+    //        if (skipPrequal && elementName === 'entrepreneur_or_no') {
+    //            el.isActive = false;
+    //            return;
+    //        }
+    //        if (inputEl) {
+    //            if (routingLogic[elementName] && routingLogic[elementName].prefillParams) {
+    //                const prefillParams = routingLogic[elementName].prefillParams;
+    //                for (let param of prefillParams) {
+    //                    if (urlParams.has(param) && urlParams.get(param).trim() !== "") {
+    //                        let value = urlParams.get(param);
+    //                        if (elementName === 'inf_field_Phone1') {
+    //                            value = value.replace(/\D/g, ''); // Strip out non-numeric characters
+    //                        }
+    //                        inputEl.value = value;
+    //                        const nextIndex = getNextIndex(el);
+    //                        if (nextIndex !== 'submit') {
+    //                            el.isActive = false;
+    //                            el.style.display = 'none';
+    //                            currentElementIndex = nextIndex;
+    //                        }
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    });
+    //    currentElementIndex = formElements[currentElementIndex].isActive ? currentElementIndex : currentElementIndex + 1;
+    //    console.log(currentElementIndex)
+    //    showQuestion(currentElementIndex, firstTime = true);
+    //}
     function handleSubmit() {
         const urlParams = new URLSearchParams(window.location.search);
         let soSkip = false
