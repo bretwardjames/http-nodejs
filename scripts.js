@@ -159,7 +159,7 @@ async function validateCurrentElement(element) {
             }
             if (inputEl.type === 'tel') {
                 const validatedPhone = await validatePhone(inputEl.value.trim());
-                if (!validated.valid) {
+                if (!validatedPhone.valid) {
                     alert('Please enter a valid phone number with 7 to 15 digits.');
                     isValid = false;
                 } else {
