@@ -133,9 +133,9 @@ function isValidPhoneNumber(phoneNumber) {
 }
 
 async function validateCurrentElement(element) {
-    console.log('Validating element:', element);
     const inputEls = element.querySelectorAll('input, select, textarea');
     let isValid = true;
+
     for (const inputEl of inputEls) {
         if (inputEl.hasAttribute('required') && !inputEl.readOnly) {
             if (inputEl.value.trim() === '') {
@@ -148,10 +148,18 @@ async function validateCurrentElement(element) {
                 contactId = await getContactId(inputEl.value);
             }
         }
+
+        // Custom validation for interest_topics
+        if (inputEl.id === 'interest_topics') {
+            const selectedOptions = inputEl.selectedOptions;
+            if (selectedOptions.length === 0) {
+                alert('Please select at least one topic.');
+                isValid = false;
+            }
+        }
     }
 
     element.answered = isValid;
-    console.log('Element is valid:', isValid);
     return isValid;
 }
 
