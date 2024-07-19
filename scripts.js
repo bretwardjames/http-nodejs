@@ -1,6 +1,5 @@
 console.log('Form JavaScript executed');
 let contactId
-let nextButtonText = 'Next';
 async function getContactId(email) {
     if (contactId) return contactId
     const data = {
@@ -95,9 +94,8 @@ function showQuestion(index, firstTime = false) {
             }
         }
     });
-    nextButtonText = index === formElements.length - 1 ? 'Submit' : 'Next';
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    document.getElementById('nextButton').textContent = nextButtonText;
+    document.getElementById('nextButton').textContent = index === formElements.length - 1 ? 'Submit' : 'Next';
     document.getElementById('nextButton').type = index === formElements.length - 1 ? 'submit' : 'button';
     updateProgressBar(firstTime);
 }
@@ -114,7 +112,7 @@ function getNextIndex(currentElement) {
         nextIndex++;
     }
 
-    if (nextButtonText === 'Submit') {
+    if (nextIndex >= formState.length) {
         return 'submit';
     }
     console.log('Next index:', nextIndex);
@@ -281,7 +279,7 @@ function handleSubmit() {
     let redirectUrl = 'https://davidbayercoaching.com/ss-survey-results'; // Default thank you page
     // Add your logic to set redirectUrl based on answers here
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
-    window.location.href = `${redirectUrl}?${urlParams.toString()}`;
+    // window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
 
 async function handleNextButton() {
