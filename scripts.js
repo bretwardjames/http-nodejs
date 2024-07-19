@@ -48,22 +48,25 @@ const routingLogic = {
     },
 }
 const formElements = Array.from(document.querySelectorAll('.infusion-field'))
+console.log('Form Elements: ', formElements)
 let formState = formElements.map(el => ({ element: el, isActive: false }));
+console.log('Form State: ', formState)
 let currentElementIndex = 0;
 let navigationHistory = [];
-console.log(formElements);
 function checkConditions(currentElement) {
+    console.log('Checking conditions for element:', currentElement);
     const inputEls = currentElement.querySelectorAll('input, select, textarea');
     let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
     let selectedValue = inputEls[0].value;
-
+    console.log('Selected Value: ', selectedValue, 'Routing Logic: ', routingLogic)
     if (elementName && routingLogic[elementName]) {
         const conditions = routingLogic[elementName].answers[selectedValue];
-
+        console.log('Conditions: ', conditions)
         if (conditions && conditions.activate) {
             conditions.activate.forEach(id => {
                 const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
                 if (elIndex !== -1) {
+                    console.log('Activating element:', id);
                     formState[elIndex].isActive = true;
                 }
             });
@@ -72,6 +75,7 @@ function checkConditions(currentElement) {
 }
 
 function showQuestion(index, firstTime = false) {
+    console.log('Showing question:', index);
     formElements.forEach((el, i) => {
         const inputEl = el.querySelector('input, select, textarea');
         if (i === index) {
@@ -97,6 +101,7 @@ function encodeCurlyApostrophe(str) {
 }
 
 function getNextIndex(currentElement) {
+    console.log('Getting next index for element:', currentElement);
     let nextIndex = currentElementIndex + 1;
 
     while (nextIndex < formState.length && !formState[nextIndex].isActive) {
@@ -106,13 +111,15 @@ function getNextIndex(currentElement) {
     if (nextIndex >= formState.length) {
         return 'submit';
     }
-
+    console.log('Next index:', nextIndex);
     return nextIndex;
 }
 
 function handleBackButton() {
+    console.log('Handling back button');
     if (navigationHistory.length > 0) {
         currentElementIndex = navigationHistory.pop();
+        console.log('Navigating back to:', currentElementIndex);
         showQuestion(currentElementIndex);
     }
 }
@@ -122,9 +129,9 @@ function isValidPhoneNumber(phoneNumber) {
 }
 
 async function validateCurrentElement(element) {
+    console.log('Validating element:', element);
     const inputEls = element.querySelectorAll('input, select, textarea');
     let isValid = true;
-
     for (const inputEl of inputEls) {
         if (inputEl.hasAttribute('required') && !inputEl.readOnly) {
             if (inputEl.value.trim() === '') {
@@ -140,6 +147,7 @@ async function validateCurrentElement(element) {
     }
 
     element.answered = isValid;
+    console.log('Element is valid:', isValid);
     return isValid;
 }
 
@@ -148,27 +156,38 @@ function roundToZeroOrWhole(number) {
 }
 
 function updateProgressBar(first = false) {
+    console.log('Updating progress bar');
     const visibleElements = formState.filter(el => el.isActive);
+    console.log('Visible elements:', visibleElements);
     const answeredElements = formElements.filter(el => el.answered);
+    console.log('Answered elements:', answeredElements);
     const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
+    console.log('Current index:', currentIndex);
     if (currentIndex === -1) {
         return;
     }
     const totalQuestions = visibleElements.length + answeredElements.length;
+    console.log('Total questions:', totalQuestions);
     const progress = first ? 1 : ((answeredElements.length) / totalQuestions) * 100;
+    console.log('Progress:', progress);
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progress');
     progressBar.style.width = `${progress}%`;
     progressPercent.innerText = `${roundToZeroOrWhole(progress)}%`;
     progressBar.setAttribute('aria-valuenow', progress);
+    console.log('Progress bar updated');
 }
 
 function applyPrefillAndSkip() {
+    console.log('Applying prefill and skip logic');
     const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL Params:', urlParams);
     if (urlParams.has('ContactId')) {
         contactId = urlParams.get('ContactId');
+        console.log('Found Contact ID:', contactId);
     }
     const skipPrequal = urlParams.get('skipPrequal') === 'true';
+    console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
 
     formElements.forEach((el, index) => {
@@ -192,27 +211,33 @@ function applyPrefillAndSkip() {
         }
 
         if (skipPrequal) {
+            console.log('Skipping prequal question and activating business questions');
             const prequalQuestions = ['business_type', 'areas_for_support', 'ft_pt', 'income_goal', 'household_income', 'resources_to_invest', 'other_programs', 'comitment_level', 'urgency'];
             prequalQuestions.forEach(id => {
                 const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
                 if (elIndex !== -1) {
+                    console.log('Activating element:', formState[elIndex]);
                     formState[elIndex].isActive = true;
                 }
             });
         } else {
-            formState[index].isActive = elementName === 'contact-info';
+            console.log('Not skipping prequal question');
+            formState[index].isActive = (elementName === 'contact-info' || elementName === 'entrepreneur_or_no');
         }
     });
 
     if (allDetailsProvided) {
+        console.log('All details provided, skipping contact-info');
         currentElementIndex = 2; // Start with the first question after contact-info
     }
-
+    console.log('Showing question at index: ', currentElementIndex);
     showQuestion(currentElementIndex, true);
 }
 
 function handleSubmit() {
+    console.log('Handling form submission');
     const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL Params:', urlParams);
     let soSkip = false;
     formElements.forEach(el => {
         const inputEl = el.querySelector('input, select, textarea');
@@ -243,14 +268,18 @@ function handleSubmit() {
 }
 
 async function handleNextButton() {
+    console.log('Handling next button');
     const currentElement = formElements[currentElementIndex];
+    console.log('Current element:', currentElement);
     const valid = await validateCurrentElement(currentElement);
+    console.log('Element is valid:', valid);
     if (!valid) {
         alert('Please fill in the required fields.');
         return;
     }
 
     const fields = currentElement.querySelectorAll('input[name], textarea[name], select[name]');
+    console.log('Fields:', fields);
     const emailInvalid = Array.from(fields).some(field => {
         if (field.name.toLowerCase().includes('email')) {
             const email = field.value;
@@ -263,21 +292,26 @@ async function handleNextButton() {
         return false;
     });
     if (emailInvalid) {
+        console.log('Email is invalid');
         return;
     }
 
     // Check conditions and update the state based on the current element
+    console.log('Checking conditions for element:', currentElement);
     checkConditions(currentElement);
 
     // Get the next active index
     const nextIndex = getNextIndex(currentElement);
+    console.log('Next index:', nextIndex);
     if (nextIndex === 'submit') {
+        console.log('Submitting form');
         handleSubmit();
     } else {
         if (navigationHistory[navigationHistory.length - 1] !== currentElementIndex) {
             navigationHistory.push(currentElementIndex);
         }
         currentElementIndex = nextIndex;
+        console.log('Navigating to:', currentElementIndex);
         showQuestion(currentElementIndex);
         console.log(formElements, currentElementIndex, nextIndex);
         if (window.innerWidth <= 768) {
