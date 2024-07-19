@@ -227,6 +227,7 @@ function applyPrefillAndSkip() {
                 const paramName = inputEl.name;
                 if (urlParams.has(paramName) && urlParams.get(paramName).trim() !== "") {
                     let value = urlParams.get(paramName);
+                    let readOnly = true;
                     if (paramName === 'inf_field_Phone1') {
                         const validatedPhone = validatePhone(value.replace(/\D/g, ''));
                         if (validatedPhone.valid) {
@@ -234,10 +235,11 @@ function applyPrefillAndSkip() {
                         } else {
                             alert('Please enter a valid phone number with 7 to 15 digits.');
                             allDetailsProvided = false;
+                            readOnly = false;
                         }
                     }
                     inputEl.value = value;
-                    inputEl.readOnly = true;
+                    inputEl.readOnly = readOnly;
                 } else {
                     allDetailsProvided = false;
                 }
