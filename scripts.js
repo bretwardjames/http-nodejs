@@ -228,7 +228,13 @@ function applyPrefillAndSkip() {
                 if (urlParams.has(paramName) && urlParams.get(paramName).trim() !== "") {
                     let value = urlParams.get(paramName);
                     if (paramName === 'inf_field_Phone1') {
-                        value = value.replace(/\D/g, ''); // Strip out non-numeric characters
+                        const validatedPhone = validatePhone(value.replace(/\D/g, ''));
+                        if (validatedPhone.valid) {
+                            value = validatedPhone.local_format;
+                        } else {
+                            alert('Please enter a valid phone number with 7 to 15 digits.');
+                            allDetailsProvided = false;
+                        }
                     }
                     inputEl.value = value;
                     inputEl.readOnly = true;
