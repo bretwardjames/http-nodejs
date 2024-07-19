@@ -143,7 +143,6 @@ async function validatePhone(phoneNumber) {
             console.log(data);
             return data;
         });
-    return /^\d{7,15}$/.test(phoneNumber.trim());
 }
 
 async function validateCurrentElement(element) {
@@ -233,7 +232,6 @@ function applyPrefillAndSkip() {
                         if (validatedPhone.valid) {
                             value = validatedPhone.local_format;
                         } else {
-                            alert('Please enter a valid phone number with 7 to 15 digits.');
                             allDetailsProvided = false;
                             readOnly = false;
                         }

@@ -71,7 +71,7 @@ app.get('/embedForm.js', (req, res) => {
 
 // Middleware to handle API requests
 app.post('/proxy', async (req, res) => {
-  const { apiName, endpoint, method, data, headers } = req.body;
+  let { apiName, endpoint, method, data, headers } = req.body;
 
   if (!apiName || !endpoint || !method) {
     return res.status(400).send('Missing required parameters: apiName, endpoint, method');
@@ -85,7 +85,7 @@ app.post('/proxy', async (req, res) => {
   if (apiName === 'KEAP') {
     authHeader = { 'X-KEAP-API-KEY': `${apiKey}` }
   } else if (apiName === 'NUMVERIFY') {
-    endpoint = `${endpoint}&access_key=${apiKey}`
+    endpoint += `&access_key=${apiKey}`
   } else {
     authHeader = { 'Authorization': `Bearer ${apiKey}` }
   }
