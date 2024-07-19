@@ -217,7 +217,8 @@ async function applyPrefillAndSkip() {
     console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
 
-    for (let el of formElements) {
+    for (let index = 0; index < formElements.length; index++) {
+        const el = formElements[index];
         const inputEls = el.querySelectorAll('input, select, textarea');
         const elementName = el.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
 
@@ -258,7 +259,7 @@ async function applyPrefillAndSkip() {
             console.log('Not skipping prequal question');
             if (elementName === 'contact-info' || elementName === 'entrepreneur_or_no') {
                 console.log('Activating element:', elementName);
-                formState[elIndex].isActive = true;
+                formState[index].isActive = true;
             }
         }
     }
