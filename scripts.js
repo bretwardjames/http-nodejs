@@ -112,7 +112,7 @@ function getNextIndex(currentElement) {
         nextIndex++;
     }
 
-    if (nextIndex > formState.length) {
+    if (nextIndex >= formState.length) {
         return 'submit';
     }
     console.log('Next index:', nextIndex);
