@@ -595,6 +595,7 @@
     }
     function updateProgressBar(first = false) {
         const visibleElements = formElements.filter(el => el.isActive);
+        console.log('Visible elements:', visibleElements, formElements[currentElementIndex]);
         const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
         if (currentIndex === -1) {
             return;
