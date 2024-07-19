@@ -106,3 +106,7 @@
     gap: 10px;
     /* Adjust the gap between buttons */
 }
+
+.form-control lg {
+    margin-top: 10px;
+}
