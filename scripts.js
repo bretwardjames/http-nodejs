@@ -205,7 +205,7 @@ function updateProgressBar(first = false) {
     console.log('Progress bar updated');
 }
 
-function applyPrefillAndSkip() {
+async function applyPrefillAndSkip() {
     console.log('Applying prefill and skip logic');
     const urlParams = new URLSearchParams(window.location.search);
     console.log('URL Params:', urlParams);
@@ -228,7 +228,7 @@ function applyPrefillAndSkip() {
                     let value = urlParams.get(paramName);
                     let readOnly = true;
                     if (paramName === 'inf_field_Phone1') {
-                        const validatedPhone = validatePhone(value.replace(/\D/g, ''));
+                        const validatedPhone = awaitvalidatePhone(value.replace(/\D/g, ''));
                         if (validatedPhone.valid) {
                             value = validatedPhone.local_format;
                         } else {
@@ -543,6 +543,6 @@ selects.forEach(select => {
     parentDiv.appendChild(buttonContainer);
 });
 
-applyPrefillAndSkip();
+await applyPrefillAndSkip();
 
 console.log('Made it to the end of the script');
