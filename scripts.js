@@ -338,57 +338,6 @@ async function handleNextButton() {
 document.getElementById('nextButton').addEventListener('click', handleNextButton);
 document.getElementById('backButton').addEventListener('click', handleBackButton);
 
-const interestOptions = [
-    { display: "How to make more money", value: "How to make more money" },
-    { display: "Relationships", value: "Relationships" },
-    { display: "Health", value: "Health" },
-    { display: "Spirituality", value: "Spirituality" },
-    { display: "Learning how to facilitate David's frameworks for others", value: "Learning how to facilitate David's frameworks for others" },
-    { display: "Parenting", value: "Parenting" },
-    { display: "Entrepreneurship/Starting a business", value: "Entrepreneurship/Starting a business" },
-    { display: "Attending David's live events", value: "Attending David's live events" }
-];
-
-
-const interestSelectedOptions = new Set();
-const interestButtonContainer = document.getElementById('button-container');
-const interestHiddenSelect = document.getElementById('interest_topics');
-
-interestOptions.forEach(option => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'btn btn-outline-primary m-2';
-    button.textContent = option.display;
-    button.style.width = '100%';
-    button.style.whiteSpace = 'normal';
-    const isSelected = Array.from(interestHiddenSelect.options).some(opt => opt.value === option.value && opt.selected);
-    if (isSelected) {
-        interestSelectedOptions.add(option.value);
-        button.classList.remove('btn-outline-primary');
-        button.classList.add('btn-primary');
-    }
-    button.addEventListener('click', function () {
-        if (interestSelectedOptions.has(option.value)) {
-            interestSelectedOptions.delete(option.value);
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-outline-primary');
-        } else {
-            interestSelectedOptions.add(option.value);
-            button.classList.remove('btn-outline-primary');
-            button.classList.add('btn-primary');
-        }
-        updateInterestHiddenInput();
-    });
-    interestButtonContainer.appendChild(button);
-});
-
-function updateInterestHiddenInput() {
-    const options = interestHiddenSelect.options;
-    for (let i = 0; i < options.length; i++) {
-        options[i].selected = interestSelectedOptions.has(options[i].value);
-    }
-}
-
 document.querySelectorAll('.checkbox-button').forEach(button => {
     button.addEventListener('click', function () {
         const checkbox = this.querySelector('input[type="checkbox"]');
