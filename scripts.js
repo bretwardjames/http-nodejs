@@ -388,10 +388,11 @@ function handleSubmit() {
 async function handleNextButton() {
     const currentElement = formElements[currentElementIndex];
     const valid = await validateCurrentElement(currentElement);
-    if (!validateCurrentElement(currentElement)) {
+    if (!valid) {
         alert('Please fill in the required fields.');
         return;
     }
+
     const fields = currentElement.querySelectorAll('input[name], textarea[name], select[name]');
     const emailInvalid = Array.from(fields).some(field => {
         if (field.name.toLowerCase().includes('email')) {
@@ -407,14 +408,31 @@ async function handleNextButton() {
     if (emailInvalid) {
         return;
     }
-    if (formElements[currentElementIndex].id === 'entrepreneur_or_no' && formElements[currentElementIndex].querySelector('input').value === "I’m not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.") {
-        const toSkip = ['how_long_in_business', 'biggest_challenge', 'monthly_rev'];
-        formElements.forEach(el => {
-            if (toSkip.includes(el.id)) {
-                el.isActive = false;
-            }
-        })
+
+    // Check the value of entrepreneur_or_no and skip specific questions
+    const entrepreneurElement = formElements.find(el => el.id === 'entrepreneur_or_no');
+    if (entrepreneurElement) {
+        let selectedValue;
+        const selectElement = entrepreneurElement.querySelector('select');
+        const inputElement = entrepreneurElement.querySelector('input');
+
+        if (selectElement) {
+            selectedValue = selectElement.value;
+        } else if (inputElement) {
+            selectedValue = inputElement.value;
+        }
+
+        if (selectedValue === "I’m not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.") {
+            const toSkip = ['how_long_in_business', 'biggest_challenge', 'monthly_rev'];
+            formElements.forEach(el => {
+                const innerElement = el.querySelector('select, input, textarea');
+                if (innerElement && toSkip.includes(innerElement.id)) {
+                    el.isActive = false;
+                }
+            });
+        }
     }
+
     const nextIndex = getNextIndex(currentElement);
     if (nextIndex === 'submit') {
         handleSubmit();
@@ -424,7 +442,7 @@ async function handleNextButton() {
         }
         currentElementIndex = nextIndex;
         showQuestion(currentElementIndex);
-        console.log(formElements, currentElementIndex, nextIndex)
+        console.log(formElements, currentElementIndex, nextIndex);
         if (window.innerWidth <= 768) {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
