@@ -157,7 +157,7 @@ function roundToZeroOrWhole(number) {
 
 function updateProgressBar(first = false) {
     console.log('Updating progress bar');
-    const visibleElements = formState.filter(el => el.isActive);
+    const visibleElements = formState.filter(el => el.isActive).map(el => el.element);
     console.log('Visible elements:', visibleElements);
     const answeredElements = formElements.filter(el => el.answered);
     console.log('Answered elements:', answeredElements);
