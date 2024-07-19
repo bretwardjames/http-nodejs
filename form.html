@@ -532,7 +532,7 @@
         document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
         document.getElementById('nextButton').textContent = index === formElements.length - 1 ? 'Submit' : 'Next';
         document.getElementById('nextButton').type = index === formElements.length - 1 ? 'submit' : 'button';
-        updateProgressBar(first = firstTime);
+        updateProgressBar(firstTime);
     }
     function encodeCurlyApostrophe(str) {
         return str // str.replace(/'/g, '&rsquo;');
@@ -541,13 +541,15 @@
         const inputEl = currentElement.querySelector('input, select, textarea');
         const elementName = inputEl ? inputEl.name : null;
         let nextIndex = elementName ? routingLogic[elementName].default : 'submit';
-        console.log(routingLogic[elementName])
+        console.log(`Current element: ${elementName}, Next index: ${nextIndex}`);
+
         if (elementName && routingLogic[elementName].answers) {
             const encodedValue = encodeCurlyApostrophe(inputEl.value);
             if (routingLogic[elementName].answers[encodedValue]) {
                 nextIndex = routingLogic[elementName].answers[encodedValue];
             }
         }
+
         formElements.forEach((el, index) => {
             if (!el.isActive || (index >= currentElementIndex && index < nextIndex) || el.classList?.contains('noshow')) {
                 el.isActive = false;
@@ -555,9 +557,12 @@
                 el.isActive = true;
             }
         });
+
         while (nextIndex !== 'submit' && !formElements[nextIndex].isActive) {
             nextIndex = getNextIndex(formElements[nextIndex]);
         }
+
+        console.log(`Next index after adjustment: ${nextIndex}`);
         return nextIndex;
     }
     function handleBackButton() {
@@ -576,7 +581,7 @@
                 alert('Please enter a valid phone number with 7 to 15 digits.');
                 return false;
             } else if (inputEl.type === 'email' && !contactId) {
-                contactId = await getContactId(inputEl.value)
+                contactId = await getContactId(inputEl.value);
             }
         }
         return true;
@@ -821,6 +826,8 @@
         select.style.display = 'none';
         parentDiv.appendChild(buttonContainer);
     });
-    applyPrefillAndSkip();
+    document.addEventListener('DOMContentLoaded', function () {
+        applyPrefillAndSkip();
+    });
     console.log('Made it to the end of the script');
 </script>
