@@ -319,14 +319,21 @@ function applyPrefillAndSkip() {
             });
         }
 
-        if (skipPrequal && elementName === 'entrepreneur_or_no') {
-            el.isActive = false;
-            return;
+        if (skipPrequal) {
+            const prequalQuestions = ['business_type', 'areas_for_support', 'ft_pt', 'income_goal', 'household_income', 'resources_to_invest', 'other_programs', 'comitment_level', 'urgency'];
+            prequalQuestions.forEach(id => {
+                const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
+                if (elIndex !== -1) {
+                    formState[elIndex].isActive = true;
+                }
+            });
+        } else {
+            formState[index].isActive = elementName === 'contact-info';
         }
     });
 
     if (allDetailsProvided) {
-        currentElementIndex = 2;
+        currentElementIndex = 2; // Start with the first question after contact-info
     }
 
     showQuestion(currentElementIndex, firstTime = true);
