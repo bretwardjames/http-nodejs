@@ -30,86 +30,6 @@ async function getContactId(email) {
         return null;
     }
 }
-// const routingLogic = {
-//"inf_field_FirstName": {
-//    "default": 1,
-//    "prefillFromUrl": true,
-//    "prefillParams": [
-//        "inf_field_FirstName"
-//    ]
-//},
-//"inf_field_LastName": {
-//    "default": 2,
-//    "prefillFromUrl": true,
-//    "prefillParams": [
-//        "inf_field_LastName"
-//    ]
-//},
-//"inf_field_Email": {
-//    "default": 3,
-//    "prefillFromUrl": true,
-//    "prefillParams": [
-//        "inf_field_Email"
-//    ]
-//},
-//"inf_field_Phone1": {
-//    "default": 4,
-//    "prefillFromUrl": true,
-//    "prefillParams": [
-//        "inf_field_Phone1"
-//    ]
-//}, 
-//     "contact-info": {
-//         "default": 1,
-//         "prefillFromUrl": true,
-//         "prefillParams": ["inf_field_FirstName", "inf_field_Email", "inf_field_Phone1"]
-//     },
-//     "entrepreneur_or_no": {
-//         "default": 2,
-//         "answers": { // Next question
-//             "I'm not a business owner and am not actively wanting to start one at this time.": 13,
-//         }
-//     },
-//     "business_type": {
-//         "default": 3
-//     },
-//     "how_long_in_business": {
-//         "default": 3,
-//     },
-//     "areas_for_support": {
-//         "default": 4
-//     },
-//     "biggest_challenge": {
-//         "default": 5
-//     },
-//     "ft_pt": {
-//         "default": 6
-//     },
-//     "monthly_rev": {
-//         "default": 7
-//     },
-//     "income_goal": {
-//         "default": 8
-//     },
-//     "household_income": {
-//         "default": 9
-//     },
-//     "resources_to_invest": {
-//         "default": 10
-//     },
-//     "other_programs": {
-//         "default": 11
-//     },
-//     "comitment_level": {
-//         "default": "submit"
-//     },
-//     "urgency": {
-//         "default": 12
-//     },
-//     "interest_topics": {
-//         "default": 'submit' // or the appropriate next question index after interest topics
-//     },
-// };
 const routingLogic = {
     "entrepreneur_or_no": {
         "answers": {
@@ -128,15 +48,10 @@ const routingLogic = {
     },
 }
 const formElements = Array.from(document.querySelectorAll('.infusion-field'))
-let formState = formElements.forEach(el => { el.isActive = false });
+let formState = formElements.map(el => ({ element: el, isActive: false }));
 let currentElementIndex = 0;
 let navigationHistory = [];
-// formElements.forEach(el => {
-//     el.isActive = true
-//     if (el.classList?.contains('noshow')) {
-//         el.isActive = false
-//     }
-// });
+
 function checkConditions(currentElement) {
     const inputEls = currentElement.querySelectorAll('input, select, textarea');
     let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
@@ -145,27 +60,22 @@ function checkConditions(currentElement) {
     if (elementName && routingLogic[elementName]) {
         const conditions = routingLogic[elementName].answers[selectedValue];
 
-        if (conditions) {
-            if (conditions.activate) {
-                conditions.activate.forEach(id => {
-                    const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
-                    if (elIndex !== -1) {
-                        formState[elIndex].isActive = true;
-                    }
-                });
-            }
+        if (conditions && conditions.activate) {
+            conditions.activate.forEach(id => {
+                const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
+                if (elIndex !== -1) {
+                    formState[elIndex].isActive = true;
+                }
+            });
         }
     }
 }
+
 function showQuestion(index, firstTime = false) {
-    console.log(formElements, index)
     formElements.forEach((el, i) => {
         const inputEl = el.querySelector('input, select, textarea');
-        console.log(`Element ${i} is active: ${el.isActive}`);
         if (i === index) {
-            console.log(`Showing element ${i}`);
             el.style.display = '';
-            console.log(el)
             if (inputEl) {
                 inputEl.setAttribute('required', 'required');
             }
@@ -181,9 +91,11 @@ function showQuestion(index, firstTime = false) {
     document.getElementById('nextButton').type = index === formElements.length - 1 ? 'submit' : 'button';
     updateProgressBar(firstTime);
 }
+
 function encodeCurlyApostrophe(str) {
     return str // str.replace(/'/g, '&rsquo;');
 }
+
 function getNextIndex(currentElement) {
     let nextIndex = currentElementIndex + 1;
 
@@ -197,34 +109,7 @@ function getNextIndex(currentElement) {
 
     return nextIndex;
 }
-//function getNextIndex(currentElement) {
-//    const inputEl = currentElement.querySelector('input, select, textarea');
-//    const elementName = inputEl ? inputEl.name : null;
-//    let nextIndex = elementName ? routingLogic[elementName].default : 'submit';
-//    console.log(`Current element: ${elementName}, Next index: ${nextIndex}`);
 
-//    if (elementName && routingLogic[elementName].answers) {
-//        const encodedValue = encodeCurlyApostrophe(inputEl.value);
-//        if (routingLogic[elementName].answers[encodedValue]) {
-//            nextIndex = routingLogic[elementName].answers[encodedValue];
-//        }
-//    }
-
-//    formElements.forEach((el, index) => {
-//        if (!el.isActive || (index >= currentElementIndex && index < nextIndex) || el.classList?.contains('noshow')) {
-//            el.isActive = false;
-//        } else {
-//            el.isActive = true;
-//        }
-//    });
-
-//    while (nextIndex !== 'submit' && !formElements[nextIndex].isActive) {
-//        nextIndex = getNextIndex(formElements[nextIndex]);
-//    }
-
-//    console.log(`Next index after adjustment: ${nextIndex}`);
-//    return nextIndex;
-//}
 function handleBackButton() {
     if (navigationHistory.length > 0) {
         currentElementIndex = navigationHistory.pop();
@@ -235,6 +120,7 @@ function handleBackButton() {
 function isValidPhoneNumber(phoneNumber) {
     return /^\d{7,15}$/.test(phoneNumber.trim());
 }
+
 async function validateCurrentElement(element) {
     const inputEls = element.querySelectorAll('input, select, textarea');
     let isValid = true;
@@ -256,25 +142,11 @@ async function validateCurrentElement(element) {
     element.answered = isValid;
     return isValid;
 }
-//async function validateCurrentElement(element) {
-//    const inputEl = element.querySelector('input, select, textarea');
-//    if (inputEl && inputEl.hasAttribute('required')) {
-//        if (inputEl.value.trim() === '') {
-//            return false;
-//        }
-//        if (inputEl.type === 'tel' && !/^\d{7,15}$/.test(inputEl.value.trim())) {
-//            alert('Please enter a valid phone number with 7 to 15 digits.');
-//            return false;
-//        } else if (inputEl.type === 'email' && !contactId) {
-//            contactId = await getContactId(inputEl.value);
-//        }
-//    }
-//    element.answered = true;
-//    return true;
-//}
+
 function roundToZeroOrWhole(number) {
     return number <= 3 ? 0 : Math.floor(number);
 }
+
 function updateProgressBar(first = false) {
     const visibleElements = formElements.filter(el => el.isActive);
     const answeredElements = formElements.filter(el => el.answered);
@@ -284,13 +156,13 @@ function updateProgressBar(first = false) {
     }
     const totalQuestions = visibleElements.length + answeredElements.length;
     const progress = first ? 1 : ((answeredElements.length) / totalQuestions) * 100;
-    console.log('Visible elements:', visibleElements, 'Current index:', currentIndex, 'Total questions:', totalQuestions, 'Progress:', progress);
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progress');
     progressBar.style.width = `${progress}%`;
     progressPercent.innerText = `${roundToZeroOrWhole(progress)}%`;
     progressBar.setAttribute('aria-valuenow', progress);
 }
+
 function applyPrefillAndSkip() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('ContactId')) {
@@ -336,61 +208,22 @@ function applyPrefillAndSkip() {
         currentElementIndex = 2; // Start with the first question after contact-info
     }
 
-    showQuestion(currentElementIndex, firstTime = true);
+    showQuestion(currentElementIndex, true);
 }
 
-//function applyPrefillAndSkip() {
-//    const urlParams = new URLSearchParams(window.location.search);
-//    if (urlParams.has('ContactId')) {
-//        contactId = urlParams.get('ContactId');
-//    }
-//    const skipPrequal = urlParams.get('skipPrequal') === 'true';
-//    formElements.forEach((el, index) => {
-//        const inputEl = el.querySelector('input, select, textarea');
-//        const elementName = inputEl ? inputEl.name : null;
-//        if (skipPrequal && elementName === 'entrepreneur_or_no') {
-//            el.isActive = false;
-//            return;
-//        }
-//        if (inputEl) {
-//            if (routingLogic[elementName] && routingLogic[elementName].prefillParams) {
-//                const prefillParams = routingLogic[elementName].prefillParams;
-//                for (let param of prefillParams) {
-//                    if (urlParams.has(param) && urlParams.get(param).trim() !== "") {
-//                        let value = urlParams.get(param);
-//                        if (elementName === 'inf_field_Phone1') {
-//                            value = value.replace(/\D/g, ''); // Strip out non-numeric characters
-//                        }
-//                        inputEl.value = value;
-//                        const nextIndex = getNextIndex(el);
-//                        if (nextIndex !== 'submit') {
-//                            el.isActive = false;
-//                            el.style.display = 'none';
-//                            currentElementIndex = nextIndex;
-//                        }
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//    });
-//    currentElementIndex = formElements[currentElementIndex].isActive ? currentElementIndex : currentElementIndex + 1;
-//    console.log(currentElementIndex)
-//    showQuestion(currentElementIndex, firstTime = true);
-//}
 function handleSubmit() {
     const urlParams = new URLSearchParams(window.location.search);
-    let soSkip = false
+    let soSkip = false;
     formElements.forEach(el => {
         const inputEl = el.querySelector('input, select, textarea');
-        let name = inputEl.name
+        let name = inputEl.name;
         if (inputEl.name === 'inf_field_FirstName') {
-            name = 'Name'
+            name = 'Name';
         } else if (inputEl.name === 'inf_field_Email') {
-            name = 'Email'
-            soSkip = true
+            name = 'Email';
+            soSkip = true;
         } else if (inputEl.name === 'inf_field_Phone1') {
-            name = 'Phone'
+            name = 'Phone';
         }
         if (inputEl && inputEl.value) {
             const encodedValue = inputEl.value.replace(/\+/g, '%20');
@@ -408,6 +241,7 @@ function handleSubmit() {
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
+
 async function handleNextButton() {
     const currentElement = formElements[currentElementIndex];
     const valid = await validateCurrentElement(currentElement);
@@ -444,15 +278,17 @@ async function handleNextButton() {
             navigationHistory.push(currentElementIndex);
         }
         currentElementIndex = nextIndex;
-        showNextQuestion();
+        showQuestion(currentElementIndex);
         console.log(formElements, currentElementIndex, nextIndex);
         if (window.innerWidth <= 768) {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
 }
+
 document.getElementById('nextButton').addEventListener('click', handleNextButton);
 document.getElementById('backButton').addEventListener('click', handleBackButton);
+
 document.querySelectorAll('.checkbox-button').forEach(button => {
     button.addEventListener('click', function () {
         const checkbox = this.querySelector('input[type="checkbox"]');
@@ -460,6 +296,7 @@ document.querySelectorAll('.checkbox-button').forEach(button => {
         this.classList.toggle('checked', checkbox.checked);
     });
 });
+
 const options = [
     { display: "Creating powerful differentiated messaging.", value: "Creating powerful differentiated messaging." },
     { display: "Putting together the details of an irresistible offer(s)", value: "Putting together the details of an irresistible offer(s)" },
@@ -471,6 +308,7 @@ const options = [
     { display: "Further developing my enrollment skills", value: "Further developing my enrollment skills" },
     { display: "Knowing what strategy to focus on now or next", value: "Knowing what strategy to focus on now or next" }
 ];
+
 const selectedOptions = new Set();
 const buttonContainer = document.getElementById('button-container');
 const hiddenSelect = document.getElementById('areas_for_support');
@@ -501,6 +339,7 @@ options.forEach(option => {
     });
     buttonContainer.appendChild(button);
 });
+
 function updateHiddenInput() {
     const options = hiddenSelect.options;
     for (let i = 0; i < options.length; i++) {
@@ -511,6 +350,7 @@ function updateHiddenInput() {
         }
     }
 }
+
 document.querySelectorAll('#button-container-describesyou .btn').forEach(button => {
     button.addEventListener('click', function () {
         document.querySelectorAll('#button-container-describesyou .btn').forEach(btn => btn.classList.remove('btn-primary'));
@@ -518,6 +358,7 @@ document.querySelectorAll('#button-container-describesyou .btn').forEach(button 
         document.getElementById('entrepreneur_or_no').value = button.getAttribute('data-value');
     });
 });
+
 const selects = document.querySelectorAll('select.form-control');
 selects.forEach(select => {
     const parentDiv = select.parentElement;
@@ -569,6 +410,7 @@ selects.forEach(select => {
     select.style.display = 'none';
     parentDiv.appendChild(buttonContainer);
 });
+
 applyPrefillAndSkip();
 
 console.log('Made it to the end of the script');
