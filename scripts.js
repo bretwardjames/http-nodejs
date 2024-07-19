@@ -331,8 +331,14 @@ async function handleNextButton() {
     }
 }
 
-document.getElementById('nextButton').addEventListener('click', handleNextButton);
-document.getElementById('backButton').addEventListener('click', handleBackButton);
+document.getElementById('nextButton').addEventListener('click', function (event) {
+    event.preventDefault();
+    handleNextButton();
+});
+document.getElementById('backButton').addEventListener('click', function (event) {
+    event.preventDefault();
+    handleBackButton();
+});
 
 document.querySelectorAll('.checkbox-button').forEach(button => {
     button.addEventListener('click', function () {
