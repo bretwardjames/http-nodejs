@@ -520,7 +520,9 @@
             const inputEl = el.querySelector('input, select, textarea');
             console.log(`Element ${i} is active: ${el.isActive}`);
             if (i === index) {
+                console.log(`Showing element ${i}`);
                 el.style.display = '';
+                console.log(el)
                 if (inputEl) {
                     inputEl.setAttribute('required', 'required');
                 }
