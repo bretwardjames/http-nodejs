@@ -185,23 +185,14 @@ function encodeCurlyApostrophe(str) {
     return str // str.replace(/'/g, '&rsquo;');
 }
 function getNextIndex(currentElement) {
-    const inputEls = currentElement.querySelectorAll('input, select, textarea');
-    let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
-    let nextIndex = elementName ? (routingLogic[elementName].default || 'submit') : 'submit';
+    let nextIndex = currentElementIndex + 1;
 
-    if (elementName && routingLogic[elementName].answers) {
-        const encodedValue = encodeCurlyApostrophe(inputEls[0].value);
-        if (routingLogic[elementName].answers[encodedValue]) {
-            nextIndex = routingLogic[elementName].answers[encodedValue].next || nextIndex;
-        }
+    while (nextIndex < formState.length && !formState[nextIndex].isActive) {
+        nextIndex++;
     }
 
-    while (nextIndex !== 'submit' && !formState[nextIndex].isActive) {
-        nextIndex++;
-        if (nextIndex >= formState.length) {
-            nextIndex = 'submit';
-            break;
-        }
+    if (nextIndex >= formState.length) {
+        return 'submit';
     }
 
     return nextIndex;
