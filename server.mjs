@@ -199,7 +199,7 @@ async function checkAndUpdateSheet(data) {
   if (data.uuid) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row.uuid === data.uuid) {
+      if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
         matchingRow = row;
         matchingRowIndex = i;
         break;
@@ -211,7 +211,7 @@ async function checkAndUpdateSheet(data) {
   if (!matchingRow) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.ipAddress === data.ip || row.phone === data.phone) {
+      if ((row.email?.toLowerCase() === data.email?.toLowerCase() || row.ipAddress === data.ip || row.phone === data.phone) && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
         matchingRow = row;
         matchingRowIndex = i;
         break;

@@ -1,4 +1,7 @@
+import { set } from "mongoose";
+
 console.log('Form JavaScript executed');
+const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
     try {
         const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', { // Update to your server URL
@@ -118,8 +121,9 @@ function showQuestion(index, firstTime = false) {
     console.log('Form State:', formState);
     console.log('Updating buttons: ', index, formState.length - 1)
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    document.getElementById('nextButton').textContent = index === formState.length - 1 ? 'Submit' : 'Next';
-    document.getElementById('nextButton').type = index === formState.length - 1 ? 'submit' : 'button';
+    nextButton.textContent = index === formState.length - 1 ? 'Submit' : 'Next';
+    nextButton.type = index === formState.length - 1 ? 'submit' : 'button';
+    nextButton.disabled = false;
     updateProgressBar(firstTime);
 }
 
@@ -218,7 +222,7 @@ function updateProgressBar(first = false) {
     }
     const totalQuestions = visibleElements.length;
     console.log('Total questions:', totalQuestions);
-    const progress = first ? 1 : totalQuestions.length < 4 ? 2 : ((answeredElements.length) / totalQuestions) * 100;
+    const progress = first ? 1 : currentIndex === 1 ? 1 : ((answeredElements.length) / totalQuestions) * 100;
     console.log('Progress:', progress);
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progress');
@@ -270,6 +274,7 @@ async function applyPrefillAndSkip() {
                     data[paramName] = value;
                 } else {
                     allDetailsProvided = false;
+                    document.getElementById('contact-info').style.display = 'block';
                 }
             }
         }
@@ -326,6 +331,8 @@ async function applyPrefillAndSkip() {
         currentElementIndex = getNextIndex(currentElementIndex); // Start with the first question after contact-info
     }
     console.log('Showing question at index: ', currentElementIndex);
+    document.getElementById('loading').style.display = 'none';
+
     showQuestion(currentElementIndex, true);
 }
 
@@ -359,15 +366,17 @@ function handleSubmit() {
     });
     if (soSkip) {
         urlParams.append('soSkip', 1);
+        setItemWithExpiry('soSkip', 1, 7);
     } else {
         urlParams.append('soSkip', 0);
+        setItemWithExpiry('soSkip', 0, 7);
     }
     if (contactId) {
         urlParams.append('Id', contactId);
     }
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
     if ((urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.") || (!urlParams.get('preQualified') === 'true' && urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." ||
-        (urlParams.get('resources_to_invest') === "$500 to $2k" && urlParams.get('household_income') === 'Less than $50k'))) {
+        (urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." && (urlParams.get('household_income') === 'Less than $50k' || urlParams.get('household_income') === '$50k to $75k')) || (urlParams.get('resources_to_invest') === "$500 - $2k" && urlParams.get('household_income') === 'Less than $50k'))) {
         redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
     }
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
@@ -413,7 +422,6 @@ function getItemWithExpiry(key) {
 }
 
 async function handleNextButton() {
-    const nextButton = document.getElementById('nextButton');
     nextButton.disabled = true;
     nextButton.textContent = 'Processing...';
 
@@ -482,9 +490,6 @@ async function handleNextButton() {
         }
     } catch (error) {
         console.error('Error:', error);
-    } finally {
-        nextButton.disabled = false;
-        nextButton.textContent = 'Next';
     }
 
     // Check conditions and update the state based on the current element
@@ -511,7 +516,7 @@ async function handleNextButton() {
     }
 }
 
-document.getElementById('nextButton').addEventListener('click', function (event) {
+nextButton.addEventListener('click', function (event) {
     event.preventDefault();
     handleNextButton();
 });
