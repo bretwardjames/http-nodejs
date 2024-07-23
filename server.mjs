@@ -139,7 +139,6 @@ app.post('/validatePhone', async (req, res) => {
 
 });
 
-// Initialize the Google Sheets API client
 async function getAuth() {
   const credentials = {
     type: process.env.GOOGLE_TYPE,
@@ -187,13 +186,27 @@ async function checkAndUpdateSheet(data) {
   let matchingRow = null;
   let matchingRowIndex = -1;
 
-  // Find matching row
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.phone) {
-      matchingRow = row;
-      matchingRowIndex = i;
-      break;
+  // Find matching row by UUID first
+  if (data.uuid) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.uuid === data.uuid) {
+        matchingRow = row;
+        matchingRowIndex = i;
+        break;
+      }
+    }
+  }
+
+  // If no matching UUID, find by other fields
+  if (!matchingRow) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.ipAddress === data.ip || row.phone === data.phone) {
+        matchingRow = row;
+        matchingRowIndex = i;
+        break;
+      }
     }
   }
 
@@ -202,19 +215,15 @@ async function checkAndUpdateSheet(data) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        matchingRow[key] = data['inf_field_Email'].toLowerCase();
+        matchingRow['email'] = data[key].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
-        matchingRow[key] = data['inf_field_Phone1'];
-
+        matchingRow['phone'] = data['inf_field_Phone1'];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow[key] = data['inf_field_FirstName'];
-
+        matchingRow['firstName'] = data['inf_field_FirstName'];
       } else if (key === 'inf_field_LastName') {
-        matchingRow[key] = data['inf_field_LastName'];
-
+        matchingRow['lastName'] = data['inf_field_LastName'];
       } else {
         matchingRow[key] = data[key];
-
       }
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
@@ -226,6 +235,7 @@ async function checkAndUpdateSheet(data) {
         values: [updatedRow]
       }
     });
+    newUUID = matchingRow.uuid;
   } else {
     const newRow = headers.map(header => data[header] || '');
     newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
@@ -243,7 +253,6 @@ async function checkAndUpdateSheet(data) {
   return newUUID;
 }
 
-// Middleware to handle checking and updating the Google Sheet
 // Middleware to handle checking and updating the Google Sheet
 app.post('/check-and-update-sheet', async (req, res) => {
   try {

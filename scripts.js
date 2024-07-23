@@ -372,23 +372,28 @@ async function handleNextButton() {
         return;
     }
 
-    // Collect data for checking and updating Google Sheets
-    const emailField = Array.from(fields).find(field => field.name.toLowerCase().includes('email'));
-    const phoneField = Array.from(fields).find(field => field.name.toLowerCase().includes('phone'));
+    // Check for existing UUID in local storage
+    let uuid = localStorage.getItem('submissionUUID');
+    console.log('Form Data:', formData);
+    const data = { ...formData, uuid }; // Include the UUID in the data object
 
-    const data = {
-        email: emailField ? emailField.value : '',
-        ip: 'user-ip', // Replace with actual user IP if available
-        phone: phoneField ? phoneField.value : '',
-        uuid: localStorage.getItem('submissionUUID')
-    };
-
-    // Check and update Google Sheets after each question
-    const uuid = await checkAndUpdateContact(data);
-    console.log('UUID from server:', uuid);
-
-    // Update UUID in local storage
-    localStorage.setItem('submissionUUID', uuid);
+    // Send data to server
+    try {
+        const response = await fetch('/check-and-update-sheet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.uuid) {
+            // Store the UUID in local storage if it doesn't exist
+            localStorage.setItem('submissionUUID', result.uuid);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 
     // Check conditions and update the state based on the current element
     console.log('Checking conditions for element:', currentElement);
