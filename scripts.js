@@ -1,5 +1,3 @@
-import { set } from "mongoose";
-
 console.log('Form JavaScript executed');
 const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
