@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventYear = dateDate ? dateDate.getFullYear() : today.getMonth() < 3 ? today.getFullYear() : today.getFullYear() + 1
 
     const updateElements = (selector, content) => {
+        console.log('Selector:', selector);
         document.querySelectorAll(selector).forEach(el => {
             console.log('Element:', el);
             const innerDiv = el.querySelector('.elHeadline');
@@ -24,10 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-
+    console.log('Updating elements');
     updateElements('[data-title="eventDate"]', dateRange);
+    console.log('Updated event date');
     updateElements('[data-title="eventLocation"]', location);
+    console.log('Updated event location');
     updateElements('[data-title="eventPromo"]', promoVideo);
+    console.log('Updated event promo');
 
     document.querySelectorAll('[data-title="eventYear"]').forEach(el => {
         if (el) {
