@@ -336,6 +336,7 @@ async function applyPrefillAndSkip() {
     }
     console.log('Showing question at index: ', currentElementIndex);
     document.getElementById('loading').style.display = 'none';
+    document.getElementById('loaded').style.display = 'block';
 
     showQuestion(currentElementIndex, true);
 }

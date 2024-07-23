@@ -1,24 +1,25 @@
-<div class="progress mb-4">
-    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
-        aria-valuemax="100"><span id="progress"></span> complete</div>
-</div>
 <div id="loading" class="flex"><img style="margin-left:auto; margin-right:auto"
         src="https://davidbayer.com/wp-content/uploads/2024/07/loading.gif" alt="Loading..." /></div>
-<form accept-charset="UTF-8" class="infusion-form" id="dynamic_form">
-    <div class="form-group">
-        <div class="infusion-field" id="contact-info" style="display:none">
-            <label for="contact-info" class="d-block mb-2 h3">Contact Information *</label>
-            <input class="form-control form-control-lg" id="inf_field_FirstName" name="inf_field_FirstName"
-                placeholder="First Name *" type="text" required="required">
-            <input class="form-control form-control-lg" id="inf_field_LastName" name="inf_field_LastName"
-                placeholder="Last Name *" type="text">
-            <input class="form-control form-control-lg" id="inf_field_Email" name="inf_field_Email"
-                placeholder="Email *" type="email" required="required">
-            <input class="form-control form-control-lg" id="inf_field_Phone1" name="inf_field_Phone1"
-                placeholder="Phone Number *" type="tel" pattern="^\d{7,15}$"
-                title="Please enter a valid phone number with 7 to 15 digits" required="required">
-        </div>
-        <!-- <div class="infusion-field">
+<div id="loaded">
+    <div class="progress mb-4">
+        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0"
+            aria-valuemin="0" aria-valuemax="100"><span id="progress"></span> complete</div>
+    </div>
+    <form accept-charset="UTF-8" class="infusion-form" id="dynamic_form">
+        <div class="form-group">
+            <div class="infusion-field" id="contact-info">
+                <label for="contact-info" class="d-block mb-2 h3">Contact Information *</label>
+                <input class="form-control form-control-lg" id="inf_field_FirstName" name="inf_field_FirstName"
+                    placeholder="First Name *" type="text" required="required">
+                <input class="form-control form-control-lg" id="inf_field_LastName" name="inf_field_LastName"
+                    placeholder="Last Name *" type="text">
+                <input class="form-control form-control-lg" id="inf_field_Email" name="inf_field_Email"
+                    placeholder="Email *" type="email" required="required">
+                <input class="form-control form-control-lg" id="inf_field_Phone1" name="inf_field_Phone1"
+                    placeholder="Phone Number *" type="tel" pattern="^\d{7,15}$"
+                    title="Please enter a valid phone number with 7 to 15 digits" required="required">
+            </div>
+            <!-- <div class="infusion-field">
             <label for="inf_field_FirstName" class="d-block mb-2 h3">First Name *</label>
             <input class="form-control form-control-lg" id="inf_field_FirstName" name="inf_field_FirstName"
                 placeholder="First Name *" type="text" required="required">
@@ -39,244 +40,259 @@
                 placeholder="Phone Number *" type="tel" pattern="^\d{7,15}$"
                 title="Please enter a valid phone number with 7 to 15 digits">
         </div> -->
-        <div class="infusion-field" style="display: none;">
-            <label for="entrepreneur_or_no" class="d-block mb-2 h3">Which of the
-                following best describes you?</label>
-            <select class="form-control form-control-lg" id="entrepreneur_or_no" name="entrepreneur_or_no">
-                <option value="">Please select one</option>
-                <option
-                    value="I'm a business owner or entrepreneur and I am currently in the process of starting, growing or scaling my business.">
-                    I'm a business owner or entrepreneur and I am currently in the process of starting, growing or
-                    scaling my business.</option>
-                <option
-                    value="I'm not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.">
-                    I'm not a business owner or entrepreneur (yet) but I have an idea and want to start my own business
-                    now/soon. </option>
-                <option value="I'm not a business owner and am not actively wanting to start one at this time.">I'm not
-                    a business owner and am not actively wanting to start one at this time.</option>
-            </select>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="business_type" class="d-block mb-2 h3">What type of business are you in
-                (i.e. relationship coaching, digital marketing agency, accountant, corporate consultant, health
-                practitioner, etc)? *</label>
-            <input class="form-control form-control-lg" id="business_type" name="business_type"
-                placeholder="What type of business are you in (i.e. relationship coaching, digital marketing agency, accountant, corporate consultant, health practitioner, etc)? *"
-                type="text">
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="how_long_in_business" class="d-block mb-2 h3">How long have you been
-                building this business? *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="how_long_in_business" name="how_long_in_business">
-                    <option value="">Please select one</option>
-                    <option value="I'm still trying to figure out what business I want to start.">I'm still trying
-                        to figure out what business I want to start.</option>
-                    <option value="I'm clear on my business but haven't actually started yet.">I'm clear on
-                        my business but haven't actually started yet.</option>
-                    <option value="I've been actively growing my business for less than 6 months.">I've been
-                        actively growing my business for less than 6 months.</option>
-                    <option value="I've been working on this business for about a year.">I've been working on this
-                        business for about a year.</option>
-                    <option value="I've been working on this business for about 2 years.">I've been working on
-                        this business for about 2 years.</option>
-                    <option value="I's been over 2 years that I've been working on this business.">It's been over
-                        2 years that I've been working on this business.</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="areas_for_support" class="d-block mb-2 h3">What areas would you like to have
-                support on moving forward? * (select all that apply)</label>
-            <div class="infusion-field-input-container">
-                <div id="button-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
-                <select style="display:none" type="hidden" id="areas_for_support" name="areas_for_support" multiple=''>
-                    <option value="Creating powerful differentiated messaging.">Creating powerful differentiated
-                        messaging.</option>
-                    <option value="Putting together the details of an irresistible offer(s)">Putting together the
-                        details of an irresistible offer(s)</option>
-                    <option value="Having a clear action plan that I can follow every week">Having a clear action plan
-                        that I can follow every week</option>
-                    <option value="Consistently getting in front of my ideal client/prospects">Consistently getting in
-                        front of my ideal client/prospects</option>
-                    <option value="Maintaining an unshakeable mindset so I can make consistent progress">Maintaining an
-                        unshakeable mindset so I can make consistent progress</option>
-                    <option value="Finding ways to generate more consistent 'now' revenue">Finding ways to
-                        generate more consistent 'now' revenue</option>
-                    <option value="Taking my already profitable business and scaling to the next level">Taking my
-                        already profitable business and scaling to the next level</option>
-                    <option value="Further developing my enrollment skills">Further developing my enrollment skills
-                    </option>
-                    <option value="Knowing what strategy to focus on now or next">Knowing what strategy to focus on now
-                        or next</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="biggest_challenge" class="d-block mb-2 h3">What do you
-                believe is the biggest challenge you're facing in your business right now? *</label>
-            <textarea class="form-control form-control-lg" cols="24" id="biggest_challenge" name="biggest_challenge"
-                placeholder="What do you believe is the biggest challenge you're facing in your business right now? *"
-                rows="7"></textarea>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="ft_pt" class="d-block mb-2 h3">Is this business full time or part time
-                for you? *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="ft_pt" name="ft_pt">
-                    <option value="">Please select one</option>
-                    <option value="Full time">Full time</option>
-                    <option value="Part Time">Part Time</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="monthly_rev" class="d-block mb-2 h3">On average,
-                how much revenue are you currently making each month in your business? *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="monthly_rev" name="monthly_rev">
-                    <option value="">Please select one</option>
-                    <option value="Not generating any revenue">Not generating any revenue</option>
-                    <option value="$0 to $2500/month">$0 to $2500/month</option>
-                    <option value="$2500 to $5k/month">$2500 to $5k/month</option>
-                    <option value="$5k to $7500/month">$5k to $7500/month</option>
-                    <option value="$7500 to $10k/month">$7500 to $10k/month</option>
-                    <option value="$10k to $20k/month">$10k to $20k/month</option>
-                    <option value="$20k+/month">$20k+/month</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="income_goal" class="d-block mb-2 h3">What is your NEXT level monthly income
-                goal? This may not be your ultimate monthly income goal but will allow you to be free of financial
-                insecurity and give you next level abundance. *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="income_goal" name="income_goal">
-                    <option value="">Please select one</option>
-                    <option value="$0 to $5k/month">$0 to $5k/month</option>
-                    <option value="$5k to $10k/month">$5k to $10k/month</option>
-                    <option value="$10k to $25k/month">$10k to $25k/month</option>
-                    <option value="$25k to $50k/month">$25k to $50k/month</option>
-                    <option value="$50k to $100k/month">$50k to $100k/month</option>
-                    <option value="$100k+ per month">$100k+ per month</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="household_income" class="d-block mb-2 h3">What was your total household income
-                over the last 12 months? *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="household_income" name="household_income">
-                    <option value="">Please select one</option>
-                    <option value="Less than $50k">Less than $50k</option>
-                    <option value="$50k to $75k">$50k to $75k</option>
-                    <option value="$75k to 100K">$75k to 100K</option>
-                    <option value="$100k to $150k">$100k to $150k</option>
-                    <option value="$150k to $250k">$150k to $250k</option>
-                    <option value="$250k+">$250k+</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="resources_to_invest" class="d-block mb-2 h3">If you were confident in a solution
-                that would help you overcome your current challenges, give you the support you need and help you hit
-                your NEXT level monthly income goal in the next 6 to 12 months, what resources do you currently have
-                available to invest in that solution? These resources can include your checking, savings, 401k, credit
-                lines, credit cards, available loans or other available resources. (Note: this will determine which
-                solution and strategies we recommend.) *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="resources_to_invest" name="resources_to_invest">
+            <div class="infusion-field">
+                <label for="entrepreneur_or_no" class="d-block mb-2 h3">Which of the
+                    following best describes you?</label>
+                <select class="form-control form-control-lg" id="entrepreneur_or_no" name="entrepreneur_or_no">
                     <option value="">Please select one</option>
                     <option
-                        value="I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time.">
-                        I know I need to invest to grow my business but I'm in a tight spot and don't have any resources
-                        available at this time.</option>
-                    <option value="$500 to $2k">$500 to $2k</option>
-                    <option value="$2k to $5k">$2k to $5k</option>
-                    <option value="$5k to $10k">$5k to $10k</option>
-                    <option value="$10k to $25k">$10k to $25k</option>
-                    <option value="$25k to $50k">$25k to $50k</option>
-                    <option value="$50k to $100k">$50k to $100k</option>
-                    <option value="$100k+">$100k+</option>
+                        value="I'm a business owner or entrepreneur and I am currently in the process of starting, growing or scaling my business.">
+                        I'm a business owner or entrepreneur and I am currently in the process of starting, growing or
+                        scaling my business.</option>
+                    <option
+                        value="I'm not a business owner or entrepreneur (yet) but I have an idea and want to start my own business now/soon.">
+                        I'm not a business owner or entrepreneur (yet) but I have an idea and want to start my own
+                        business
+                        now/soon. </option>
+                    <option value="I'm not a business owner and am not actively wanting to start one at this time.">I'm
+                        not
+                        a business owner and am not actively wanting to start one at this time.</option>
                 </select>
             </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="other_programs" class="d-block mb-2 h3">Are you currently enrolled in any
-                other coaching or training programs? *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="other_programs" name="other_programs">
-                    <option value="">Please select one</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
+            <div class="infusion-field" style="display: none;">
+                <label for="business_type" class="d-block mb-2 h3">What type of business are you in
+                    (i.e. relationship coaching, digital marketing agency, accountant, corporate consultant, health
+                    practitioner, etc)? *</label>
+                <input class="form-control form-control-lg" id="business_type" name="business_type"
+                    placeholder="What type of business are you in (i.e. relationship coaching, digital marketing agency, accountant, corporate consultant, health practitioner, etc)? *"
+                    type="text">
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="how_long_in_business" class="d-block mb-2 h3">How long have you been
+                    building this business? *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="how_long_in_business" name="how_long_in_business">
+                        <option value="">Please select one</option>
+                        <option value="I'm still trying to figure out what business I want to start.">I'm still trying
+                            to figure out what business I want to start.</option>
+                        <option value="I'm clear on my business but haven't actually started yet.">I'm clear on
+                            my business but haven't actually started yet.</option>
+                        <option value="I've been actively growing my business for less than 6 months.">I've been
+                            actively growing my business for less than 6 months.</option>
+                        <option value="I've been working on this business for about a year.">I've been working on this
+                            business for about a year.</option>
+                        <option value="I've been working on this business for about 2 years.">I've been working on
+                            this business for about 2 years.</option>
+                        <option value="I's been over 2 years that I've been working on this business.">It's been over
+                            2 years that I've been working on this business.</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="areas_for_support" class="d-block mb-2 h3">What areas would you like to have
+                    support on moving forward? * (select all that apply)</label>
+                <div class="infusion-field-input-container">
+                    <div id="button-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                    <select style="display:none" type="hidden" id="areas_for_support" name="areas_for_support"
+                        multiple=''>
+                        <option value="Creating powerful differentiated messaging.">Creating powerful differentiated
+                            messaging.</option>
+                        <option value="Putting together the details of an irresistible offer(s)">Putting together the
+                            details of an irresistible offer(s)</option>
+                        <option value="Having a clear action plan that I can follow every week">Having a clear action
+                            plan
+                            that I can follow every week</option>
+                        <option value="Consistently getting in front of my ideal client/prospects">Consistently getting
+                            in
+                            front of my ideal client/prospects</option>
+                        <option value="Maintaining an unshakeable mindset so I can make consistent progress">Maintaining
+                            an
+                            unshakeable mindset so I can make consistent progress</option>
+                        <option value="Finding ways to generate more consistent 'now' revenue">Finding ways to
+                            generate more consistent 'now' revenue</option>
+                        <option value="Taking my already profitable business and scaling to the next level">Taking my
+                            already profitable business and scaling to the next level</option>
+                        <option value="Further developing my enrollment skills">Further developing my enrollment skills
+                        </option>
+                        <option value="Knowing what strategy to focus on now or next">Knowing what strategy to focus on
+                            now
+                            or next</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="biggest_challenge" class="d-block mb-2 h3">What do you
+                    believe is the biggest challenge you're facing in your business right now? *</label>
+                <textarea class="form-control form-control-lg" cols="24" id="biggest_challenge" name="biggest_challenge"
+                    placeholder="What do you believe is the biggest challenge you're facing in your business right now? *"
+                    rows="7"></textarea>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="ft_pt" class="d-block mb-2 h3">Is this business full time or part time
+                    for you? *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="ft_pt" name="ft_pt">
+                        <option value="">Please select one</option>
+                        <option value="Full time">Full time</option>
+                        <option value="Part Time">Part Time</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="monthly_rev" class="d-block mb-2 h3">On average,
+                    how much revenue are you currently making each month in your business? *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="monthly_rev" name="monthly_rev">
+                        <option value="">Please select one</option>
+                        <option value="Not generating any revenue">Not generating any revenue</option>
+                        <option value="$0 to $2500/month">$0 to $2500/month</option>
+                        <option value="$2500 to $5k/month">$2500 to $5k/month</option>
+                        <option value="$5k to $7500/month">$5k to $7500/month</option>
+                        <option value="$7500 to $10k/month">$7500 to $10k/month</option>
+                        <option value="$10k to $20k/month">$10k to $20k/month</option>
+                        <option value="$20k+/month">$20k+/month</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="income_goal" class="d-block mb-2 h3">What is your NEXT level monthly income
+                    goal? This may not be your ultimate monthly income goal but will allow you to be free of financial
+                    insecurity and give you next level abundance. *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="income_goal" name="income_goal">
+                        <option value="">Please select one</option>
+                        <option value="$0 to $5k/month">$0 to $5k/month</option>
+                        <option value="$5k to $10k/month">$5k to $10k/month</option>
+                        <option value="$10k to $25k/month">$10k to $25k/month</option>
+                        <option value="$25k to $50k/month">$25k to $50k/month</option>
+                        <option value="$50k to $100k/month">$50k to $100k/month</option>
+                        <option value="$100k+ per month">$100k+ per month</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="household_income" class="d-block mb-2 h3">What was your total household income
+                    over the last 12 months? *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="household_income" name="household_income">
+                        <option value="">Please select one</option>
+                        <option value="Less than $50k">Less than $50k</option>
+                        <option value="$50k to $75k">$50k to $75k</option>
+                        <option value="$75k to 100K">$75k to 100K</option>
+                        <option value="$100k to $150k">$100k to $150k</option>
+                        <option value="$150k to $250k">$150k to $250k</option>
+                        <option value="$250k+">$250k+</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="resources_to_invest" class="d-block mb-2 h3">If you were confident in a solution
+                    that would help you overcome your current challenges, give you the support you need and help you hit
+                    your NEXT level monthly income goal in the next 6 to 12 months, what resources do you currently have
+                    available to invest in that solution? These resources can include your checking, savings, 401k,
+                    credit
+                    lines, credit cards, available loans or other available resources. (Note: this will determine which
+                    solution and strategies we recommend.) *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="resources_to_invest" name="resources_to_invest">
+                        <option value="">Please select one</option>
+                        <option
+                            value="I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time.">
+                            I know I need to invest to grow my business but I'm in a tight spot and don't have any
+                            resources
+                            available at this time.</option>
+                        <option value="$500 to $2k">$500 to $2k</option>
+                        <option value="$2k to $5k">$2k to $5k</option>
+                        <option value="$5k to $10k">$5k to $10k</option>
+                        <option value="$10k to $25k">$10k to $25k</option>
+                        <option value="$25k to $50k">$25k to $50k</option>
+                        <option value="$50k to $100k">$50k to $100k</option>
+                        <option value="$100k+">$100k+</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="other_programs" class="d-block mb-2 h3">Are you currently enrolled in any
+                    other coaching or training programs? *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="other_programs" name="other_programs">
+                        <option value="">Please select one</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="urgency" class="d-block mb-2 h3">On a
+                    scale from 1-10, how urgent is it for you to find a way to get your business, impact and income to
+                    the
+                    next level? (1 not very urgent it's something that would be nice- 10 very urgent I need to get
+                    things to
+                    the next level now.) *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="urgency" name="urgency">
+                        <option value="">Please select one</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="comitment_level" class="d-block mb-2 h3">On a scale from 1-10, how committed are
+                    you to investing in support for your next level if you feel it's the right solution (1 not very
+                    committed I'll do it all on my own - 10 very committed I know mentorship is the best way to do
+                    this)?
+                    *</label>
+                <div class="infusion-field-input-container">
+                    <select class="form-control form-control-lg" id="comitment_level" name="comitment_level">
+                        <option value="">Please select one</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </div>
+            <div class="infusion-field" style="display: none;">
+                <label for="interest_topics" class="d-block mb-2 h3">Awesome! What topics are you interested in? *
+                    (select
+                    all that apply)</label>
+                <div class="infusion-field-input-container">
+                    <div id="button-container-interest" style="display: flex; flex-direction: column; gap: 10px;"></div>
+                    <select style="display:none" type="hidden" id="interest_topics" name="interest_topics" multiple=''>
+                        <option value="How to make more money">How to make more money</option>
+                        <option value="Relationships">Relationships</option>
+                        <option value="Health">Health</option>
+                        <option value="Spirituality">Spirituality</option>
+                        <option value="Learning how to facilitate David's frameworks for others">Learning how to
+                            facilitate
+                            David's frameworks for others</option>
+                        <option value="Parenting">Parenting</option>
+                        <option value="Entrepreneurship/Starting a business">Entrepreneurship/Starting a
+                            business</option>
+                        <option value="Attending David's live events">Attending David's live events</option>
+                    </select>
+                </div>
+            </div>
+            <div id="formNavigation" style="margin-top:10px">
+                <button type="button" id="backButton" class="btn btn-secondary" style="display: none;">Back</button>
+                <button type="button" id="nextButton" class="btn btn-primary">Next</button>
             </div>
         </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="urgency" class="d-block mb-2 h3">On a
-                scale from 1-10, how urgent is it for you to find a way to get your business, impact and income to the
-                next level? (1 not very urgent it's something that would be nice- 10 very urgent I need to get things to
-                the next level now.) *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="urgency" name="urgency">
-                    <option value="">Please select one</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="comitment_level" class="d-block mb-2 h3">On a scale from 1-10, how committed are
-                you to investing in support for your next level if you feel it's the right solution (1 not very
-                committed I'll do it all on my own - 10 very committed I know mentorship is the best way to do this)?
-                *</label>
-            <div class="infusion-field-input-container">
-                <select class="form-control form-control-lg" id="comitment_level" name="comitment_level">
-                    <option value="">Please select one</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
-            </div>
-        </div>
-        <div class="infusion-field" style="display: none;">
-            <label for="interest_topics" class="d-block mb-2 h3">Awesome! What topics are you interested in? * (select
-                all that apply)</label>
-            <div class="infusion-field-input-container">
-                <div id="button-container-interest" style="display: flex; flex-direction: column; gap: 10px;"></div>
-                <select style="display:none" type="hidden" id="interest_topics" name="interest_topics" multiple=''>
-                    <option value="How to make more money">How to make more money</option>
-                    <option value="Relationships">Relationships</option>
-                    <option value="Health">Health</option>
-                    <option value="Spirituality">Spirituality</option>
-                    <option value="Learning how to facilitate David's frameworks for others">Learning how to facilitate
-                        David's frameworks for others</option>
-                    <option value="Parenting">Parenting</option>
-                    <option value="Entrepreneurship/Starting a business">Entrepreneurship/Starting a
-                        business</option>
-                    <option value="Attending David's live events">Attending David's live events</option>
-                </select>
-            </div>
-        </div>
-        <div id="formNavigation" style="margin-top:10px">
-            <button type="button" id="backButton" class="btn btn-secondary" style="display: none;">Back</button>
-            <button type="button" id="nextButton" class="btn btn-primary">Next</button>
-        </div>
-    </div>
-</form>
+    </form>
+</div>
 <script src="https://http-nodejs-production-5fbc.up.railway.app/embedForm.js"></script>

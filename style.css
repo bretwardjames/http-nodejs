@@ -110,3 +110,13 @@
 .form-control-lg {
     margin-top: 10px;
 }
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Adjust height as necessary */
+    width: 100%;
+    /* Make sure the container takes full width */
+}
