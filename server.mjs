@@ -202,15 +202,20 @@ async function checkAndUpdateSheet(data) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        key = 'email';
+        matchingRow[key] = data['inf_field_Email'].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
-        key = 'phone';
+        matchingRow[key] = data['inf_field_Phone1'];
+
       } else if (key === 'inf_field_FirstName') {
-        key = 'firstName';
+        matchingRow[key] = data['inf_field_FirstName'];
+
       } else if (key === 'inf_field_LastName') {
-        key = 'lastName';
+        matchingRow[key] = data['inf_field_LastName'];
+
+      } else {
+        matchingRow[key] = data[key];
+
       }
-      matchingRow[key] = data[key];
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
     await sheets.spreadsheets.values.update({
