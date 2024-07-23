@@ -31,8 +31,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Allowed domains
 const allowedDomains = ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app'];
