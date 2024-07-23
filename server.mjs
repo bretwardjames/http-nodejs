@@ -182,7 +182,8 @@ async function checkAndUpdateSheet(data) {
     });
     return rowData;
   });
-
+  console.log('Rows from google:', rows);
+  console.log('Data from page:', data);
   let matchingRow = null;
   let matchingRowIndex = -1;
 
