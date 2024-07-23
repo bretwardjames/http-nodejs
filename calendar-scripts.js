@@ -32,7 +32,7 @@ function getItemsWithPrefix(prefix) {
     return items;
 }
 
-
+const currentUrl = window.location.href;
 
 // Replace + with %20
 let updatedUrl = currentUrl.replace(/\+/g, '%20');
