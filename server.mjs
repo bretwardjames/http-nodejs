@@ -191,7 +191,7 @@ async function checkAndUpdateSheet(data) {
   // Find matching row
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.phone) {
+    if (row.email?.toLowerCase() === data.inf_field_Email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.inf_field_Phone1) {
       matchingRow = row;
       matchingRowIndex = i;
       break;
@@ -202,6 +202,15 @@ async function checkAndUpdateSheet(data) {
   if (matchingRow) {
     // Update existing row
     Object.keys(data).forEach(key => {
+      if (key === 'inf_field_Email') {
+        key = 'email';
+      } else if (key === 'inf_field_Phone1') {
+        key = 'phone';
+      } else if (key === 'inf_field_FirstName') {
+        key = 'firstName';
+      } else if (key === 'inf_field_LastName') {
+        key = 'lastName';
+      }
       matchingRow[key] = data[key];
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
