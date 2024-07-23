@@ -343,6 +343,37 @@ function handleSubmit() {
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
 
+function setItemWithExpiry(key, value, days) {
+    const now = new Date();
+    const expiry = now.getTime() + days * 24 * 60 * 60 * 1000; // Add specified number of days in milliseconds
+
+    const item = {
+        value: value,
+        expiry: expiry
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+}
+
+function getItemWithExpiry(key) {
+    const itemStr = localStorage.getItem(key);
+
+    // If the item doesn't exist, return null
+    if (!itemStr) {
+        return null;
+    }
+
+    const item = JSON.parse(itemStr);
+    const now = new Date().getTime();
+
+    // Compare the expiry time of the item with the current time
+    if (now > item.expiry) {
+        // If the item is expired, delete the item from storage and return null
+        localStorage.removeItem(key);
+        return null;
+    }
+    return item.value;
+}
+
 async function handleNextButton() {
     console.log('Handling next button');
     const currentElement = formElements[currentElementIndex];
@@ -379,14 +410,14 @@ async function handleNextButton() {
     }
 
     // Check for existing UUID in local storage
-    let uuid = localStorage.getItem('submissionUUID');
+    let uuid = getItemWithExpiry('submissionUUID');
     if (uuid) {
         formData.uuid = uuid;
     }
 
     // Send data to server
     try {
-        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', {
+        const response = await fetch('/check-and-update-sheet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -395,13 +426,24 @@ async function handleNextButton() {
         });
         const result = await response.json();
         if (result.uuid) {
-            // Store the UUID in local storage if it doesn't exist
-            localStorage.setItem('submissionUUID', result.uuid);
+            // Store the UUID in local storage with a 7-day expiration from today
+            setItemWithExpiry('submissionUUID', result.uuid, 7);
         }
     } catch (error) {
         console.error('Error:', error);
     }
 
+    // Store each answer with 'submission_' prefix in local storage
+    fields.forEach(field => {
+        if (field.name === 'inf_field_Email') {
+            setItemWithExpiry('submission_Email', field.value, 7);
+        } else {
+            setItemWithExpiry(`submission_${field.name}`, field.value, 7);
+        }
+    });
+
+    const name = fields.find(field => field.name === 'inf_field_FirstName').value + ' ' + fields.find(field => field.name === 'inf_field_LastName').value;
+    setItemWithExpiry('submission_Name', name, 7);
     // Check conditions and update the state based on the current element
     console.log('Checking conditions for element:', currentElement);
     checkConditions(currentElement);
