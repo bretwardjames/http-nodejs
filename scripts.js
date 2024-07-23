@@ -120,7 +120,7 @@ function showQuestion(index, firstTime = false) {
     console.log('Updating buttons: ', index, formState.length - 1)
     const activeElements = formState.filter(i => i.isActive)
     console.log('Active Elements: ', activeElements)
-    const indexCheck = activeElements.findIndex(i => i.element === formElements[index])
+    const indexCheck = activeElements.length < 3 ? 3 : activeElements.findIndex(i => i.element === formElements[index])
     console.log('Index Check: ', indexCheck)
     const timeToSubmit = indexCheck === activeElements.length - 1
     console.log('Time to Submit: ', timeToSubmit)
