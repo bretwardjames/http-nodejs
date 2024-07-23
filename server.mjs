@@ -212,6 +212,7 @@ async function checkAndUpdateSheet(data) {
   }
 
   let newUUID = uuidv4();
+  console.log('Matching row:', matchingRow);
   if (matchingRow) {
     // Update existing row
     Object.keys(data).forEach(key => {
