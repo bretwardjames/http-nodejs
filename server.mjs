@@ -23,7 +23,7 @@ const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com'], // Replace with your allowed domain(s)
+  origin: ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.com'], // Replace with your allowed domain(s)
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Allowed domains
-const allowedDomains = ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com'];
+const allowedDomains = ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.com'];
 
 // Middleware to check referring domain
 const checkReferer = (req, res, next) => {
