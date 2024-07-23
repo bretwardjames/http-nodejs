@@ -163,8 +163,7 @@ async function getAuth() {
   return authClient;
 }
 
-// The rest of your code remains the same
-// Add this function to check and update the Google Sheet
+// Check and update the Google Sheet
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
@@ -242,6 +241,7 @@ app.post('/check-and-update-sheet', async (req, res) => {
     res.status(500).send('An error occurred while checking and updating the sheet.');
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -1,7 +1,7 @@
 console.log('Form JavaScript executed');
 async function checkAndUpdateContact(data) {
     try {
-        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', { // Update to your server URL
+        const response = await fetch('https://yourserver.com/check-and-update-sheet', { // Update to your server URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -383,7 +383,7 @@ async function handleNextButton() {
         uuid: localStorage.getItem('submissionUUID')
     };
 
-    // Check and update Google Sheets
+    // Check and update Google Sheets after each question
     const uuid = await checkAndUpdateContact(data);
     console.log('UUID from server:', uuid);
 
