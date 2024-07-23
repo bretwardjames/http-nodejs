@@ -41,6 +41,23 @@
     // Load CSS
     loadCSS(`${serverUrl}/style.css`);
 
+    // Array of external script URLs
+    const externalScripts = [
+        'https://static.plusthis.com/ext/PTFeatureBase.min.js',
+        'https://static.plusthis.com/ext/PTPageTriggers.min.js'
+    ];
+
+    // Function to load all external scripts sequentially
+    function loadExternalScripts(scripts, callback) {
+        if (scripts.length === 0) {
+            callback();
+            return;
+        }
+        loadJS(scripts[0], () => {
+            loadExternalScripts(scripts.slice(1), callback);
+        });
+    }
+
     fetch(`${serverUrl}/form.html`)
         .then(response => {
             if (!response.ok) {
@@ -60,10 +77,13 @@
                 document.body.appendChild(newScript);
             }
 
-            // Load JavaScript after HTML is inserted
-            loadJS(`${serverUrl}/scripts.js`, function () {
-                console.log('External script loaded and executed.');
-                // Place any additional initialization code here if necessary
+            // Load external scripts and then load the main script
+            loadExternalScripts(externalScripts, function () {
+                console.log('External scripts loaded.');
+                loadJS(`${serverUrl}/scripts.js`, function () {
+                    console.log('Main script loaded and executed.');
+                    // Place any additional initialization code here if necessary
+                });
             });
         })
         .catch(err => console.error('Failed to load the form:', err));
