@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import libphonenumber from 'google-libphonenumber';
 import { google } from 'googleapis';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -198,7 +198,7 @@ async function checkAndUpdateSheet(data) {
     }
   }
 
-  let newUUID = uuid.v4();
+  let newUUID = uuidv4();
   if (matchingRow) {
     // Update existing row
     Object.keys(data).forEach(key => {
