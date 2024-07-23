@@ -365,7 +365,7 @@ function handleSubmit() {
         urlParams.append('soSkip', 0);
     }
     if (contactId) {
-        urlParams.append('ContactId', contactId);
+        urlParams.append('Id', contactId);
     }
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
     if ((urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.") || (!urlParams.get('preQualified') === 'true' && urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." ||
