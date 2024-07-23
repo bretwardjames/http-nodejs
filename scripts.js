@@ -425,7 +425,7 @@ async function handleNextButton() {
 
     // Send data to server
     try {
-        const response = await fetch('/check-and-update-sheet', {
+        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
