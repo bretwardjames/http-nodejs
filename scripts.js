@@ -354,7 +354,13 @@ async function handleNextButton() {
         return;
     }
 
+    // Create the data object with key-value pairs from the form fields
+    const formData = {};
     const fields = currentElement.querySelectorAll('input[name], textarea[name], select[name]');
+    fields.forEach(field => {
+        formData[field.name] = field.value;
+    });
+
     console.log('Fields:', fields);
     const emailInvalid = Array.from(fields).some(field => {
         if (field.name.toLowerCase().includes('email')) {
@@ -374,8 +380,9 @@ async function handleNextButton() {
 
     // Check for existing UUID in local storage
     let uuid = localStorage.getItem('submissionUUID');
-    console.log('Form Data:', formData);
-    const data = { ...formData, uuid }; // Include the UUID in the data object
+    if (uuid) {
+        formData.uuid = uuid;
+    }
 
     // Send data to server
     try {
@@ -384,7 +391,7 @@ async function handleNextButton() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(formData)
         });
         const result = await response.json();
         if (result.uuid) {
