@@ -381,7 +381,6 @@ function handleSubmit() {
     }
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
 
-    const urlParams = new URLSearchParams(window.location.search);
     const notEntrepreneur = urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.";
     const preQualified = urlParams.get('preQualified') === 'true';
     const resources = urlParams.get('resources_to_invest');
