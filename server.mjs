@@ -163,7 +163,6 @@ async function getAuth() {
   return authClient;
 }
 
-// Check and update the Google Sheet
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
@@ -191,7 +190,7 @@ async function checkAndUpdateSheet(data) {
   // Find matching row
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    if (row.email?.toLowerCase() === data.inf_field_Email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.inf_field_Phone1) {
+    if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.phone) {
       matchingRow = row;
       matchingRowIndex = i;
       break;
@@ -240,9 +239,14 @@ async function checkAndUpdateSheet(data) {
 }
 
 // Middleware to handle checking and updating the Google Sheet
+// Middleware to handle checking and updating the Google Sheet
 app.post('/check-and-update-sheet', async (req, res) => {
   try {
     const data = req.body;
+    // Capture the user's IP address from the request headers
+    const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    data.ipAddress = userIp;
+
     const newUUID = await checkAndUpdateSheet(data);
     res.status(200).send({ uuid: newUUID });
   } catch (error) {
