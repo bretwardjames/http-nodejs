@@ -76,13 +76,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const qualifiedSection = document.querySelector('[data-title="qualified"]');
     const subSection = document.querySelector('[data-title="qualifiedSubSection"]');
     const noSurveySection = document.querySelector('[data-title="noSurvey"]');
+    const loadingSection = document.querySelector('[data-title="loadingGif"]');
     subSection.style.display = 'none';
     qualifiedSection.style.display = 'none';
     noSurveySection.style.display = 'none';
     if (urlParams.get('resources_to_invest') && urlParams.get('Name') && urlParams.get('Email') && urlParams.get('household_income')) {
+        loadingSection.style.display = 'none';
         qualifiedSection.style.display = 'block';
         subSection.style.display = 'block';
     } else {
+        loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
     }
 
