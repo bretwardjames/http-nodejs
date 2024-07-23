@@ -383,6 +383,10 @@ function getItemWithExpiry(key) {
 }
 
 async function handleNextButton() {
+    const nextButton = document.getElementById('nextButton');
+    nextButton.disabled = true;
+    nextButton.textContent = 'Processing...';
+
     console.log('Handling next button');
     const currentElement = formElements[currentElementIndex];
     console.log('Current element:', currentElement);
@@ -472,6 +476,7 @@ async function handleNextButton() {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
+    nextButton.disabled = false;
 }
 
 document.getElementById('nextButton').addEventListener('click', function (event) {
