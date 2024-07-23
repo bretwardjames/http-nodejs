@@ -418,7 +418,7 @@ async function handleNextButton() {
     }
 
     // Check for existing UUID in local storage
-    let uuid = getItemWithExpiry('submissionUUID');
+    let uuid = localStorage.getItem('submissionUUID');
     if (uuid) {
         formData.uuid = uuid;
     }
