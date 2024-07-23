@@ -225,6 +225,7 @@ async function checkAndUpdateSheet(data) {
       } else {
         matchingRow[key] = data[key];
       }
+      matchingRow.updated = new Date();
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
     await sheets.spreadsheets.values.update({
@@ -239,6 +240,8 @@ async function checkAndUpdateSheet(data) {
   } else {
     const newRow = headers.map(header => data[header] || '');
     newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
+    newRow[headers.indexOf('created')] = new Date();
+    newRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'raw_applications!A:Z',
