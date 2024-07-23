@@ -8,6 +8,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import libphonenumber from 'google-libphonenumber';
+import { google } from 'googleapis';
+import uuid from 'uuid';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -135,6 +137,110 @@ app.post('/validatePhone', async (req, res) => {
     return res.status(400).json({ valid: false, message: e.message });
   }
 
+});
+
+// Initialize the Google Sheets API client
+async function getAuth() {
+  const credentials = {
+    type: process.env.GOOGLE_TYPE,
+    project_id: process.env.GOOGLE_PROJECT_ID,
+    private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Ensure newline characters are correctly interpreted
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    auth_uri: process.env.GOOGLE_AUTH_URI,
+    token_uri: process.env.GOOGLE_TOKEN_URI,
+    auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
+    client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL
+  };
+
+  const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets']
+  });
+  const authClient = await auth.getClient();
+  google.options({ auth: authClient });
+  return authClient;
+}
+
+// The rest of your code remains the same
+// Add this function to check and update the Google Sheet
+async function checkAndUpdateSheet(data) {
+  const auth = await getAuth();
+  const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
+  const range = 'raw_applications!A:Z'; // Adjust the range according to your sheet structure
+
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  // Fetch the data from the sheet
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range
+  });
+  const headers = response.data.values.shift();
+  const rows = response.data.values.map(row => {
+    const rowData = {};
+    row.forEach((cell, i) => {
+      rowData[headers[i]] = cell;
+    });
+    return rowData;
+  });
+
+  let matchingRow = null;
+  let matchingRowIndex = -1;
+
+  // Find matching row
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    if (row.email?.toLowerCase() === data.email?.toLowerCase() || row.uuid === data.uuid || row.ipAddress === data.ip || row.phone === data.phone) {
+      matchingRow = row;
+      matchingRowIndex = i;
+      break;
+    }
+  }
+
+  let newUUID = uuid.v4();
+  if (matchingRow) {
+    // Update existing row
+    Object.keys(data).forEach(key => {
+      matchingRow[key] = data[key];
+    });
+    const updatedRow = headers.map(header => matchingRow[header] || '');
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `raw_applications!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [updatedRow]
+      }
+    });
+  } else {
+    const newRow = headers.map(header => data[header] || '');
+    newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
+    await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: 'raw_applications!A:Z',
+      valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
+      requestBody: {
+        values: [newRow]
+      }
+    });
+  }
+
+  return newUUID;
+}
+
+// Middleware to handle checking and updating the Google Sheet
+app.post('/check-and-update-sheet', async (req, res) => {
+  try {
+    const data = req.body;
+    const newUUID = await checkAndUpdateSheet(data);
+    res.status(200).send({ uuid: newUUID });
+  } catch (error) {
+    console.error('Error checking and updating sheet:', error);
+    res.status(500).send('An error occurred while checking and updating the sheet.');
+  }
 });
 
 const PORT = process.env.PORT || 3000;

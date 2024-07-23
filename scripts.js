@@ -1,4 +1,25 @@
 console.log('Form JavaScript executed');
+async function checkAndUpdateContact(data) {
+    try {
+        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', { // Update to your server URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        console.log('UUID:', result.uuid);
+
+        // Store the UUID locally
+        localStorage.setItem('submissionUUID', result.uuid);
+        return result.uuid;
+    } catch (error) {
+        console.error('Error checking and updating contact:', error);
+        return null;
+    }
+}
 let contactId
 async function getContactId(email) {
     if (contactId) return contactId
@@ -350,6 +371,24 @@ async function handleNextButton() {
         console.log('Email is invalid');
         return;
     }
+
+    // Collect data for checking and updating Google Sheets
+    const emailField = Array.from(fields).find(field => field.name.toLowerCase().includes('email'));
+    const phoneField = Array.from(fields).find(field => field.name.toLowerCase().includes('phone'));
+
+    const data = {
+        email: emailField ? emailField.value : '',
+        ip: 'user-ip', // Replace with actual user IP if available
+        phone: phoneField ? phoneField.value : '',
+        uuid: localStorage.getItem('submissionUUID')
+    };
+
+    // Check and update Google Sheets
+    const uuid = await checkAndUpdateContact(data);
+    console.log('UUID from server:', uuid);
+
+    // Update UUID in local storage
+    localStorage.setItem('submissionUUID', uuid);
 
     // Check conditions and update the state based on the current element
     console.log('Checking conditions for element:', currentElement);
