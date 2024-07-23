@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import libphonenumber from 'google-libphonenumber';
 import { google } from 'googleapis';
-import { v4 as uuid } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -241,7 +241,6 @@ app.post('/check-and-update-sheet', async (req, res) => {
     res.status(500).send('An error occurred while checking and updating the sheet.');
   }
 });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
