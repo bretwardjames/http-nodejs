@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
         loadingSection.style.display = 'none';
         qualifiedSection.style.display = 'block';
         subSection.style.display = 'block';
+        PTPageTriggers.listen({
+            feature: "2339-Q7F4DdRnndNpBxB9WICjNIxFVedO3dWjqNEyXVZp"
+        });
     } else {
         loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
@@ -93,3 +96,5 @@ document.addEventListener('DOMContentLoaded', function () {
     button.querySelector('a').href += "?" + urlParams.toString();
     console.log(button);
 });
+
+

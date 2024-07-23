@@ -1,3 +1,5 @@
+import { set } from "mongoose";
+
 console.log('Form JavaScript executed');
 async function checkAndUpdateContact(data) {
     try {
@@ -187,6 +189,7 @@ async function validateCurrentElement(element) {
 
             } else if (inputEl.type === 'email' && !contactId) {
                 contactId = await getContactId(inputEl.value);
+                setItemWithExpiry('submission_Id', contactId, 7);
             }
         }
     }
