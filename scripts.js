@@ -238,6 +238,7 @@ async function applyPrefillAndSkip() {
     const skipPrequal = urlParams.get('skipPrequal') === 'true';
     console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
+    const data = {};
 
     for (let index = 0; index < formElements.length; index++) {
         const el = formElements[index];
@@ -265,6 +266,7 @@ async function applyPrefillAndSkip() {
                         inputEl.title = "This field is prefilled and cannot be edited.";
                         inputEl.classList.add('tooltip-trigger'); // Add class for styling
                     }
+                    data[paramName] = value;
                 } else {
                     allDetailsProvided = false;
                 }
@@ -287,6 +289,34 @@ async function applyPrefillAndSkip() {
                 console.log('Activating element:', elementName);
                 formState[index].isActive = true;
             }
+        }
+    }
+
+    // Check for existing UUID in local storage
+    let uuid = getItemWithExpiry('submissionUUID');
+    if (uuid) {
+        data.uuid = uuid;
+    }
+
+    // Send data to server
+    if (Object.keys(data).length > 0) {
+        try {
+            const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (result.uuid) {
+                setItemWithExpiry('submissionUUID', result.uuid, 7);
+                for (const key in data) {
+                    setItemWithExpiry(`submission_${key}`, data[key], 7);
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
     }
 
