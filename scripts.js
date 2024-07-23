@@ -118,10 +118,16 @@ function showQuestion(index, firstTime = false) {
     });
     console.log('Form State:', formState);
     console.log('Updating buttons: ', index, formState.length - 1)
+    const activeElements = formState.filter(i => i.isActive)
+    console.log('Active Elements: ', activeElements)
+    const indexCheck = activeElements.findIndex(i => i.element === formElements[index])
+    console.log('Index Check: ', indexCheck)
+    const timeToSubmit = indexCheck === activeElements.length - 1
+    console.log('Time to Submit: ', timeToSubmit)
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    nextButton.textContent = index === formState.filter(i => i.isActive).length - 1 ? 'Submit' : 'Next';
-    nextButton.type = index === formState.filter(i => i.isActive).length - 1 ? 'submit' : 'button';
-    nextButton.disabled = false;
+    nextButton.textContent = timeToSubmit ? 'Submit' : 'Next';
+    nextButton.type = timeToSubmit ? 'submit' : 'button';
+    nextButton.disabled = timeToSubmit ? true : false;
     updateProgressBar(firstTime);
 }
 
