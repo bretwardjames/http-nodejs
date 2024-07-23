@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Document loaded');
     const today = new Date()
     const startingDate = 'March 21, 2025'
     const endingDate = 'March 23, 2025'
@@ -14,9 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateElements = (selector, content) => {
         document.querySelectorAll(selector).forEach(el => {
+            console.log('Element:', el);
             const innerDiv = el.querySelector('.elHeadline');
+            console.log('Inner div:', innerDiv);
             if (innerDiv) {
                 innerDiv.innerHTML = `<i class="fa_prepended fas fa-calendar-alt" contenteditable="false"></i><b>${content}</b>`;
+                console.log('Updated inner div:', innerDiv);
             }
         });
     };
