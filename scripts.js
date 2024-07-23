@@ -220,7 +220,7 @@ function updateProgressBar(first = false) {
     }
     const totalQuestions = visibleElements.length;
     console.log('Total questions:', totalQuestions);
-    const progress = first ? 1 : currentIndex === 1 ? 1 : ((answeredElements.length) / totalQuestions) * 100;
+    const progress = first ? 1 : currentIndex === 1 ? 5 : ((answeredElements.length) / totalQuestions) * 100;
     console.log('Progress:', progress);
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progress');
