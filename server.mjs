@@ -74,6 +74,10 @@ app.get('/calendar-scripts.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'calendar-scripts.js'));
 });
 
+app.get('/ple-scripts.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'ple-scripts.js'));
+});
+
 // Serve the JavaScript file
 app.get('/embedForm.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'embedForm.js'));

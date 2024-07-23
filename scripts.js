@@ -395,13 +395,9 @@ async function handleNextButton() {
 
     // Create the data object with key-value pairs from the form fields
     const formData = {};
-    const fields = currentElement.querySelectorAll('input[name], textarea[name], select[name]');
-    fields.forEach(field => {
-        formData[field.name] = field.value;
-    });
-
+    const fields = Array.from(currentElement.querySelectorAll('input[name], textarea[name], select[name]'));
     console.log('Fields:', fields);
-    const emailInvalid = Array.from(fields).some(field => {
+    const emailInvalid = fields.some(field => {
         if (field.name.toLowerCase().includes('email')) {
             const email = field.value;
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
