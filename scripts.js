@@ -119,8 +119,8 @@ function showQuestion(index, firstTime = false) {
     console.log('Form State:', formState);
     console.log('Updating buttons: ', index, formState.length - 1)
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
-    nextButton.textContent = index === formState.length - 1 ? 'Submit' : 'Next';
-    nextButton.type = index === formState.length - 1 ? 'submit' : 'button';
+    nextButton.textContent = index === formState.filter(i => i.isActive).length - 1 ? 'Submit' : 'Next';
+    nextButton.type = index === formState.filter(i => i.isActive).length - 1 ? 'submit' : 'button';
     nextButton.disabled = false;
     updateProgressBar(firstTime);
 }
