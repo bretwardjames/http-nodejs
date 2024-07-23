@@ -380,8 +380,11 @@ function handleSubmit() {
         urlParams.append('Id', contactId);
     }
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
-    if ((urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.") || (!urlParams.get('preQualified') === 'true' && urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." ||
-        (urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." && (urlParams.get('household_income') === 'Less than $50k' || urlParams.get('household_income') === '$50k to $75k')) || (urlParams.get('resources_to_invest') === "$500 - $2k" && urlParams.get('household_income') === 'Less than $50k'))) {
+    const notEntrepreneur = urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.";
+    const preQualified = urlParams.get('preQualified') === 'true';
+    const resources = urlParams.get('resources_to_invest') === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time." ? 'none' : urlParams.get('resources_to_invest') === "$500 - $2k" ? 'low' : 'qualified';
+    const hhi = urlParams.get('household_income') === 'Less than $50k' ? 'none' : urlParams.get('household_income') === '$50k to $75k' ? 'low' : 'qualified';
+    if (!preQualified && (notEntrepreneur || (resources === 'none' && (hhi === 'none' || hhi === 'low')) || hhi === 'none' && resources === 'low')) {
         redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
     }
     console.log(`${redirectUrl}?${urlParams.toString().replace(/\+/g, '%20')}`)
