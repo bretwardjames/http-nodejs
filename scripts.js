@@ -441,13 +441,15 @@ async function handleNextButton() {
     fields.forEach(field => {
         if (field.name === 'inf_field_Email') {
             setItemWithExpiry('submission_Email', field.value, 7);
+        } else if (field.name === 'inf_field_LastName') {
+            const name = fields.find(field => field.name === 'inf_field_FirstName').value + ' ' + fields.find(field => field.name === 'inf_field_LastName').value;
+            setItemWithExpiry('submission_Name', name, 7);
         } else {
             setItemWithExpiry(`submission_${field.name}`, field.value, 7);
         }
     });
 
-    const name = fields.find(field => field.name === 'inf_field_FirstName').value + ' ' + fields.find(field => field.name === 'inf_field_LastName').value;
-    setItemWithExpiry('submission_Name', name, 7);
+
     // Check conditions and update the state based on the current element
     console.log('Checking conditions for element:', currentElement);
     checkConditions(currentElement);
