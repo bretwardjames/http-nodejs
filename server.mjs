@@ -71,7 +71,7 @@ app.get('/scripts.js', (req, res) => {
 
 // Serve the Scripts file
 app.get('/calendar-scripts.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'scripts.js'));
+  res.sendFile(path.join(__dirname, 'calendar-scripts.js'));
 });
 
 // Serve the JavaScript file
