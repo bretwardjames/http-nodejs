@@ -191,8 +191,7 @@ async function checkAndUpdateSheet(data) {
     });
     return rowData;
   });
-  console.log('Rows from google:', rows);
-  console.log('Data from page:', data);
+
   let matchingRow = null;
   let matchingRowIndex = -1;
 
@@ -221,22 +220,21 @@ async function checkAndUpdateSheet(data) {
   }
 
   let newUUID = uuidv4();
-  console.log('Matching row:', matchingRow);
   if (matchingRow) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        matchingRow['email'] = data[key];
+        matchingRow['email'] = data[key].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
-        matchingRow['phone'] = data['inf_field_Phone1'];
+        matchingRow['phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow['firstName'] = data['inf_field_FirstName'];
+        matchingRow['firstName'] = data[key];
       } else if (key === 'inf_field_LastName') {
-        matchingRow['lastName'] = data['inf_field_LastName'];
+        matchingRow['lastName'] = data[key];
       } else {
         matchingRow[key] = data[key];
       }
-      matchingRow.updated = new Date();
+      newUUID = matchingRow.uuid;
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
     await sheets.spreadsheets.values.update({
@@ -247,16 +245,9 @@ async function checkAndUpdateSheet(data) {
         values: [updatedRow]
       }
     });
-    newUUID = matchingRow.uuid;
   } else {
     const newRow = headers.map(header => data[header] || '');
-    newRow[headers.indexOf('firstName')] = data['inf_field_FirstName'];
-    newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
-    newRow[headers.indexOf('email')] = data['inf_field_Email'];
-    newRow[headers.indexOf('phone')] = data['inf_field_Phone1'];
     newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
-    newRow[headers.indexOf('created')] = new Date();
-    newRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'raw_applications!A:Z',

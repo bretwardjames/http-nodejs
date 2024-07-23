@@ -343,13 +343,12 @@ function handleSubmit() {
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
 
+// Function to set an item with an expiry in local storage
 function setItemWithExpiry(key, value, days) {
     const now = new Date();
-    const expiry = now.getTime() + days * 24 * 60 * 60 * 1000; // Add specified number of days in milliseconds
-
     const item = {
         value: value,
-        expiry: expiry
+        expiry: now.getTime() + days * 24 * 60 * 60 * 1000, // Expiry in days
     };
     localStorage.setItem(key, JSON.stringify(item));
 }
@@ -394,6 +393,8 @@ async function handleNextButton() {
     console.log('Element is valid:', valid);
     if (!valid) {
         alert('Please fill in the required fields.');
+        nextButton.disabled = false;
+        nextButton.textContent = 'Next';
         return;
     }
 
@@ -407,6 +408,8 @@ async function handleNextButton() {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!regex.test(email)) {
                 alert('Please enter a valid email address.');
+                nextButton.disabled = false;
+                nextButton.textContent = 'Next';
                 return true;
             }
         }
@@ -417,8 +420,12 @@ async function handleNextButton() {
         return;
     }
 
+    fields.forEach(field => {
+        formData[field.name] = field.value;
+    });
+
     // Check for existing UUID in local storage
-    let uuid = localStorage.getItem('submissionUUID');
+    let uuid = getItemWithExpiry('submissionUUID');
     if (uuid) {
         formData.uuid = uuid;
     }
@@ -436,23 +443,18 @@ async function handleNextButton() {
         if (result.uuid) {
             // Store the UUID in local storage with a 7-day expiration from today
             setItemWithExpiry('submissionUUID', result.uuid, 7);
+
+            // Store each form field with the prefix 'submission_'
+            for (const key in formData) {
+                setItemWithExpiry(`submission_${key}`, formData[key], 7);
+            }
         }
     } catch (error) {
         console.error('Error:', error);
+    } finally {
+        nextButton.disabled = false;
+        nextButton.textContent = 'Next';
     }
-
-    // Store each answer with 'submission_' prefix in local storage
-    fields.forEach(field => {
-        if (field.name === 'inf_field_Email') {
-            setItemWithExpiry('submission_Email', field.value, 7);
-        } else if (field.name === 'inf_field_LastName') {
-            const name = fields.find(field => field.name === 'inf_field_FirstName').value + ' ' + fields.find(field => field.name === 'inf_field_LastName').value;
-            setItemWithExpiry('submission_Name', name, 7);
-        } else {
-            setItemWithExpiry(`submission_${field.name}`, field.value, 7);
-        }
-    });
-
 
     // Check conditions and update the state based on the current element
     console.log('Checking conditions for element:', currentElement);
@@ -476,7 +478,6 @@ async function handleNextButton() {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
-    nextButton.disabled = false;
 }
 
 document.getElementById('nextButton').addEventListener('click', function (event) {
