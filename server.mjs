@@ -237,6 +237,7 @@ async function checkAndUpdateSheet(data) {
       newUUID = matchingRow.uuid;
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
+    updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
       range: `raw_applications!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
@@ -248,6 +249,14 @@ async function checkAndUpdateSheet(data) {
   } else {
     const newRow = headers.map(header => data[header] || '');
     newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
+    newRow[headers.indexOf('created')] = new Date()
+    newRow[headers.indexOf('ipAddress')] = data.ipAddress;
+    newRow[headers.indexOf('email')] = data['inf_field_Email'];
+    newRow[headers.indexOf('phone')] = data['inf_field_Phone1'];
+    newRow[headers.indexOf('firstName')] = data['inf_field_FirstName'];
+    newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
+    newRow[headers.indexOf('updated')] = new Date()
+
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'raw_applications!A:Z',
