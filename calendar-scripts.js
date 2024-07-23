@@ -24,7 +24,15 @@ function getItemWithExpiry(key) {
         return null;
     }
 
-    const item = JSON.parse(itemStr);
+    let item;
+    try {
+        item = JSON.parse(itemStr);
+    } catch (error) {
+        console.error(`Error parsing JSON for key ${key}:`, error);
+        localStorage.removeItem(key); // Remove corrupted item
+        return null;
+    }
+
     const now = new Date().getTime();
 
     // Compare the expiry time of the item with the current time
