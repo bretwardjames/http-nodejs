@@ -127,7 +127,7 @@ function showQuestion(index, firstTime = false) {
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
     nextButton.textContent = timeToSubmit ? 'Submit' : 'Next';
     nextButton.type = timeToSubmit ? 'submit' : 'button';
-    nextButton.disabled = timeToSubmit ? true : false;
+    nextButton.disabled = false;
     updateProgressBar(firstTime);
 }
 
