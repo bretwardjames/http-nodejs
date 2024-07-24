@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // const elements = document.querySelectorAll(selector);
         const elements = document.getElementsByClassName(selector);
         console.log('Elements found:', elements.length);
-        elements.forEach(el => {
+        Array.from(elements).forEach(el => {
             console.log('Element:', el);
             el.innerText = content;
             console.log('Updated element:', el);
