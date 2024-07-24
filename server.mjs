@@ -78,6 +78,10 @@ app.get('/ple-scripts.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'ple-scripts.js'));
 });
 
+app.get('/checkout-cookies.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'checkout.cookies.js'));
+});
+
 // Serve the JavaScript file
 app.get('/embedForm.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'embedForm.js'));
