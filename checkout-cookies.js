@@ -58,6 +58,52 @@
                 });
             }
         });
+        // Select all buttons
+        const buttons = document.querySelectorAll('button');
+
+        // Select all links
+        const links = document.querySelectorAll('a[href]');
+
+
+        // Combine all elements into a single NodeList
+        const allClickableElements = Array.prototype.slice.call(buttons)
+            .concat(Array.prototype.slice.call(links));
+
+        // Function to handle click event and redirect with parameters
+        function handleClick(event) {
+            event.preventDefault();
+
+            var firstName = "{{customer.first_name}}";
+            var lastName = "{{customer.last_name}}";
+            var email = "{{customer.email}}";
+            var phone = "{{customer.phone}}";
+
+            var baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
+            if (baseUrl) {
+                var params = new URLSearchParams();
+                params.append('inf_field_FirstName', firstName);
+                params.append('inf_field_LastName', lastName);
+                params.append('inf_field_Email', email);
+                params.append('inf_field_Phone1', phone);
+
+                var newUrl = baseUrl + '?' + params.toString();
+                window.location.href = newUrl;
+            }
+        }
+
+        // Attach click event listener to each clickable element
+        allClickableElements.forEach(function (element) {
+            // Check if the element is an anchor tag with an href or a button
+            if (element.tagName.toLowerCase() === 'a' || element.tagName.toLowerCase() === 'button') {
+                element.addEventListener('click', handleClick);
+            } else {
+                // For elements with onclick attribute, prevent default action and handle manually
+                element.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    handleClick.call(this, event);
+                });
+            }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
