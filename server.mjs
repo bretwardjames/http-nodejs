@@ -122,6 +122,39 @@ app.post('/proxy', async (req, res) => {
   }
 });
 
+app.get('/ple-data', (req, res) => {
+  const pleVariables = Object.keys(process.env)
+    .filter(key => key.startsWith('PLE_'))
+    .reduce((obj, key) => {
+      obj[key] = process.env[key];
+      return obj;
+    }, {});
+
+  // Check if PLE_endDate is present and if it's in the past
+  if (pleVariables.PLE_endDate) {
+    const endDate = new Date(pleVariables.PLE_endDate);
+    const today = new Date();
+    if (endDate < today) {
+      // Switch to _next variables if the event is past
+      Object.keys(pleVariables).forEach(key => {
+        if (key.endsWith('_next')) {
+          const baseKey = key.replace('_next', '');
+          pleVariables[baseKey] = pleVariables[key];
+        }
+      });
+    }
+  }
+
+  // Remove _next variables from the response
+  Object.keys(pleVariables).forEach(key => {
+    if (key.endsWith('_next')) {
+      delete pleVariables[key];
+    }
+  });
+
+  res.json(pleVariables);
+});
+
 app.post('/validatePhone', async (req, res) => {
   const { phoneNumber, countryCode } = req.body;
 
