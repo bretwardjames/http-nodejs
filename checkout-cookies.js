@@ -73,20 +73,20 @@
         function handleClick(event) {
             event.preventDefault();
 
-            var firstName = "{{customer.first_name}}" || getCookie('first_name');
-            var lastName = "{{customer.last_name}}" || getCookie('last_name');
-            var email = "{{customer.email}}" || getCookie('email');
-            var phone = "{{customer.phone}}" || getCookie('phone');
+            const firstName = getCookie('first_name');
+            const lastName = getCookie('last_name');
+            const email = getCookie('email');
+            const phone = getCookie('phone');
 
-            var baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
+            const baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
             if (baseUrl) {
                 var params = new URLSearchParams();
-                params.append('inf_field_FirstName', firstName);
-                params.append('inf_field_LastName', lastName);
-                params.append('inf_field_Email', email);
-                params.append('inf_field_Phone1', phone);
+                if (firstName) params.append('first_name', firstName);
+                if (lastName) params.append('last_name', lastName);
+                if (email) params.append('email', email);
+                if (phone) params.append('phone', phone);
 
-                var newUrl = baseUrl + '?' + params.toString();
+                const newUrl = baseUrl + '?' + params.toString();
                 window.location.href = newUrl;
             }
         }
