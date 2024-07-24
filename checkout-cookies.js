@@ -1,10 +1,11 @@
 (function () {
     const domain = window.location.hostname;
-
+    console.log('Domain:', domain);
     function setCookie(name, value, days) {
         const date = new Date();
         date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
         const expires = `expires=${date.toUTCString()}`;
+        console.log('Setting cookie:', `${name}=${value};${expires};path=/;domain=${domain};SameSite=None;Secure`);
         document.cookie = `${name}=${value};${expires};path=/;domain=${domain};SameSite=None;Secure`;
     }
 
@@ -19,6 +20,7 @@
     }
 
     function showCookieConsentBanner() {
+        console.log('Showing cookie consent banner');
         const banner = document.createElement('div');
         banner.id = 'cookie-consent-banner';
         banner.style.position = 'fixed';
@@ -36,6 +38,7 @@
         document.body.appendChild(banner);
 
         document.getElementById('accept-cookies').addEventListener('click', function () {
+            console.log('Setting cookie consent');
             setCookie('cookie_consent', 'true', 365);
             banner.style.display = 'none';
             attachInputListeners();
@@ -43,10 +46,14 @@
     }
 
     function attachInputListeners() {
+        console.log('Attaching input listeners');
         ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
+            console.log('Key:', key);
             const element = document.querySelector(`[name="${key}"]`);
+            console.log('Element:', element);
             if (element) {
                 element.addEventListener('change', function () {
+                    console.log('Setting cookie:', key, element.value);
                     setCookie(key, element.value, 7);
                 });
             }
@@ -55,6 +62,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         if (!checkCookieConsent()) {
+            console.log('Cookie consent not given');
             showCookieConsentBanner();
         } else {
             attachInputListeners();
