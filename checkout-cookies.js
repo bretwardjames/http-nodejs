@@ -38,6 +38,18 @@
         document.getElementById('accept-cookies').addEventListener('click', function () {
             setCookie('cookie_consent', 'true', 365);
             banner.style.display = 'none';
+            attachInputListeners();
+        });
+    }
+
+    function attachInputListeners() {
+        ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
+            const element = document.querySelector(`[name="${key}"]`);
+            if (element) {
+                element.addEventListener('input', function () {
+                    setCookie(key, element.value, 7);
+                });
+            }
         });
     }
 
@@ -45,14 +57,7 @@
         if (!checkCookieConsent()) {
             showCookieConsentBanner();
         } else {
-            ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
-                const element = document.querySelector(`[name="${key}"]`);
-                if (element) {
-                    element.addEventListener('input', function () {
-                        setCookie(key, element.value, 7);
-                    });
-                }
-            });
+            attachInputListeners();
         }
     });
 })();
