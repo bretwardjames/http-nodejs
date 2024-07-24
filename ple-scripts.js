@@ -12,7 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Elements found:', elements.length);
         Array.from(elements).forEach(el => {
             console.log('Element:', el);
-            el.innerText = content;
+            if (selector.toLowerCase().includes('graphic')) {
+                el.src = content;
+            } else {
+                el.innerText = content;
+            }
             console.log('Updated element:', el);
             // const innerDiv = el.querySelector('.elHeadline');
             // console.log('Inner div:', innerDiv);
