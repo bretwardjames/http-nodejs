@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('All elements updated');
     }
 
+    checkAndUpdate();
     // Add a delay to allow the dynamic content to load
     // setTimeout(checkAndUpdate, 3000); // 3 seconds delay
 });
