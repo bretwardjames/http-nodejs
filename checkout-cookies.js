@@ -80,7 +80,7 @@
 
             const baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
             if (baseUrl) {
-                var params = new URLSearchParams();
+                let params = new URLSearchParams();
                 if (firstName) params.append('first_name', firstName);
                 if (lastName) params.append('last_name', lastName);
                 if (email) params.append('email', email);
