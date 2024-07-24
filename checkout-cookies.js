@@ -73,10 +73,10 @@
         function handleClick(event) {
             event.preventDefault();
 
-            var firstName = "{{customer.first_name}}";
-            var lastName = "{{customer.last_name}}";
-            var email = "{{customer.email}}";
-            var phone = "{{customer.phone}}";
+            var firstName = "{{customer.first_name}}" || getCookie('first_name');
+            var lastName = "{{customer.last_name}}" || getCookie('last_name');
+            var email = "{{customer.email}}" || getCookie('email');
+            var phone = "{{customer.phone}}" || getCookie('phone');
 
             var baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
             if (baseUrl) {
