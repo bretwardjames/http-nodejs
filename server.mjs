@@ -130,14 +130,29 @@ app.get('/ple-data', (req, res) => {
       return obj;
     }, {});
 
+  const today = new Date();
+
   // Check if PLE_endDate is present and if it's in the past
   if (pleVariables.PLE_endDate) {
     const endDate = new Date(pleVariables.PLE_endDate);
-    const today = new Date();
     if (endDate < today) {
       // Switch to _next variables if the event is past
       Object.keys(pleVariables).forEach(key => {
-        if (key.endsWith('_next')) {
+        if (!key.startsWith('PLE_promo') && key.endsWith('_next')) {
+          const baseKey = key.replace('_next', '');
+          pleVariables[baseKey] = pleVariables[key];
+        }
+      });
+    }
+  }
+
+  // Check if PLE_promo_switchDate is present and if it's in the past
+  if (pleVariables.PLE_promo_switchDate) {
+    const promoSwitchDate = new Date(pleVariables.PLE_promo_switchDate);
+    if (promoSwitchDate < today) {
+      // Switch to _next variables for promo if the switch date is past
+      Object.keys(pleVariables).forEach(key => {
+        if (key.startsWith('PLE_promo') && key.endsWith('_next')) {
           const baseKey = key.replace('_next', '');
           pleVariables[baseKey] = pleVariables[key];
         }

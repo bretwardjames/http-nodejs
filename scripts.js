@@ -462,7 +462,7 @@ function getItemWithExpiry(key) {
 
 async function handleNextButton() {
     nextButton.disabled = true;
-    nextButton.textContent = 'Processing...';
+    nextButton.textContent = 'Saving...';
 
     console.log('Handling next button');
     const currentElement = formElements[currentElementIndex];
