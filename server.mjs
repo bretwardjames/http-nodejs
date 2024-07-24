@@ -79,7 +79,7 @@ app.get('/ple-scripts.js', (req, res) => {
 });
 
 app.get('/checkout-cookies.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'checkout.cookies.js'));
+  res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
 // Serve the JavaScript file
