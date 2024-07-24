@@ -93,16 +93,11 @@
 
         // Attach click event listener to each clickable element
         allClickableElements.forEach(function (element) {
+            console.log('Element:', element);
             // Check if the element is an anchor tag with an href or a button
-            if (element.tagName.toLowerCase() === 'a' || element.tagName.toLowerCase() === 'button') {
-                element.addEventListener('click', handleClick);
-            } else {
-                // For elements with onclick attribute, prevent default action and handle manually
-                element.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    handleClick.call(this, event);
-                });
-            }
+            element.addEventListener('click', handleClick);
+            console.log('Event listener added');
+
         });
     }
 
