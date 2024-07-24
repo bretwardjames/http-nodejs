@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('PLE data:', pleData);
 
         Object.keys(pleData).forEach(key => {
-            const shortKey = key.replace('PLE_', '');
+            const shortKey = key.replace('PLE_', '').replace('promo_', '');
             // const selector = `[data-title="${shortKey}"]`;
             updateElements(shortKey, pleData[key]);
         });
