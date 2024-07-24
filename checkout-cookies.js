@@ -46,7 +46,7 @@
         ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
             const element = document.querySelector(`[name="${key}"]`);
             if (element) {
-                element.addEventListener('input', function () {
+                element.addEventListener('change', function () {
                     setCookie(key, element.value, 7);
                 });
             }
