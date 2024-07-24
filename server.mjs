@@ -147,7 +147,7 @@ app.get('/ple-data', (req, res) => {
   }
 
   // Check if PLE_promo_switchDate is present and if it's in the past
-  if (pleVariables.PLE_promo_switchDate) {
+  if (pleVariables.PLE_promo_switchDate && pleVariables.PLE_promo_switchDate !== '') {
     const promoSwitchDate = new Date(pleVariables.PLE_promo_switchDate);
     if (promoSwitchDate < today) {
       // Switch to _next variables for promo if the switch date is past
