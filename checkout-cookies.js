@@ -81,10 +81,11 @@
             const baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
             if (baseUrl) {
                 let params = new URLSearchParams();
-                if (firstName) params.append('first_name', firstName);
-                if (lastName) params.append('last_name', lastName);
-                if (email) params.append('email', email);
-                if (phone) params.append('phone', phone);
+                params.append('blank', 'true');
+                if (firstName) params.append('inf_field_FirstName', firstName);
+                if (lastName) params.append('inf_field_LastName', lastName);
+                if (email) params.append('inf_field_Email', email);
+                if (phone) params.append('inf_field_Phone1', phone);
 
                 const newUrl = baseUrl + '?' + params.toString();
                 window.location.href = newUrl;
