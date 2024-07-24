@@ -247,6 +247,7 @@ async function applyPrefillAndSkip() {
     if (!urlParams.has('inf_field_Email')) {
         console.log('Email not found, checking cookies');
         const cookieEmail = getCookie('email');
+        console.log('Cookie Email:', cookieEmail);
         if (cookieEmail) {
             urlParams.set('inf_field_Email', cookieEmail);
         }
@@ -254,6 +255,7 @@ async function applyPrefillAndSkip() {
     if (!urlParams.has('inf_field_FirstName')) {
         console.log('First name not found, checking cookies');
         const cookieFirstName = getCookie('first_name');
+        console.log('Cookie First Name:', cookieFirstName);
         if (cookieFirstName) {
             urlParams.set('inf_field_FirstName', cookieFirstName);
         }
@@ -261,6 +263,7 @@ async function applyPrefillAndSkip() {
     if (!urlParams.has('inf_field_Phone1')) {
         console.log('Phone not found, checking cookies');
         const cookiePhone = getCookie('phone');
+        console.log('Cookie Phone:', cookiePhone);
         if (cookiePhone) {
             urlParams.set('inf_field_Phone1', cookiePhone);
         }
@@ -268,6 +271,7 @@ async function applyPrefillAndSkip() {
     if (!urlParams.has('inf_field_LastName')) {
         console.log('Last name not found, checking cookies');
         const cookieLastName = getCookie('last_name');
+        console.log('Cookie Last Name:', cookieLastName);
         if (cookieLastName) {
             urlParams.set('inf_field_LastName', cookieLastName);
         }
