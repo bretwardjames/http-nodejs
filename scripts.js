@@ -235,10 +235,43 @@ function updateProgressBar(first = false) {
     progressBar.setAttribute('aria-valuenow', progress);
     console.log('Progress bar updated');
 }
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 async function applyPrefillAndSkip() {
     console.log('Applying prefill and skip logic');
     const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('inf_field_Email')) {
+        console.log('Email not found, checking cookies');
+        const cookieEmail = getCookie('email');
+        if (cookieEmail) {
+            urlParams.set('inf_field_Email', cookieEmail);
+        }
+    }
+    if (!urlParams.has('inf_field_FirstName')) {
+        console.log('First name not found, checking cookies');
+        const cookieFirstName = getCookie('first_name');
+        if (cookieFirstName) {
+            urlParams.set('inf_field_FirstName', cookieFirstName);
+        }
+    }
+    if (!urlParams.has('inf_field_Phone1')) {
+        console.log('Phone not found, checking cookies');
+        const cookiePhone = getCookie('phone');
+        if (cookiePhone) {
+            urlParams.set('inf_field_Phone1', cookiePhone);
+        }
+    }
+    if (!urlParams.has('inf_field_LastName')) {
+        console.log('Last name not found, checking cookies');
+        const cookieLastName = getCookie('last_name');
+        if (cookieLastName) {
+            urlParams.set('inf_field_LastName', cookieLastName);
+        }
+    }
     console.log('URL Params:', urlParams);
     if (urlParams.has('ContactId')) {
         contactId = urlParams.get('ContactId');
