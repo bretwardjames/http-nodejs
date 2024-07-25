@@ -23,7 +23,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            document.getElementsById('password').value = urlParams.get('password');
+            document.getElementById('password').value = urlParams.get('password');
             console.log('Fetching PLE data...');
             const response = await fetch('/ple-data?password=' + urlParams.get('password'));
             const data = await response.json();
