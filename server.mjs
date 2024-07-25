@@ -52,6 +52,17 @@ app.get('/admin', authMiddleware, (req, res) => {
   res.sendFile(__dirname + '/admin.html');
 });
 
+app.get('/ple-data', authMiddleware, (req, res) => {
+  const pleVariables = Object.keys(process.env)
+    .filter(key => key.startsWith('PLE_'))
+    .reduce((obj, key) => {
+      obj[key] = process.env[key];
+      return obj;
+    }, {});
+
+  res.json(pleVariables);
+});
+
 app.post('/update-ple', authMiddleware, async (req, res) => {
   const updates = req.body;
   Object.keys(updates).forEach(key => {
