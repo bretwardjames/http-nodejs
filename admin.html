@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+</head>
+
+<body>
+    <h1>Manage PLE Variables</h1>
+    <form action="/update-ple" method="POST">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <div id="ple-variables">
+            <!-- PLE variables will be loaded here by JavaScript -->
+        </div>
+
+        <button type="submit">Update Variables</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('/ple-data?password=' + encodeURIComponent(document.getElementById('password').value));
+            const data = await response.json();
+
+            const pleVariablesDiv = document.getElementById('ple-variables');
+            Object.keys(data).forEach(key => {
+                const value = data[key];
+                const label = document.createElement('label');
+                label.setAttribute('for', key);
+                label.textContent = key + ':';
+                const input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('id', key);
+                input.setAttribute('name', key);
+                input.setAttribute('value', value);
+                pleVariablesDiv.appendChild(label);
+                pleVariablesDiv.appendChild(input);
+                pleVariablesDiv.appendChild(document.createElement('br'));
+            });
+        });
+    </script>
+</body>
+
+</html>

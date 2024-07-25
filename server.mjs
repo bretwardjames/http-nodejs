@@ -37,6 +37,31 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Allowed domains
 const allowedDomains = ['https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app'];
 
+const adminPassword = process.env.ADMIN_PASSWORD || 'defaultPassword';
+
+function authMiddleware(req, res, next) {
+  const password = req.body.password || req.query.password;
+  if (password === adminPassword) {
+    next();
+  } else {
+    res.status(401).send('Unauthorized');
+  }
+}
+
+app.get('/admin', authMiddleware, (req, res) => {
+  res.sendFile(__dirname + '/admin.html');
+});
+
+app.post('/update-ple', authMiddleware, async (req, res) => {
+  const updates = req.body;
+  Object.keys(updates).forEach(key => {
+    if (key.startsWith('PLE_')) {
+      process.env[key] = updates[key];
+    }
+  });
+  res.send('Variables updated successfully');
+});
+
 // Middleware to check referring domain
 const checkReferer = (req, res, next) => {
   const referer = req.get('Referer');
@@ -50,6 +75,8 @@ const checkReferer = (req, res, next) => {
     res.status(403).send('Forbidden: Invalid referring domain');
   }
 };
+
+
 
 // Apply the middleware
 app.use(checkReferer);
