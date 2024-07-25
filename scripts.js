@@ -249,10 +249,14 @@ async function applyPrefillAndSkip() {
         contactId = urlParams.get('ContactId');
         console.log('Found Contact ID:', contactId);
     }
-    if (!urlParams.has('inf_field_FirstName')) urlParams.set('inf_field_FirstName', getCookie('first_name'));
-    if (!urlParams.has('inf_field_Email')) urlParams.set('inf_field_Email', getCookie('email'));
-    if (!urlParams.has('inf_field_Phone1')) urlParams.set('inf_field_Phone1', getCookie('phone'));
-    if (!urlParams.has('inf_field_LastName')) urlParams.set('inf_field_LastName', getCookie('last_name'));
+    const firstNameCookie = getCookie('first_name');
+    const lastNameCookie = getCookie('last_name');
+    const emailCookie = getCookie('email');
+    const phoneCookie = getCookie('phone');
+    if (!urlParams.has('inf_field_FirstName') && firstNameCookie) urlParams.set('inf_field_FirstName', firstNameCookie);
+    if (!urlParams.has('inf_field_LastName') && lastNameCookie) urlParams.set('inf_field_LastName', lastNameCookie);
+    if (!urlParams.has('inf_field_Email') && emailCookie) urlParams.set('inf_field_Email', emailCookie);
+    if (!urlParams.has('inf_field_Phone1') && phoneCookie) urlParams.set('inf_field_Phone1', phoneCookie);
     const skipPrequal = urlParams.get('skipPrequal') === 'true';
     console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
