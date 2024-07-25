@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.src = content;
             } else {
                 el.innerText = content;
+                el.style.padding = '0'
             }
             console.log('Updated element:', el);
             // const innerDiv = el.querySelector('.elHeadline');
