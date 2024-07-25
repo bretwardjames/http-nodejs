@@ -52,7 +52,7 @@ app.get('/admin', authMiddleware, (req, res) => {
   res.sendFile(__dirname + '/admin.html');
 });
 
-app.get('/ple-data', authMiddleware, (req, res) => {
+app.get('/ple-data-to-update', authMiddleware, (req, res) => {
   const pleVariables = Object.keys(process.env)
     .filter(key => key.startsWith('PLE_'))
     .reduce((obj, key) => {

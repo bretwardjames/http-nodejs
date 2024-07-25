@@ -25,17 +25,18 @@
             const urlParams = new URLSearchParams(window.location.search);
             document.getElementById('password').value = urlParams.get('password');
             console.log('Fetching PLE data...');
-            const response = await fetch('/ple-data?password=' + urlParams.get('password'));
+            const response = await fetch('/ple-data-to-update?password=' + urlParams.get('password'));
             const data = await response.json();
             console.log('PLE data:', data);
             const pleVariablesDiv = document.getElementById('ple-variables');
             console.log('Populating PLE variables...');
             Object.keys(data).forEach(key => {
+                const strippedKey = key.replace('PLE_', '').replace('promo_', '');
                 console.log('Adding input for', key);
                 const value = data[key];
                 const label = document.createElement('label');
-                label.setAttribute('for', key);
-                label.textContent = key + ':';
+                label.setAttribute('for', strippedKey);
+                label.textContent = strippedKey + ':';
                 const input = document.createElement('input');
                 input.setAttribute('type', 'text');
                 input.setAttribute('id', key);
