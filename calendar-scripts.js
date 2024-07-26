@@ -100,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Updated URL:', updatedUrl);
 
     if (!urlParams.get('resources_to_invest') && !urlParams.get('Name') && !urlParams.get('Email') && !urlParams.get('household_income')) {
+        const baseUrl = getCurrentUrlWithoutParameters();
+        let shouldReload = false;
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
         if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
@@ -111,8 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 shouldReload = true;
             }
         };
-        const baseUrl = getCurrentUrlWithoutParameters();
-        let shouldReload = false;
 
         for (const key in localStorageItems) {
             const shortKey = key.replace('submission_', '');
