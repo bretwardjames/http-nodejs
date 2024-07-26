@@ -31,7 +31,7 @@
         banner.style.textAlign = 'center';
         banner.style.padding = '1vh';
         banner.innerHTML = `
-            <div><p style="font-size: 1.5em;/* vertical-align: middle; */">We use cookies store basic contact details to make your experience smoother. Cookies expire after 7 days. Please click 'Allow' below for the best experience.</p></div>
+            <div><p style="font-size: 1.2em;/* vertical-align: middle; */">We use cookies store basic contact details to make your experience smoother. Cookies expire after 7 days. Please click 'Allow' below for the best experience.</p></div>
             <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Allow Cookies</button>
             <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline Cookies</button>
         `;
