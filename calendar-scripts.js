@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     if (key === 'uuid') continue;
                     if (key === 'created') continue;
                     if (key === 'updated') continue;
-                    if (key === 'ip') continue;
+                    if (key === 'ipAddress') continue;
                     if (key === 'phone') key = 'mobile';
                     if (key === 'email') key = 'Email';
                     urlParams.set(key, rowData[key]);
