@@ -1,5 +1,3 @@
-import { url } from "inspector";
-
 function getCurrentUrlWithoutParameters() {
     return window.location.origin + window.location.pathname;
 }
