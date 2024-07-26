@@ -81,7 +81,19 @@
     flex-wrap: nowrap;
     gap: 10px;
     overflow-x: auto;
+    flex-direction: row;
     /* Add some gap between the buttons */
+}
+
+.button-container.btn-range .btn {
+    display: flex;
+    /* Use flexbox for buttons */
+    justify-content: center;
+    /* Center content horizontally */
+    align-items: center;
+    /* Center content vertically */
+    text-align: center;
+    /* Center text in buttons */
 }
 
 .button-container .btn-sm {
