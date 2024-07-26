@@ -19,7 +19,6 @@ function getItemsWithPrefix(prefix) {
 function getItemWithExpiry(key) {
     const itemStr = localStorage.getItem(key);
 
-    // If the item doesn't exist, return null
     if (!itemStr) {
         return null;
     }
@@ -29,15 +28,13 @@ function getItemWithExpiry(key) {
         item = JSON.parse(itemStr);
     } catch (error) {
         console.error(`Error parsing JSON for key ${key}:`, error);
-        localStorage.removeItem(key); // Remove corrupted item
+        localStorage.removeItem(key);
         return null;
     }
 
     const now = new Date().getTime();
 
-    // Compare the expiry time of the item with the current time
     if (now > item.expiry) {
-        // If the item is expired, delete the item from storage and return null
         localStorage.removeItem(key);
         return null;
     }
@@ -48,7 +45,7 @@ function setItemWithExpiry(key, value, days) {
     const now = new Date();
     const item = {
         value: value,
-        expiry: now.getTime() + days * 24 * 60 * 60 * 1000, // Expiry in days
+        expiry: now.getTime() + days * 24 * 60 * 60 * 1000,
     };
     localStorage.setItem(key, JSON.stringify(item));
 }
@@ -67,14 +64,12 @@ async function getSheetRow(uuid) {
         });
 
         if (!response.ok) {
-            // Handle non-200 HTTP responses
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const rowData = await response.json();
         return rowData;
     } catch (error) {
-        // Handle errors here
         console.error('Error fetching data:', error);
         return null;
     }
@@ -101,31 +96,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     let resourceToInvest = urlParams.get('resources_to_invest');
     let householdIncome = urlParams.get('household_income');
 
-    while (!name || !email || !phone || !resourceToInvest || !householdIncome) {
+    if (!name || !email || !phone || !resourceToInvest || !householdIncome) {
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
-
-        if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
-            const rowData = await getSheetRow(submissionUUID);
-            if (rowData) {
-                for (const key in rowData) {
-                    urlParams.set(key, rowData[key]);
-                }
-                name = rowData['firstName'] + ' ' + rowData['lastName'];
-                email = rowData['email'];
-                phone = rowData['phone'];
-                resourceToInvest = rowData['resources_to_invest'];
-                householdIncome = rowData['household_income'];
-
-                if (name && email && phone && resourceToInvest && householdIncome) {
-                    setItemWithExpiry('submission_Name', name, 7);
-                    setItemWithExpiry('submission_Email', email, 7);
-                    setItemWithExpiry('submission_mobile', phone, 7);
-                    setItemWithExpiry('submission_resources_to_invest', resourceToInvest, 7);
-                    setItemWithExpiry('submission_household_income', householdIncome, 7);
-                }
-            }
-        }
 
         for (const key in localStorageItems) {
             const shortKey = key.replace('submission_', '');
@@ -133,18 +106,40 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (value) {
                 urlParams.set(shortKey, value);
             }
+            name = name || localStorageItems['submission_inf_field_FirstName'] + ' ' + localStorageItems['submission_inf_field_LastName'];
+            email = email || localStorageItems['submission_inf_field_Email'];
+            phone = phone || localStorageItems['submission_inf_field_Phone1'];
+            resourceToInvest = resourceToInvest || localStorageItems['submission_resources_to_invest'];
+            householdIncome = householdIncome || localStorageItems['submission_household_income'];
+        }
+
+        if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
+            const rowData = await getSheetRow(submissionUUID);
+            if (rowData) {
+                for (const key in rowData) {
+                    urlParams.set(key, rowData[key]);
+                    setItemWithExpiry(`submission_${key}`, rowData[key], 7);
+                }
+                name = name || `${rowData['firstName']} ${rowData['lastName']}`;
+                email = email || rowData['email'];
+                phone = phone || rowData['phone'];
+                resourceToInvest = resourceToInvest || rowData['resources_to_invest'];
+                householdIncome = householdIncome || rowData['household_income'];
+            }
         }
 
         if (name && email && phone && resourceToInvest && householdIncome) {
+            if (name) urlParams.set('Name', name);
+            if (email) urlParams.set('Email', email);
+            if (phone) urlParams.set('mobile', phone);
+            if (resourceToInvest) urlParams.set('resources_to_invest', resourceToInvest);
+            if (householdIncome) urlParams.set('household_income', householdIncome);
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
             window.location.replace(newUrl.replace(/\+/g, '%20'));
-            return; // Ensure the function stops here if the page reloads
-        } else {
-            break; // Exit the loop if values are not found
+            return;
         }
     }
 
-    // Update the URL in the address bar without reloading the page
     window.history.replaceState({}, document.title, updatedUrl);
 
     const qualifiedSection = document.querySelector('[data-title="qualified"]');
