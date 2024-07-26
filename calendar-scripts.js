@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('submissionUUID')) {
         const submissionUUID = urlParams.get('submissionUUID');
-        localStorage.setItemWithExpiry('submissionUUID', submissionUUID, 7);
+        setItemWithExpiry('submissionUUID', submissionUUID, 7);
         urlParams.delete('submissionUUID');
         urlParams.forEach((value, key) => {
             localStorage.setItem(`submission_${key}`, value);
