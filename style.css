@@ -79,7 +79,7 @@
 .button-container.btn-range {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px;
+    gap: 0px;
     overflow-x: auto;
     flex-direction: row;
     /* Add some gap between the buttons */
