@@ -31,10 +31,9 @@
         banner.style.textAlign = 'center';
         banner.style.padding = '1vh';
         banner.innerHTML = `
-            <span style="font-size: 1.5em;/* vertical-align: middle; */">This site uses cookies to provide you with a great user experience. 
-            By using this site, you accept our use of cookies.</span>
-            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Accept</button>
-            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline</button>
+            <div title="We track first name, last name, email, and phone so that we can prefill a form later in this process for you. The cookie is deleted after 7 days to maintain privacy"><p style="font-size: 1.5em;/* vertical-align: middle; */">This site uses cookies to provide you with a great user experience. Hover here to see how we use this data.</p></div>
+            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Allow Cookies</button>
+            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline Cookies</button>
         `;
         document.body.appendChild(banner);
         document.getElementById('decline-cookies').addEventListener('click', function () {
