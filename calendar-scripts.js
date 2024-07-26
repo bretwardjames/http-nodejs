@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (!urlParams.get('mobile')) urlParams.set('mobile', phone);
             if (!urlParams.get('resources_to_invest')) urlParams.set('resources_to_invest', resourceToInvest);
             if (!urlParams.get('household_income')) urlParams.set('household_income', householdIncome);
+            if (!urlParams.get('soSkip')) urlParams.set('soSkip', 1);
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
             window.location.replace(newUrl.replace(/\+/g, '%20'));
             return;
