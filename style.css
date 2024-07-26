@@ -94,6 +94,10 @@
     /* Center content vertically */
     text-align: center;
     /* Center text in buttons */
+    font-size: 1.4em;
+    padding: 7px;
+    margin: 3px;
+
 }
 
 .button-container .btn-sm {
