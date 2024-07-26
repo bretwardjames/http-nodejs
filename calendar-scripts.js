@@ -73,18 +73,17 @@ async function getSheetRow(uuid) {
 
         const rowData = await response.json();
         return rowData;
-        // Handle rowData here
     } catch (error) {
         // Handle errors here
         console.error('Error fetching data:', error);
-        return null
+        return null;
     }
-};
+}
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     let currentUrl = window.location.href;
-
     const urlParams = new URLSearchParams(window.location.search);
+
     if (urlParams.has('submissionUUID')) {
         const submissionUUID = urlParams.get('submissionUUID');
         setItemWithExpiry('submissionUUID', submissionUUID, 7);
@@ -94,63 +93,60 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Create the updated URL without the submissionUUID parameter
-    let baseUrl = window.location.origin + window.location.pathname;
+    let baseUrl = getCurrentUrlWithoutParameters();
     let updatedUrl = `${baseUrl}?${urlParams.toString()}`.replace(/\+/g, '%20');
-    console.log('Updated URL:', updatedUrl);
+    let name = urlParams.get('Name');
+    let email = urlParams.get('Email');
+    let phone = urlParams.get('mobile');
+    let resourceToInvest = urlParams.get('resources_to_invest');
+    let householdIncome = urlParams.get('household_income');
 
-    if (!urlParams.get('resources_to_invest') && !urlParams.get('Name') && !urlParams.get('Email') && !urlParams.get('household_income')) {
-        const baseUrl = getCurrentUrlWithoutParameters();
-        let shouldReload = false;
+    while (!name || !email || !phone || !resourceToInvest || !householdIncome) {
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
+
         if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
-            const rowData = getSheetRow(submissionUUID);
+            const rowData = await getSheetRow(submissionUUID);
             if (rowData) {
                 for (const key in rowData) {
                     urlParams.set(key, rowData[key]);
                 }
-                shouldReload = true;
+                name = rowData['firstName'] + ' ' + rowData['lastName'];
+                email = rowData['email'];
+                phone = rowData['phone'];
+                resourceToInvest = rowData['resources_to_invest'];
+                householdIncome = rowData['household_income'];
+
+                if (name && email && phone && resourceToInvest && householdIncome) {
+                    setItemWithExpiry('submission_Name', name, 7);
+                    setItemWithExpiry('submission_Email', email, 7);
+                    setItemWithExpiry('submission_mobile', phone, 7);
+                    setItemWithExpiry('submission_resources_to_invest', resourceToInvest, 7);
+                    setItemWithExpiry('submission_household_income', householdIncome, 7);
+                }
             }
-        };
+        }
 
         for (const key in localStorageItems) {
             const shortKey = key.replace('submission_', '');
             const value = localStorageItems[key];
             if (value) {
                 urlParams.set(shortKey, value);
-                shouldReload = true;
             }
         }
 
-        if (!urlParams.get('Name') || !urlParams.get('Email')) {
-            const firstName = localStorage.getItem('inf_field_FirstName');
-            const lastName = localStorage.getItem('inf_field_LastName');
-            const email = localStorage.getItem('inf_field_Email');
-            if (firstName) {
-                let name = firstName;
-                if (lastName) {
-                    name += ' ' + lastName;
-                }
-                urlParams.set('Name', name);
-                shouldReload = true;
-            }
-            if (email) {
-                urlParams.set('Email', email);
-                shouldReload = true;
-            }
-        }
-
-        if (shouldReload) {
+        if (name && email && phone && resourceToInvest && householdIncome) {
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
-            console.log('Redirecting to:', newUrl.replace(/\+/g, '%20'));
-            // window.location.replace(newUrl.replace(/\+/g, '%20'));
+            window.location.replace(newUrl.replace(/\+/g, '%20'));
             return; // Ensure the function stops here if the page reloads
+        } else {
+            break; // Exit the loop if values are not found
         }
     }
 
     // Update the URL in the address bar without reloading the page
     window.history.replaceState({}, document.title, updatedUrl);
+
     const qualifiedSection = document.querySelector('[data-title="qualified"]');
     const subSection = document.querySelector('[data-title="qualifiedSubSection"]');
     const noSurveySection = document.querySelector('[data-title="noSurvey"]');
@@ -158,7 +154,8 @@ document.addEventListener('DOMContentLoaded', function () {
     subSection.style.display = 'none';
     qualifiedSection.style.display = 'none';
     noSurveySection.style.display = 'none';
-    if (urlParams.get('resources_to_invest') && urlParams.get('Name') && urlParams.get('Email') && urlParams.get('household_income')) {
+
+    if (resourceToInvest && name && email && householdIncome) {
         loadingSection.style.display = 'none';
         qualifiedSection.style.display = 'block';
         subSection.style.display = 'block';
@@ -174,5 +171,3 @@ document.addEventListener('DOMContentLoaded', function () {
     button.querySelector('a').href += "?" + urlParams.toString();
     console.log(button);
 });
-
-
