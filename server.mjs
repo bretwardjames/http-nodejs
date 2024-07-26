@@ -377,6 +377,46 @@ app.post('/check-and-update-sheet', async (req, res) => {
   }
 });
 
+app.get('/get-sheet-row', async (req, res) => {
+  const auth = await getAuth();
+  const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
+  const range = 'raw_applications!A:Z'; // Adjust the range according to your sheet structure
+
+  const sheets = google.sheets({ version: 'v4', auth });
+  // Fetch the data from the sheet
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range
+  });
+  const headers = response.data.values.shift();
+  const rows = response.data.values.map(row => {
+    const rowData = {};
+    row.forEach((cell, i) => {
+      rowData[headers[i]] = cell;
+    });
+    return rowData;
+  });
+
+  let matchingRow = null;
+
+  // Find matching row by UUID
+  if (req.query.uuid) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.uuid === req.query.uuid) {
+        matchingRow = row;
+        break;
+      }
+    }
+  }
+
+  if (matchingRow) {
+    res.json(matchingRow);
+  } else {
+    res.status(404).send('Row not found');
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

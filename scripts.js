@@ -392,6 +392,7 @@ function handleSubmit() {
     if (contactId) {
         urlParams.append('Id', contactId);
     }
+    urlParams.append('submissionUUID', getItemWithExpiry('submissionUUID'));
     let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
 
     const notEntrepreneur = urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.";
