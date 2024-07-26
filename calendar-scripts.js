@@ -130,14 +130,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             const rowData = await getSheetRow(submissionUUID);
             console.log('Row Data:', rowData);
             if (rowData) {
-                for (let key in rowData) {
+                for (const key in rowData) {
+                    let newKey = key;
                     if (key === 'uuid') continue;
                     if (key === 'created') continue;
                     if (key === 'updated') continue;
                     if (key === 'ipAddress') continue;
-                    if (key === 'phone') key = 'mobile';
-                    if (key === 'email') key = 'Email';
-                    urlParams.set(key, rowData[key]);
+                    if (key === 'phone') newKey = 'mobile';
+                    if (key === 'email') newKey = 'Email';
+                    urlParams.set(newKey, rowData[key]);
                     console.log('Adding Key to :', key, 'Value:', rowData[key]);
                     setItemWithExpiry(`submission_${key}`, rowData[key], 7);
                 }
