@@ -30,12 +30,19 @@
         banner.style.color = '#fff';
         banner.style.textAlign = 'center';
         banner.style.padding = '10px';
+        banner.style.height = "15vh";
         banner.innerHTML = `
             This site uses cookies to provide you with a great user experience. 
             By using this site, you accept our use of cookies.
             <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Accept</button>
+            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline</button>
         `;
         document.body.appendChild(banner);
+        document.getElementById('decline-cookies').addEventListener('click', function () {
+            console.log('Setting cookie consent');
+            setCookie('cookie_consent', 'false', 365);
+            banner.style.display = 'none';
+        });
 
         document.getElementById('accept-cookies').addEventListener('click', function () {
             console.log('Setting cookie consent');
