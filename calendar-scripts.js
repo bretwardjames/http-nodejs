@@ -64,6 +64,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        if (!urlParams.get('Name') || !urlParams.get('Email')) {
+            const firstName = localStorage.getItem('inf_field_FirstName');
+            const lastName = localStorage.getItem('inf_field_LastName');
+            const email = localStorage.getItem('inf_field_Email');
+            if (firstName) {
+                let name = firstName;
+                if (lastName) {
+                    name += ' ' + lastName;
+                }
+                urlParams.set('Name', name);
+                shouldReload = true;
+            }
+            if (email) {
+                urlParams.set('Email', email);
+                shouldReload = true;
+            }
+        }
+
         if (shouldReload) {
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
             window.location.replace(newUrl);
