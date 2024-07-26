@@ -708,44 +708,67 @@ selects.forEach(select => {
         if (index === 0) return true;
         return !isNaN(option.value) && +option.value === index;
     });
-    if (isRange && options.length === 11) {
-        const sliderLabel = document.createElement('label');
-        sliderLabel.textContent = "Select a value:";
-        sliderLabel.className = 'range-label';
-        const slider = document.createElement('input');
-        slider.type = 'range';
-        slider.min = 1;
-        slider.max = 10;
-        slider.value = 1;
-        slider.className = 'form-range';
-        const sliderValue = document.createElement('span');
-        sliderValue.textContent = slider.value;
-        sliderValue.className = 'range-value';
-        slider.addEventListener('input', function () {
-            sliderValue.textContent = slider.value;
-            select.value = slider.value;
-        });
-        buttonContainer.appendChild(sliderLabel);
-        buttonContainer.appendChild(slider);
-        buttonContainer.appendChild(sliderValue);
-    } else {
-        options.forEach(option => {
-            if (option.value !== '') {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'btn btn-outline-primary btn-sm';
-                button.textContent = option.textContent;
-                button.style.whiteSpace = 'normal';
-                button.setAttribute('data-value', option.value);
-                button.addEventListener('click', function () {
-                    buttonContainer.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-primary'));
-                    button.classList.add('btn-primary');
-                    select.value = button.getAttribute('data-value');
-                });
-                buttonContainer.appendChild(button);
-            }
-        });
+    if (isRange) {
+        buttonContainer.classList.add('btn-range')
     }
+    options.forEach(option => {
+        if (option.value !== '') {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn btn-outline-primary btn-sm option-button';
+            button.textContent = option.textContent;
+            button.setAttribute('data-value', option.value);
+
+            button.addEventListener('click', function () {
+                buttonContainer.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('btn-primary'));
+                button.classList.add('btn-primary');
+                select.value = button.getAttribute('data-value');
+            });
+
+            buttonContainer.appendChild(button);
+        }
+    });
+
+    select.style.display = 'none';
+    parentDiv.appendChild(buttonContainer);
+    // if (isRange && options.length === 11) {
+    //     const sliderLabel = document.createElement('label');
+    //     sliderLabel.textContent = "Select a value:";
+    //     sliderLabel.className = 'range-label';
+    //     const slider = document.createElement('input');
+    //     slider.type = 'range';
+    //     slider.min = 1;
+    //     slider.max = 10;
+    //     slider.value = 1;
+    //     slider.className = 'form-range';
+    //     const sliderValue = document.createElement('span');
+    //     sliderValue.textContent = slider.value;
+    //     sliderValue.className = 'range-value';
+    //     slider.addEventListener('input', function () {
+    //         sliderValue.textContent = slider.value;
+    //         select.value = slider.value;
+    //     });
+    //     buttonContainer.appendChild(sliderLabel);
+    //     buttonContainer.appendChild(slider);
+    //     buttonContainer.appendChild(sliderValue);
+    // } else {
+    //     options.forEach(option => {
+    //         if (option.value !== '') {
+    //             const button = document.createElement('button');
+    //             button.type = 'button';
+    //             button.className = 'btn btn-outline-primary btn-sm';
+    //             button.textContent = option.textContent;
+    //             button.style.whiteSpace = 'normal';
+    //             button.setAttribute('data-value', option.value);
+    //             button.addEventListener('click', function () {
+    //                 buttonContainer.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-primary'));
+    //                 button.classList.add('btn-primary');
+    //                 select.value = button.getAttribute('data-value');
+    //             });
+    //             buttonContainer.appendChild(button);
+    //         }
+    //     });
+    // }
     select.style.display = 'none';
     parentDiv.appendChild(buttonContainer);
 });

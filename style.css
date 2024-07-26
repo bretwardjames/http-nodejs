@@ -76,6 +76,14 @@
     /* Add some gap between the buttons */
 }
 
+.button-container .btn-range {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    /* Add some gap between the buttons */
+}
+
 .button-container .btn-sm {
     display: inline-block;
     /* Ensure buttons are inline */
