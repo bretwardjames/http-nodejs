@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const rowData = await getSheetRow(submissionUUID);
             console.log('Row Data:', rowData);
             if (rowData) {
-                for (const key in rowData) {
+                for (let key in rowData) {
                     if (key === 'uuid') continue;
                     if (key === 'created') continue;
                     if (key === 'updated') continue;
