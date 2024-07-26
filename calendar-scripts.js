@@ -95,8 +95,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     let phone = urlParams.get('mobile');
     let resourceToInvest = urlParams.get('resources_to_invest');
     let householdIncome = urlParams.get('household_income');
-
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Phone:', phone);
+    console.log('Resource to invest:', resourceToInvest);
+    console.log('Household income:', householdIncome);
     if (!name || !email || !phone || !resourceToInvest || !householdIncome) {
+        console.log('Something missing. Checking Local Storage')
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
 
@@ -105,19 +110,28 @@ document.addEventListener('DOMContentLoaded', async function () {
             const value = localStorageItems[key];
             if (value) {
                 urlParams.set(shortKey, value);
+                console.log('Adding Key:', shortKey, 'Value:', value);
             }
-            name = name || localStorageItems['submission_inf_field_FirstName'] + ' ' + localStorageItems['submission_inf_field_LastName'];
-            email = email || localStorageItems['submission_inf_field_Email'];
-            phone = phone || localStorageItems['submission_inf_field_Phone1'];
-            resourceToInvest = resourceToInvest || localStorageItems['submission_resources_to_invest'];
-            householdIncome = householdIncome || localStorageItems['submission_household_income'];
-        }
 
+        }
+        name = name || localStorageItems['submission_inf_field_FirstName'] + ' ' + localStorageItems['submission_inf_field_LastName'];
+        email = email || localStorageItems['submission_inf_field_Email'];
+        phone = phone || localStorageItems['submission_inf_field_Phone1'];
+        resourceToInvest = resourceToInvest || localStorageItems['submission_resources_to_invest'];
+        householdIncome = householdIncome || localStorageItems['submission_household_income'];
+        console.log('Name:', name);
+        console.log('Email:', email);
+        console.log('Phone:', phone);
+        console.log('Resource to invest:', resourceToInvest);
+        console.log('Household income:', householdIncome);
         if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
+            console.log('Still missing. Fetching data from sheet');
             const rowData = await getSheetRow(submissionUUID);
+            console.log('Row Data:', rowData);
             if (rowData) {
                 for (const key in rowData) {
                     urlParams.set(key, rowData[key]);
+                    console.log('Adding Key to :', key, 'Value:', rowData[key]);
                     setItemWithExpiry(`submission_${key}`, rowData[key], 7);
                 }
                 name = name || `${rowData['firstName']} ${rowData['lastName']}`;
@@ -125,6 +139,10 @@ document.addEventListener('DOMContentLoaded', async function () {
                 phone = phone || rowData['phone'];
                 resourceToInvest = resourceToInvest || rowData['resources_to_invest'];
                 householdIncome = householdIncome || rowData['household_income'];
+                console.log('Name:', name);
+                console.log('Email:', email);
+                console.log('Phone:', phone);
+                console.log('Resource to invest:', resourceToInvest);
             }
         }
 
@@ -138,6 +156,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             window.location.replace(newUrl.replace(/\+/g, '%20'));
             return;
         }
+
+        console.log('Some issue with the data. Redirecting to the same page');
+        console.log('Name:', name);
+        console.log('Email:', email);
+        console.log('Phone:', phone);
+        console.log('Resource to invest:', resourceToInvest);
+        console.log('Household income:', householdIncome);
     }
 
     window.history.replaceState({}, document.title, updatedUrl);
