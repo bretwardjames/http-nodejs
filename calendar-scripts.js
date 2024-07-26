@@ -95,11 +95,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     let phone = urlParams.get('mobile');
     let resourceToInvest = urlParams.get('resources_to_invest');
     let householdIncome = urlParams.get('household_income');
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Phone:', phone);
-    console.log('Resource to invest:', resourceToInvest);
-    console.log('Household income:', householdIncome);
+    // console.log('Name:', name);
+    // console.log('Email:', email);
+    // console.log('Phone:', phone);
+    // console.log('Resource to invest:', resourceToInvest);
+    // console.log('Household income:', householdIncome);
     if (!name || !email || !phone || !resourceToInvest || !householdIncome) {
         console.log('Something missing. Checking Local Storage')
         const localStorageItems = getItemsWithPrefix('submission_');
@@ -119,12 +119,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         phone = phone || localStorageItems['submission_mobile'];
         resourceToInvest = resourceToInvest || localStorageItems['submission_resources_to_invest'];
         householdIncome = householdIncome || localStorageItems['submission_household_income'];
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Phone:', phone);
-        console.log('Resource to invest:', resourceToInvest);
-        console.log('Household income:', householdIncome);
-        if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
+        // console.log('Name:', name);
+        // console.log('Email:', email);
+        // console.log('Phone:', phone);
+        // console.log('Resource to invest:', resourceToInvest);
+        // console.log('Household income:', householdIncome);
+        if (submissionUUID && (!name || !email || !phone || !resourceToInvest || !householdIncome)) {
             console.log('Still missing. Fetching data from sheet');
             const rowData = await getSheetRow(submissionUUID);
             console.log('Row Data:', rowData);
@@ -140,9 +140,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 resourceToInvest = resourceToInvest || rowData['resources_to_invest'];
                 householdIncome = householdIncome || rowData['household_income'];
                 console.log('Name:', name);
-                console.log('Email:', email);
-                console.log('Phone:', phone);
-                console.log('Resource to invest:', resourceToInvest);
+                // console.log('Email:', email);
+                // console.log('Phone:', phone);
+                // console.log('Resource to invest:', resourceToInvest);
             }
         }
 
@@ -158,11 +158,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         console.log('Some issue with the data. Redirecting to the same page');
-        console.log('Name:', name);
-        console.log('Email:', email);
-        console.log('Phone:', phone);
-        console.log('Resource to invest:', resourceToInvest);
-        console.log('Household income:', householdIncome);
+        // console.log('Name:', name);
+        // console.log('Email:', email);
+        // console.log('Phone:', phone);
+        // console.log('Resource to invest:', resourceToInvest);
+        // console.log('Household income:', householdIncome);
     }
 
     window.history.replaceState({}, document.title, updatedUrl);
