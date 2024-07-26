@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (!urlParams.get('resources_to_invest')) urlParams.set('resources_to_invest', resourceToInvest);
             if (!urlParams.get('household_income')) urlParams.set('household_income', householdIncome);
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
-            // window.location.replace(newUrl.replace(/\+/g, '%20'));
+            window.location.replace(newUrl.replace(/\+/g, '%20'));
             return;
         }
 
