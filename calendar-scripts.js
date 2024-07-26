@@ -143,7 +143,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (shouldReload) {
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
-            window.location.replace(newUrl.replace(/\+/g, '%20'));
+            console.log('Redirecting to:', newUrl.replace(/\+/g, '%20'));
+            // window.location.replace(newUrl.replace(/\+/g, '%20'));
             return; // Ensure the function stops here if the page reloads
         }
     }
