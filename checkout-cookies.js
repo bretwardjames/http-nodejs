@@ -26,14 +26,13 @@
         banner.style.position = 'fixed';
         banner.style.bottom = '0';
         banner.style.width = '100%';
-        banner.style.backgroundColor = '#333';
+        banner.style.backgroundColor = 'rgb(51, 51, 51, 90%)';
         banner.style.color = '#fff';
         banner.style.textAlign = 'center';
-        banner.style.padding = '10px';
-        banner.style.height = "15vh";
+        banner.style.padding = '1vh';
         banner.innerHTML = `
-            This site uses cookies to provide you with a great user experience. 
-            By using this site, you accept our use of cookies.
+            <span style="font-size: 1.5em;/* vertical-align: middle; */">This site uses cookies to provide you with a great user experience. 
+            By using this site, you accept our use of cookies.</span>
             <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Accept</button>
             <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline</button>
         `;
