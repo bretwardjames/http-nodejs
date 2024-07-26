@@ -729,8 +729,6 @@ selects.forEach(select => {
         }
     });
 
-    select.style.display = 'none';
-    parentDiv.appendChild(buttonContainer);
     // if (isRange && options.length === 11) {
     //     const sliderLabel = document.createElement('label');
     //     sliderLabel.textContent = "Select a value:";
