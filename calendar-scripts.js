@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log('Something missing. Checking Local Storage')
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
+        console.log('Local Storage Items:', localStorageItems);
 
         for (const key in localStorageItems) {
             const shortKey = key.replace('submission_', '');
