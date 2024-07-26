@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Create the updated URL without the submissionUUID parameter
     let baseUrl = window.location.origin + window.location.pathname;
-    let updatedUrl = `${baseUrl}?${urlParams.toString()}`;
-
+    let updatedUrl = `${baseUrl}?${urlParams.toString()}`.replace(/\+/g, '%20');
+    console.log('Updated URL:', updatedUrl);
 
     if (!urlParams.get('resources_to_invest') && !urlParams.get('Name') && !urlParams.get('Email') && !urlParams.get('household_income')) {
         const localStorageItems = getItemsWithPrefix('submission_');
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (shouldReload) {
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
-            window.location.replace(newUrl);
+            window.location.replace(newUrl.replace(/\+/g, '%20'));
             return; // Ensure the function stops here if the page reloads
         }
     }
