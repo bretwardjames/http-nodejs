@@ -130,10 +130,29 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log('Row Data:', rowData);
             if (rowData) {
                 for (const key in rowData) {
+                    if (key === 'uuid') continue;
+                    if (key === 'created') continue;
+                    if (key === 'updated') continue;
+                    if (key === 'ip') continue;
+                    if (key === 'phone') key = 'mobile';
+                    if (key === 'email') key = 'Email';
                     urlParams.set(key, rowData[key]);
                     console.log('Adding Key to :', key, 'Value:', rowData[key]);
                     setItemWithExpiry(`submission_${key}`, rowData[key], 7);
                 }
+
+                if (!urlParams.get('Name')) {
+                    const first = rowData['firstName'] || '';
+                    const last = rowData['lastName'] || '';
+                    let fullName = first
+                    if (last) {
+                        fullName += ` ${last}`;
+                    }
+                    urlParams.set('Name', fullName);
+                    setItemWithExpiry('submission_Name', fullName, 7);
+                    name = fullName;
+                }
+
                 name = name || `${rowData['firstName']} ${rowData['lastName']}`;
                 email = email || rowData['email'];
                 phone = phone || rowData['phone'];
@@ -147,11 +166,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         if (name && email && phone && resourceToInvest && householdIncome) {
-            if (name) urlParams.set('Name', name);
-            if (email) urlParams.set('Email', email);
-            if (phone) urlParams.set('mobile', phone);
-            if (resourceToInvest) urlParams.set('resources_to_invest', resourceToInvest);
-            if (householdIncome) urlParams.set('household_income', householdIncome);
+            if (!urlParams.get('Name')) urlParams.set('Name', name);
+            if (!urlParams.get('Email')) urlParams.set('Email', email);
+            if (!urlParams.get('mobile')) urlParams.set('mobile', phone);
+            if (!urlParams.get('resources_to_invest')) urlParams.set('resources_to_invest', resourceToInvest);
+            if (!urlParams.get('household_income')) urlParams.set('household_income', householdIncome);
             const newUrl = `${baseUrl}?${urlParams.toString()}`;
             window.location.replace(newUrl.replace(/\+/g, '%20'));
             return;
