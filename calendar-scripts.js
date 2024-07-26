@@ -78,7 +78,12 @@ async function getSheetRow(uuid) {
 document.addEventListener('DOMContentLoaded', async function () {
     let currentUrl = window.location.href;
     const urlParams = new URLSearchParams(window.location.search);
-
+    if (!urlParams.has('utm_source')) {
+        const source = urlParams.get('source')
+        if (source) {
+            urlParams.set('utm_source', source);
+        }
+    }
     if (urlParams.has('submissionUUID')) {
         const submissionUUID = urlParams.get('submissionUUID');
         setItemWithExpiry('submissionUUID', submissionUUID, 7);
@@ -107,9 +112,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log('Local Storage Items:', localStorageItems);
 
         for (const key in localStorageItems) {
-            const shortKey = key.replace('submission_', '');
+            let shortKey = key.replace('submission_', '');
             const value = localStorageItems[key];
             if (value) {
+                if (shortKey === 'source') shortKey = 'utm_source';
                 urlParams.set(shortKey, value);
                 console.log('Adding Key:', shortKey, 'Value:', value);
             }
@@ -138,6 +144,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     if (key === 'ipAddress') continue;
                     if (key === 'phone') newKey = 'mobile';
                     if (key === 'email') newKey = 'Email';
+                    if (key === 'source') newKey = 'utm_source';
                     urlParams.set(newKey, rowData[key]);
                     console.log('Adding Key to :', key, 'Value:', rowData[key]);
                     setItemWithExpiry(`submission_${key}`, rowData[key], 7);
