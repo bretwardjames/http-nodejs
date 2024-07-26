@@ -7,7 +7,7 @@ function getItemsWithPrefix(prefix) {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith(prefix)) {
-            const value = getItemFromStorage(key);
+            const value = getItemWithExpiry(key) || getItemFromStorage(key);
             if (value !== null) {
                 items[key] = value;
             }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setItemWithExpiry('submissionUUID', submissionUUID, 7);
         urlParams.delete('submissionUUID');
         urlParams.forEach((value, key) => {
-            localStorage.setItem(`submission_${key}`, value);
+            setItemWithExpiry(`submission_${key}`, value, 7);
         });
     }
 
