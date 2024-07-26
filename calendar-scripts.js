@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update the URL in the address bar without reloading the page
     window.history.replaceState({}, document.title, updatedUrl);
+    urlParams.forEach((value, key) => {
+        localStorage.setItem(`submission_${key}`, value);
+    });
     const qualifiedSection = document.querySelector('[data-title="qualified"]');
     const subSection = document.querySelector('[data-title="qualifiedSubSection"]');
     const noSurveySection = document.querySelector('[data-title="noSurvey"]');
