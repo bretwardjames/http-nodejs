@@ -44,6 +44,15 @@ function getItemWithExpiry(key) {
     return item.value;
 }
 
+function setItemWithExpiry(key, value, days) {
+    const now = new Date();
+    const item = {
+        value: value,
+        expiry: now.getTime() + days * 24 * 60 * 60 * 1000, // Expiry in days
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+}
+
 function getItemFromStorage(key) {
     return localStorage.getItem(key);
 }
@@ -78,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('submissionUUID')) {
         const submissionUUID = urlParams.get('submissionUUID');
-        localStorage.setItem('submissionUUID', submissionUUID);
+        localStorage.setItemWithExpiry('submissionUUID', submissionUUID, 7);
         urlParams.delete('submissionUUID');
         urlParams.forEach((value, key) => {
             localStorage.setItem(`submission_${key}`, value);
@@ -92,8 +101,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!urlParams.get('resources_to_invest') && !urlParams.get('Name') && !urlParams.get('Email') && !urlParams.get('household_income')) {
         const localStorageItems = getItemsWithPrefix('submission_');
-        if (localStorageItems['submissionUUID'] && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
-            const rowData = getSheetRow(localStorageItems['submissionUUID']);
+        const submissionUUID = getItemWithExpiry('submissionUUID');
+        if (submissionUUID && (!localStorageItems['submission_resources_to_invest'] || !localStorageItems['submission_Name'] || !localStorageItems['submission_Email'] || !localStorageItems['submission_household_income'])) {
+            const rowData = getSheetRow(submissionUUID);
             if (rowData) {
                 for (const key in rowData) {
                     urlParams.set(key, rowData[key]);
