@@ -108,7 +108,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (!checkCookieConsent()) {
+        if (!checkCookieConsent() && !window.location.href.includes('questionnaire')) {
             console.log('Cookie consent not given');
             showCookieConsentBanner();
         } else {
