@@ -7,7 +7,7 @@ function getItemsWithPrefix(prefix) {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith(prefix)) {
-            const value = getItemWithExpiry(key) || getItemFromStorage(key);
+            const value = getItemFromStorage(key);
             if (value !== null) {
                 items[key] = value;
             }
