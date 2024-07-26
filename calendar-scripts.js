@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
         }
-        name = name || localStorageItems['submission_inf_field_FirstName'] + ' ' + localStorageItems['submission_inf_field_LastName'];
-        email = email || localStorageItems['submission_inf_field_Email'];
-        phone = phone || localStorageItems['submission_inf_field_Phone1'];
+        name = name || localStorageItems['submission_Name'] || localStorageItems['inf_field_FirstName'] + ' ' + localStorageItems['submission_inf_field_LastName'];
+        email = email || localStorageItems['submission_Email'];
+        phone = phone || localStorageItems['submission_mobile'];
         resourceToInvest = resourceToInvest || localStorageItems['submission_resources_to_invest'];
         householdIncome = householdIncome || localStorageItems['submission_household_income'];
         console.log('Name:', name);
