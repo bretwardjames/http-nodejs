@@ -32,7 +32,7 @@
         banner.style.textAlign = 'center';
         banner.style.padding = '1vh';
         banner.innerHTML = `
-            We use cookies store basic contact details to make your experience smoother. By continuing to use this site, you agree to our use of cookies.
+            <div style="margin:3px">We use cookies store basic contact details to make your experience smoother. By continuing to use this site, you agree to our use of cookies.</div>
             <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: larger;">Allow and Dismiss</button>
             <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer; font-size: smaller;">Decline Cookies</button>
         `;
