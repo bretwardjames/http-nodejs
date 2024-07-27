@@ -16,7 +16,8 @@
     }
 
     function checkCookieConsent() {
-        return getCookie('cookie_consent') === 'true';
+        const accessStatus = getCookie('cookie_consent')
+        return (accessStatus && access_status !== 'false');
     }
 
     function showCookieConsentBanner() {
@@ -31,14 +32,14 @@
         banner.style.textAlign = 'center';
         banner.style.padding = '1vh';
         banner.innerHTML = `
-            <div><p style="font-size: 1.2em;/* vertical-align: middle; */">We use cookies store basic contact details to make your experience smoother. Cookies expire after 7 days. Please click 'Allow' below for the best experience.</p></div>
-            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Allow Cookies</button>
-            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer;">Decline Cookies</button>
+            We use cookies store basic contact details to make your experience smoother. By continuing to use this site, you agree to our use of cookies.
+            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: larger;">Allow and Dismiss</button>
+            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer; font-size: smaller;">Decline Cookies</button>
         `;
         document.body.appendChild(banner);
         document.getElementById('decline-cookies').addEventListener('click', function () {
-            console.log('Setting cookie consent');
             setCookie('cookie_consent', 'false', 365);
+            console.log('Setting cookie consent');
             banner.style.display = 'none';
         });
 
