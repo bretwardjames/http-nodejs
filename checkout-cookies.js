@@ -33,9 +33,9 @@
         banner.style.padding = '1vh';
         banner.innerHTML = `
             <div style="margin-bottom:10px">We use cookies store basic contact details to make your experience smoother. By continuing to use this site, you agree to our use of cookies.</div>
-            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: larger;">Allow and Dismiss</button>
-            <button id="decline-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: red; color: white; border: none; cursor: pointer; font-size: smaller;">Decline Cookies</button>
-        `;
+            <button id="accept-cookies" style="margin-left: 10px; padding: 5px 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Allow and Dismiss</button>
+            <a id="decline-cookies" style="margin-left: 10px; color: red; border: none; cursor: pointer; font-size: smaller;">Decline Cookies</a>
+                    `;
         document.body.appendChild(banner);
         document.getElementById('decline-cookies').addEventListener('click', function () {
             setCookie('cookie_consent', 'false', 365);
