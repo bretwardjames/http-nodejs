@@ -284,6 +284,7 @@ async function applyPrefillAndSkip() {
                     } else if (paramName === 'inf_field_Email') {
                         const email = value;
                         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        console.log(value)
                         if (!regex.test(email)) {
                             allDetailsProvided = false;
                             readOnly = false;
