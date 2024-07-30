@@ -281,6 +281,13 @@ async function applyPrefillAndSkip() {
                             allDetailsProvided = false;
                             readOnly = false;
                         }
+                    } else if (paramName === 'inf_field_Email') {
+                        const email = value;
+                        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!regex.test(email)) {
+                            allDetailsProvided = false;
+                            readOnly = false;
+                        }
                     }
                     inputEl.value = value;
                     inputEl.readOnly = readOnly;
