@@ -593,7 +593,7 @@ async function handleNextButton() {
     }
 
     // Call the function to apply the fade-out effect
-    updateFadeEffect();
+    // updateFadeEffect();
 
 }
 
