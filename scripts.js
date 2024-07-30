@@ -474,6 +474,9 @@ function getItemWithExpiry(key) {
     return item.value;
 }
 
+let fadeLevel = 1; // Initial fade level
+const fadeIncrement = 0.5; // Incremental fade level
+
 async function handleNextButton() {
     nextButton.disabled = true;
     nextButton.textContent = 'Saving...';
@@ -567,35 +570,31 @@ async function handleNextButton() {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
     }
-    let fadeLevel = 1; // Initial fade level
-    const fadeIncrement = 0.5; // Incremental fade level
 
-    function handleNextButton() {
-        // Your existing logic for handling the next button
 
-        // Increment the fade level
-        fadeLevel -= fadeIncrement;
-        if (fadeLevel < .3) fadeLevel = .3; // Ensure fade level does not exceed 1
+    // Increment the fade level
+    fadeLevel -= fadeIncrement;
+    if (fadeLevel < .3) fadeLevel = .3; // Ensure fade level does not exceed 1
 
-        // Function to update the fade-out effect
-        function updateFadeEffect() {
-            const bodyChildren = document.body.children;
-            const surveyElement = document.getElementById('embedded-form-container'); // Replace with your survey element's ID
+    // Function to update the fade-out effect
+    function updateFadeEffect() {
+        const bodyChildren = document.body.children;
+        const surveyElement = document.getElementById('embedded-form-container'); // Replace with your survey element's ID
 
-            for (let i = 0; i < bodyChildren.length; i++) {
-                if (bodyChildren[i] !== surveyElement) {
-                    bodyChildren[i].style.opacity = fadeLevel;
-                    bodyChildren[i].style.transition = 'opacity 0.5s'; // Smooth transition
-                } else {
-                    bodyChildren[i].style.opacity = 1;
-                    bodyChildren[i].style.pointerEvents = 'auto'; // Allow interaction with the focused element
-                }
+        for (let i = 0; i < bodyChildren.length; i++) {
+            if (bodyChildren[i] !== surveyElement) {
+                bodyChildren[i].style.opacity = fadeLevel;
+                bodyChildren[i].style.transition = 'opacity 0.5s'; // Smooth transition
+            } else {
+                bodyChildren[i].style.opacity = 1;
+                bodyChildren[i].style.pointerEvents = 'auto'; // Allow interaction with the focused element
             }
         }
-
-        // Call the function to apply the fade-out effect
-        updateFadeEffect();
     }
+
+    // Call the function to apply the fade-out effect
+    updateFadeEffect();
+
 }
 
 nextButton.addEventListener('click', function (event) {
