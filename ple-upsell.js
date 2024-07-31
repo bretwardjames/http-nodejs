@@ -1,6 +1,3 @@
-import { response } from "express";
-import { get } from "http";
-
 (async function () {
     document.addEventListener('DOMContentLoaded', async function () {
         function getErrorString(error) {
