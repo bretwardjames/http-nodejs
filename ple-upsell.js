@@ -16,7 +16,7 @@
                     method: "GET",
                 };
 
-                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy}`, requestObject);
+                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, requestObject);
                 const data = await orderResponse.json();
 
                 const contactId = data.contact.id;
