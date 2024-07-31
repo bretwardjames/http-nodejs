@@ -16,18 +16,20 @@
                     method: "GET",
                 };
 
-                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, requestObject);
+                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, requestObject, "POST");
+                console.log('Order response:', orderResponse);
                 const data = await orderResponse.json();
-
+                console.log('Order data:', data);
                 const contactId = data.contact.id;
 
                 const keapContactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', {
                     apiName: "KEAP",
                     endpoint: `/contacts/${contactId}`,
                     method: "GET"
-                });
+                }, "POST");
+                console.log('Contact response:', keapContactResponse);
                 const keapContact = await keapContactResponse.json();
-
+                console.log('Contact data:', keapContact);
                 const today = new Date();
                 const currentUrl = window.location.href;
                 const firstName = data.contact.first_name;
@@ -63,7 +65,7 @@
 
                             };
 
-                            const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject);
+                            const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject, "POST");
                             const upsellData = await upsellResponse.json();
 
                             const upsellOrderId = upsellData.id;
@@ -82,7 +84,7 @@
                                 }
                             };
 
-                            await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
+                            await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject, "POST");
 
                             window.location.href = surveyRedirect;
 
