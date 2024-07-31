@@ -1,3 +1,7 @@
+// Remove these import statements as they are unnecessary
+// import { response } from "express";
+// import { get } from "http";
+
 (async function () {
     document.addEventListener('DOMContentLoaded', async function () {
         function getErrorString(error) {
@@ -11,25 +15,35 @@
         if (isFromKeap) {
             try {
                 const requestObject = {
-                    apiName: "KEAP",
-                    endpoint: `/orders/${keapOrderId}`,
                     method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        apiName: "KEAP",
+                        endpoint: `/orders/${keapOrderId}`,
+                        method: "GET"
+                    })
                 };
 
-                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy`, requestObject, "POST");
-                console.log('Order response:', orderResponse);
+                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy?apiName=KEAP&endpoint=/orders/${keapOrderId}`, requestObject);
                 const data = await orderResponse.json();
-                console.log('Order data:', data);
+
                 const contactId = data.contact.id;
 
                 const keapContactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', {
-                    apiName: "KEAP",
-                    endpoint: `/contacts/${contactId}`,
-                    method: "GET"
-                }, "POST");
-                console.log('Contact response:', keapContactResponse);
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        apiName: "KEAP",
+                        endpoint: `/contacts/${contactId}`,
+                        method: "GET"
+                    })
+                });
                 const keapContact = await keapContactResponse.json();
-                console.log('Contact data:', keapContact);
+
                 const today = new Date();
                 const currentUrl = window.location.href;
                 const firstName = data.contact.first_name;
@@ -47,44 +61,55 @@
 
                         try {
                             const upsellRequestObject = {
-                                apiName: "KEAP",
-                                endpoint: `/orders`,
                                 method: "POST",
-                                data: {
-                                    contact_id: contactId,
-                                    order_date: today.toISOString(),
-                                    order_items: [
-                                        {
-                                            product_id: 47,
-                                            quantity: 1,
-                                        }
-                                    ],
-                                    order_title: 'PLE Comp Ticket',
-                                    order_type: 'Online'
-                                }
-
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    apiName: "KEAP",
+                                    endpoint: `/orders`,
+                                    method: "POST",
+                                    data: {
+                                        contact_id: contactId,
+                                        order_date: today.toISOString(),
+                                        order_items: [
+                                            {
+                                                product_id: 47,
+                                                quantity: 1,
+                                            }
+                                        ],
+                                        order_title: 'PLE Comp Ticket',
+                                        order_type: 'Online'
+                                    }
+                                })
                             };
 
-                            const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject, "POST");
+                            const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject);
                             const upsellData = await upsellResponse.json();
 
                             const upsellOrderId = upsellData.id;
 
                             const paymentRequestObject = {
-                                apiName: "KEAP",
-                                endpoint: `/orders/${upsellOrderId}/payments`,
                                 method: "POST",
-                                data: {
-                                    credit_card_id: ccId,
-                                    payment_amount: upsellData.total_due,
-                                    payment_date: today.toISOString(),
-                                    charge_now: true,
-                                    payment_method_type: 'CREDIT_CARD',
-                                    orderId: upsellOrderId
-                                }
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    apiName: "KEAP",
+                                    endpoint: `/orders/${upsellOrderId}/payments`,
+                                    method: "POST",
+                                    data: {
+                                        credit_card_id: ccId,
+                                        payment_amount: upsellData.total_due,
+                                        payment_date: today.toISOString(),
+                                        charge_now: true,
+                                        payment_method_type: 'CREDIT_CARD',
+                                        orderId: upsellOrderId
+                                    }
+                                })
                             };
 
-                            await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject, "POST");
+                            await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
 
                             window.location.href = surveyRedirect;
 
@@ -96,7 +121,7 @@
                 });
             } catch (error) {
                 console.error('Error fetching order or contact data:', error);
-                window.location.href = surveyRedirect + getErrorString('Error%20fetching%20order%20data');
+                window.location.href = getErrorString('Error%20fetching%20order%20data');
             }
         }
     });
