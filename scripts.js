@@ -1,3 +1,5 @@
+import { set } from "mongoose";
+
 console.log('Form JavaScript executed');
 const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
@@ -248,6 +250,16 @@ async function applyPrefillAndSkip() {
     if (urlParams.has('ContactId')) {
         contactId = urlParams.get('ContactId');
         console.log('Found Contact ID:', contactId);
+    }
+    if (urlParams.has('error')) {
+        const errorDiv = document.getElementById('message');
+        if (errorDiv) {
+            errorDiv.textContent = decodeURIComponent(urlParams.get('error'));
+            errorDiv.classList.add('message-show');
+            setTimeout(() => {
+                errorDiv.classList.remove('message-show');
+            }, 5000);
+        }
     }
     const firstNameCookie = getCookie('first_name');
     const lastNameCookie = getCookie('last_name');
