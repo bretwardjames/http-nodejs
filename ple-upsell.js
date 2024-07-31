@@ -19,7 +19,7 @@
         if (isFromKeap) {
             try {
                 const requestObject = {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
