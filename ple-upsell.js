@@ -121,7 +121,7 @@
                 });
             } catch (error) {
                 console.error('Error fetching order or contact data:', error);
-                window.location.href = getErrorString('Error%20fetching%20order%20data');
+                window.location.href = surveyRedirect + getErrorString('Error%20fetching%20order%20data');
             }
         }
     });
