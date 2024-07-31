@@ -98,7 +98,7 @@
                             const paymentObj = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
                             const paymentData = await paymentObj.json();
 
-                            window.location.href = surveyRedirect + getErrorString(paymentData.payment_status);
+                            window.location.href = surveyRedirect + getErrorString(paymentData.payment_status + '.');
 
                         } catch (error) {
                             console.error('Error during upsell or payment process:', error);

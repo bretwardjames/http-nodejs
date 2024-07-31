@@ -255,6 +255,8 @@ async function applyPrefillAndSkip() {
             errorDiv.textContent = decodeURIComponent(urlParams.get('error'));
             errorDiv.classList.add('message-show');
             setTimeout(() => {
+                errorDiv.classList.add('message-hide');
+                errorDiv.textContent = '';
                 errorDiv.classList.remove('message-show');
             }, 5000);
         }
