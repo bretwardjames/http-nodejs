@@ -11,10 +11,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const keapOrderId = urlParams.get('OrderId');
         const isFromKeap = keapOrderId && keapOrderId !== '' && keapOrderId !== '0';
-        const firstName = urlParams.get('inf_field_FirstName');
-        const lastName = urlParams.get('inf_field_LastName');
-        const email = urlParams.get('inf_field_Email');
-        const phone = urlParams.get('inf_field_Phone1');
+        const firstName = urlParams.get('inf_field_FirstName') || '';
+        const lastName = urlParams.get('inf_field_LastName') || '';
+        const email = urlParams.get('inf_field_Email') || '';
+        const phone = urlParams.get('inf_field_Phone1') || '';
+        const contactId = urlParams.get('inf_field_ContactId') || '';
         const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_Phone1=${phone}&inf_field_ContactId=${contactId}`;
         if (isFromKeap) {
             try {
