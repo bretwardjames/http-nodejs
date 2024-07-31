@@ -145,6 +145,7 @@
 }
 
 .message-show {
+    display: block;
     width: 100%;
     background-color: rgb(51, 51, 51, 50%);
     color: #fff;
