@@ -11,26 +11,20 @@
         if (isFromKeap) {
             try {
                 const requestObject = {
+                    apiName: "KEAP",
+                    endpoint: `/orders/${keapOrderId}`,
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
                 };
 
-                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy?apiName=KEAP&endpoint=/orders/${keapOrderId}`, requestObject);
+                const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy}`, requestObject);
                 const data = await orderResponse.json();
 
                 const contactId = data.contact.id;
 
                 const keapContactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        apiName: "KEAP",
-                        endpoint: `/contacts/${contactId}`
-                    })
+                    apiName: "KEAP",
+                    endpoint: `/contacts/${contactId}`,
+                    method: "GET"
                 });
                 const keapContact = await keapContactResponse.json();
 
@@ -51,26 +45,22 @@
 
                         try {
                             const upsellRequestObject = {
+                                apiName: "KEAP",
+                                endpoint: `/orders`,
                                 method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    apiName: "KEAP",
-                                    endpoint: `/orders`,
-                                    data: {
-                                        contact_id: contactId,
-                                        order_date: today.toISOString(),
-                                        order_items: [
-                                            {
-                                                product_id: 47,
-                                                quantity: 1,
-                                            }
-                                        ],
-                                        order_title: 'PLE Comp Ticket',
-                                        order_type: 'Online'
-                                    }
-                                })
+                                data: {
+                                    contact_id: contactId,
+                                    order_date: today.toISOString(),
+                                    order_items: [
+                                        {
+                                            product_id: 47,
+                                            quantity: 1,
+                                        }
+                                    ],
+                                    order_title: 'PLE Comp Ticket',
+                                    order_type: 'Online'
+                                }
+
                             };
 
                             const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject);
@@ -79,22 +69,17 @@
                             const upsellOrderId = upsellData.id;
 
                             const paymentRequestObject = {
+                                apiName: "KEAP",
+                                endpoint: `/orders/${upsellOrderId}/payments`,
                                 method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    apiName: "KEAP",
-                                    endpoint: `/orders/${upsellOrderId}/payments`,
-                                    data: {
-                                        credit_card_id: ccId,
-                                        payment_amount: upsellData.total_due,
-                                        payment_date: today.toISOString(),
-                                        charge_now: true,
-                                        payment_method_type: 'CREDIT_CARD',
-                                        orderId: upsellOrderId
-                                    }
-                                })
+                                data: {
+                                    credit_card_id: ccId,
+                                    payment_amount: upsellData.total_due,
+                                    payment_date: today.toISOString(),
+                                    charge_now: true,
+                                    payment_method_type: 'CREDIT_CARD',
+                                    orderId: upsellOrderId
+                                }
                             };
 
                             await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
