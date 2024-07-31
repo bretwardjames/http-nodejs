@@ -256,9 +256,13 @@ async function applyPrefillAndSkip() {
             errorDiv.classList.add('message-show');
             setTimeout(() => {
                 errorDiv.classList.add('message-hide');
-                errorDiv.textContent = '';
                 errorDiv.classList.remove('message-show');
+                errorDiv.textContent = '';
+
             }, 5000);
+            setTimeout(() => {
+                errorDiv.textContent = '';  // Clear the content after the fade-out is complete
+            }, 5500); // Delay clearing the text until after the transition
         }
     }
     const firstNameCookie = getCookie('first_name');
