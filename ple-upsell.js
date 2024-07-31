@@ -11,7 +11,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const keapOrderId = urlParams.get('OrderId');
         const isFromKeap = keapOrderId && keapOrderId !== '' && keapOrderId !== '0';
-
+        const firstName = urlParams.get('inf_field_FirstName');
+        const lastName = urlParams.get('inf_field_LastName');
+        const email = urlParams.get('inf_field_Email');
+        const phone = urlParams.get('inf_field_Phone1');
+        const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_Phone1=${phone}&inf_field_ContactId=${contactId}`;
         if (isFromKeap) {
             try {
                 const requestObject = {
@@ -31,28 +35,9 @@
 
                 const contactId = data.contact.id;
 
-                const keapContactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        apiName: "KEAP",
-                        endpoint: `/contacts/${contactId}`,
-                        method: "GET"
-                    })
-                });
-                const keapContact = await keapContactResponse.json();
-
                 const today = new Date();
                 const currentUrl = window.location.href;
-                const firstName = data.contact.first_name;
-                const lastName = data.contact.last_name;
-                const email = data.contact.email;
-                const phone = keapContact.phone_numbers[0]?.number;
                 const ccId = data.payment_plan.credit_card_id;
-                const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_Phone1=${phone}&inf_field_ContactId=${contactId}`;
-
                 const upsellButtons = document.querySelectorAll(`[data-imagelink="${currentUrl}?declined=true&errors=Sorry%20Your%20Cart%20Session%20has%20expired#yes-link"]`);
 
                 upsellButtons.forEach(button => {
