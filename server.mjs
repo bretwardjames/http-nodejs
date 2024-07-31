@@ -116,6 +116,10 @@ app.get('/ple-scripts.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'ple-scripts.js'));
 });
 
+app.get('/ple-upsell.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'ple-upsell.js'));
+});
+
 app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
