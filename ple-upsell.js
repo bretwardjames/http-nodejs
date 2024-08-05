@@ -44,7 +44,7 @@
                         },
                         body: JSON.stringify({
                             apiName: "KEAP",
-                            endpoint: `/contacts/${contactId}`,
+                            endpoint: `/v1/contacts/${contactId}`,
                             method: "GET"
                         })
                     };
@@ -75,7 +75,7 @@
                                 },
                                 body: JSON.stringify({
                                     apiName: "KEAP",
-                                    endpoint: `/orders`,
+                                    endpoint: `/v1/orders`,
                                     method: "POST",
                                     data: {
                                         contact_id: contactId,
@@ -104,14 +104,13 @@
                                 },
                                 body: JSON.stringify({
                                     apiName: "KEAP",
-                                    endpoint: `/orders/${upsellOrderId}/payments`,
+                                    endpoint: `/v1/orders/${upsellOrderId}/payments`,
                                     method: "POST",
                                     data: {
                                         credit_card_id: ccId,
                                         payment_amount: upsellData.total_due,
                                         charge_now: true,
                                         payment_method_type: 'CREDIT_CARD',
-                                        orderId: upsellOrderId
                                     }
                                 })
                             };
