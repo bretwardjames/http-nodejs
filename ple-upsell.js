@@ -109,7 +109,6 @@
                                     data: {
                                         credit_card_id: ccId,
                                         payment_amount: upsellData.total_due,
-                                        payment_date: today.toISOString(),
                                         charge_now: true,
                                         payment_method_type: 'CREDIT_CARD',
                                         orderId: upsellOrderId
