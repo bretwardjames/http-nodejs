@@ -111,6 +111,7 @@
                                         payment_amount: upsellData.total_due,
                                         charge_now: true,
                                         payment_method_type: 'CREDIT_CARD',
+                                        payment_gateway_id: 8
                                     }
                                 })
                             };
