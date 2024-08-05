@@ -147,8 +147,9 @@ app.post('/proxy', async (req, res) => {
   } else if (apiName === 'NUMVERIFY') {
 
     endpoint += `&access_key=${apiKey}`
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
   } else if (apiName === 'IPINFO') {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     endpoint += `${ip}?token=${apiKey}`
   } else {
     authHeader = { 'Authorization': `Bearer ${apiKey}` }
