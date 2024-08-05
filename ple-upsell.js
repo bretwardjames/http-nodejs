@@ -16,7 +16,8 @@
         const email = urlParams.get('inf_field_Email') || '';
         let phone = urlParams.get('inf_field_Phone1') || '';
         const contactId = urlParams.get('inf_field_ContactId') || '';
-        const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_Phone1=${phone}&inf_field_ContactId=${contactId}`;
+        const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_ContactId=${contactId}`;
+
         if (isFromKeap) {
             try {
                 const requestObject = {
@@ -37,22 +38,27 @@
                 const contactId = data.contact.id;
 
                 try {
-                    const contactRequestObject = {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            apiName: "KEAP",
-                            endpoint: `/v1/contacts/${contactId}`,
-                            method: "GET"
-                        })
-                    };
+                    if (!phone || phone === '') {
+                        const contactRequestObject = {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                apiName: "KEAP",
+                                endpoint: `/v1/contacts/${contactId}`,
+                                method: "GET"
+                            })
+                        };
 
-                    const contactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', contactRequestObject);
-                    const contactData = await contactResponse.json();
+                        const contactResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', contactRequestObject);
+                        const contactData = await contactResponse.json();
 
-                    phone = contactData.phone_numbers[0].number;
+                        phone = contactData.phone_numbers[0].number;
+
+                        surveyRedirect += `&inf_field_Phone1=${phone}`;
+                    }
+
                 }
                 catch (error) {
                     console.error('Error fetching contact data:', error);
