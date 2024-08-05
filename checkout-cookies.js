@@ -16,8 +16,8 @@
     }
 
     function checkCookieConsent() {
-        const accessStatus = getCookie('cookie_consent')
-        return (accessStatus && access_status !== 'false');
+        let accessStatus = getCookie('cookie_consent')
+        return accessStatus;
     }
 
     function showCookieConsentBanner() {
@@ -109,10 +109,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (!checkCookieConsent() && !window.location.href.includes('questionnaire')) {
-            console.log('Cookie consent not given');
+        const consentStatus = checkCookieConsent();
+
+        if (!consentStatus && !window.location.href.includes('questionnaire')) {
+            console.log('Cookie consent not given or declined');
             showCookieConsentBanner();
-        } else {
+        }
+
+        if (consentStatus !== 'false') {
             attachInputListeners();
         }
     });
