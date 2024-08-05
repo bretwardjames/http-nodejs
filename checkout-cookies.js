@@ -92,6 +92,10 @@
             const element = document.querySelector(`[name="${key}"]`);
             console.log('Element:', element);
             if (element) {
+                if (element.value) {
+                    console.log('Setting cookie:', key, element.value);
+                    setCookie(key, element.value, 7);
+                }
                 element.addEventListener('change', function () {
                     console.log('Setting cookie:', key, element.value);
                     setCookie(key, element.value, 7);
