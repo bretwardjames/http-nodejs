@@ -67,70 +67,71 @@
                     button.addEventListener('click', async function (event) {
                         event.preventDefault();
 
-                        try {
-                            const upsellRequestObject = {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    apiName: "KEAP",
-                                    endpoint: `/v1/orders`,
-                                    method: "POST",
-                                    data: {
-                                        contact_id: contactId,
-                                        order_date: today.toISOString(),
-                                        order_items: [
-                                            {
-                                                product_id: 47,
-                                                quantity: 1,
-                                            }
-                                        ],
-                                        order_title: 'PLE Comp Ticket',
-                                        order_type: 'Online'
-                                    }
-                                })
-                            };
 
-                            const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject);
-                            const upsellData = await upsellResponse.json();
-
-                            const upsellOrderId = upsellData.id;
-
-                            const paymentRequestObject = {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify({
-                                    apiName: "KEAP",
-                                    endpoint: `/v1/orders/${upsellOrderId}/payments`,
-                                    method: "POST",
-                                    data: {
-                                        credit_card_id: ccId,
-                                        payment_amount: upsellData.total_due,
-                                        charge_now: true,
-                                        payment_method_type: 'CREDIT_CARD',
-                                        payment_gateway_id: 8
-                                    }
-                                })
-                            };
-
-                            const paymentObj = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
-                            const paymentData = await paymentObj.json();
-
-                            window.location.href = surveyRedirect + getErrorString(paymentData.payment_status + '.');
-
-                        } catch (error) {
-                            console.error('Error during upsell or payment process:', error);
-                            window.location.href = surveyRedirect + getErrorString('Error%20processing%20payment');
-                        }
 
                     });
                     const imgs = button.querySelectorAll('img[data-imagelink*="#yes-link"]');
                     imgs.forEach(img => {
-                        img.addEventListener('click', (event) => {
+                        img.addEventListener('click', async function (event) {
                             event.stopPropagation(); // Prevent the event from bubbling up to the div
+                            try {
+                                const upsellRequestObject = {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        apiName: "KEAP",
+                                        endpoint: `/v1/orders`,
+                                        method: "POST",
+                                        data: {
+                                            contact_id: contactId,
+                                            order_date: today.toISOString(),
+                                            order_items: [
+                                                {
+                                                    product_id: 47,
+                                                    quantity: 1,
+                                                }
+                                            ],
+                                            order_title: 'PLE Comp Ticket',
+                                            order_type: 'Online'
+                                        }
+                                    })
+                                };
+
+                                const upsellResponse = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', upsellRequestObject);
+                                const upsellData = await upsellResponse.json();
+
+                                const upsellOrderId = upsellData.id;
+
+                                const paymentRequestObject = {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        apiName: "KEAP",
+                                        endpoint: `/v1/orders/${upsellOrderId}/payments`,
+                                        method: "POST",
+                                        data: {
+                                            credit_card_id: ccId,
+                                            payment_amount: upsellData.total_due,
+                                            charge_now: true,
+                                            payment_method_type: 'CREDIT_CARD',
+                                            payment_gateway_id: 8
+                                        }
+                                    })
+                                };
+
+                                const paymentObj = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', paymentRequestObject);
+                                const paymentData = await paymentObj.json();
+
+                                window.location.href = surveyRedirect + getErrorString(paymentData.payment_status + '.');
+
+                            } catch (error) {
+                                console.error('Error during upsell or payment process:', error);
+                                window.location.href = surveyRedirect + getErrorString('Error%20processing%20payment');
+                            }
                             console.log('Image clicked:', event.currentTarget);
                         });
                     });
