@@ -61,7 +61,7 @@
                 const today = new Date();
                 const currentUrl = window.location.href;
                 const ccId = data.payment_plan.credit_card_id;
-                const upsellButtons = document.querySelectorAll(`[data-imagelink*="#yes-link"]`);
+                const upsellButtons = document.querySelectorAll(`img[data-imagelink*="#yes-link"]`);
 
                 upsellButtons.forEach(button => {
                     button.addEventListener('click', async function (event) {
