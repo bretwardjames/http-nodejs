@@ -17,6 +17,7 @@
 
     async function checkCookieConsent() {
         let consent = getCookie('cookie_consent')
+        consent = consent === 'true' ? true : consent === 'false' ? false : undefined;
         if (consent === undefined) {
             try {
                 const requestObject = {
@@ -173,7 +174,7 @@
     document.addEventListener('DOMContentLoaded', async function () {
         const consentStatus = await checkCookieConsent();
 
-        if (consentStatus === 'true') {
+        if (consentStatus) {
             // Show the revoke consent icon if the user has accepted cookies
             showRevokeConsentIcon();
         }
