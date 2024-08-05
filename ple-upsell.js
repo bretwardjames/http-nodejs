@@ -9,7 +9,7 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const keapOrderId = urlParams.get('OrderId');
+        const keapOrderId = urlParams.get('orderId');
         const isFromKeap = keapOrderId && keapOrderId !== '' && keapOrderId !== '0';
         const firstName = urlParams.get('inf_field_FirstName') || '';
         const lastName = urlParams.get('inf_field_LastName') || '';
