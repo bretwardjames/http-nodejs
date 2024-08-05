@@ -125,12 +125,13 @@
                             console.error('Error during upsell or payment process:', error);
                             window.location.href = surveyRedirect + getErrorString('Error%20processing%20payment');
                         }
-                        const imgs = button.querySelectorAll('img[data-imagelink*="#yes-link"]');
-                        imgs.forEach(img => {
-                            img.addEventListener('click', (event) => {
-                                event.stopPropagation(); // Prevent the event from bubbling up to the div
-                                console.log('Image clicked:', event.currentTarget);
-                            });
+
+                    });
+                    const imgs = button.querySelectorAll('img[data-imagelink*="#yes-link"]');
+                    imgs.forEach(img => {
+                        img.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent the event from bubbling up to the div
+                            console.log('Image clicked:', event.currentTarget);
                         });
                     });
                 });
