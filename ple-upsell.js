@@ -5,7 +5,7 @@
 (async function () {
     document.addEventListener('DOMContentLoaded', async function () {
         function getErrorString(error) {
-            return `&error=${error}%20Please%20email%20suport@davidbayer.com%20or%20call%20407-537-4538%20for%20assistance.`;
+            return `&message=${error}%20Please%20email%20suport@davidbayer.com%20or%20call%20407-537-4538%20for%20assistance.`;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -15,8 +15,8 @@
         const lastName = urlParams.get('inf_field_LastName') || '';
         const email = urlParams.get('inf_field_Email') || '';
         let phone = urlParams.get('inf_field_Phone1') || '';
-        const contactId = urlParams.get('inf_field_ContactId') || '';
-        const surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&inf_field_ContactId=${contactId}`;
+        let contactId = urlParams.get('inf_field_ContactId') || '';
+        let surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}`;
 
         if (isFromKeap) {
             try {
@@ -35,7 +35,11 @@
                 const orderResponse = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/proxy?apiName=KEAP&endpoint=/orders/${keapOrderId}`, requestObject);
                 const data = await orderResponse.json();
 
-                const contactId = data.contact.id;
+                contactId = data.contact.id;
+
+                if (contactId) {
+                    surveyRedirect += `&inf_field_ContactId=${contactId}`;
+                }
 
                 try {
                     if (!phone || phone === '') {

@@ -249,10 +249,10 @@ async function applyPrefillAndSkip() {
         contactId = urlParams.get('ContactId');
         console.log('Found Contact ID:', contactId);
     }
-    // if (urlParams.has('error')) {
+    // if (urlParams.has('message')) {
     //     const errorDiv = document.getElementById('message');
     //     if (errorDiv) {
-    //         errorDiv.textContent = decodeURIComponent(urlParams.get('error'));
+    //         errorDiv.textContent = decodeURIComponent(urlParams.get('message'));
     //         errorDiv.classList.add('message-show');
     //         setTimeout(() => {
     //             errorDiv.classList.add('message-hide');
