@@ -15,9 +15,41 @@
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    function checkCookieConsent() {
-        let accessStatus = getCookie('cookie_consent')
-        return accessStatus;
+    async function checkCookieConsent() {
+        let consent = getCookie('cookie_consent')
+        if (consent === undefined) {
+            try {
+                const requestObject = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        apiName: "IPINFO",
+                        endpoint: `/`,
+                        method: "GET"
+                    })
+                };
+                const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', requestObject);
+                const data = await response.json();
+                // List of EU country codes
+                const euCountries = [
+                    'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR',
+                    'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO',
+                    'SE', 'SI', 'SK'
+                ];
+
+                // Determine if the user is in the EU
+                const isInEU = euCountries.includes(data.country);
+                if (isInEU) {
+                    setCookie('cookie_consent', 'false', 365);
+                    consent = 'false';
+                }
+            } catch (error) {
+                console.error('Error checking EU status:', error);
+            }
+        }
+        return consent;
     }
 
     function showCookieConsentBanner() {
@@ -48,6 +80,7 @@
             setCookie('cookie_consent', 'true', 365);
             banner.style.display = 'none';
             attachInputListeners();
+            showRevokeConsentIcon();
         });
     }
 
@@ -108,8 +141,42 @@
         // });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const consentStatus = checkCookieConsent();
+    function showRevokeConsentIcon() {
+        const revokeDiv = document.createElement('div');
+        revokeDiv.id = 'revoke-cookie-consent';
+        revokeDiv.style.position = 'fixed';
+        revokeDiv.style.bottom = '20px';
+        revokeDiv.style.right = '20px';
+        revokeDiv.style.zIndex = '1000';
+
+        const revokeBtn = document.createElement('button');
+        revokeBtn.id = 'revoke-btn';
+        revokeBtn.title = 'Revoke Cookie Consent';
+        revokeBtn.style.backgroundColor = '#f1c40f';
+        revokeBtn.style.border = 'none';
+        revokeBtn.style.borderRadius = '50%';
+        revokeBtn.style.padding = '10px';
+        revokeBtn.style.cursor = 'pointer';
+        revokeBtn.style.fontSize = '24px';
+        revokeBtn.innerText = '🍪';
+
+        revokeBtn.addEventListener('click', function () {
+            setCookie('cookie_consent', 'false', 365);
+            alert('Cookie tracking has been disabled.');
+            location.reload();  // Reload the page to apply changes
+        });
+
+        revokeDiv.appendChild(revokeBtn);
+        document.body.appendChild(revokeDiv);
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const consentStatus = await checkCookieConsent();
+
+        if (consentStatus === 'true') {
+            // Show the revoke consent icon if the user has accepted cookies
+            showRevokeConsentIcon();
+        }
 
         if (!consentStatus && !window.location.href.includes('questionnaire')) {
             console.log('Cookie consent not given or declined');

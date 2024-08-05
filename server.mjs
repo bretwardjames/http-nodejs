@@ -145,7 +145,11 @@ app.post('/proxy', async (req, res) => {
   if (apiName === 'KEAP') {
     authHeader = { 'X-KEAP-API-KEY': `${apiKey}` }
   } else if (apiName === 'NUMVERIFY') {
+
     endpoint += `&access_key=${apiKey}`
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  } else if (apiName === 'IPINFO') {
+    endpoint += `${ip}?token=${apiKey}`
   } else {
     authHeader = { 'Authorization': `Bearer ${apiKey}` }
   }
