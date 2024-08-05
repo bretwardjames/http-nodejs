@@ -146,6 +146,20 @@
         // });
     }
 
+    function clearTrackingData() {
+        // Remove all relevant cookies
+        const trackingCookies = ['first_name', 'last_name', 'email', 'phone'];
+        trackingCookies.forEach(cookie => deleteCookie(cookie));
+
+        // Clear local storage
+        localStorage.clear();
+
+        // Clear session storage
+        sessionStorage.clear();
+
+        console.log('Tracking data cleared');
+    }
+
     function showRevokeConsentIcon() {
         const revokeDiv = document.createElement('div');
         revokeDiv.id = 'revoke-cookie-consent';
@@ -166,8 +180,8 @@
         revokeBtn.innerText = '🍪';
 
         revokeBtn.addEventListener('click', function () {
-            setCookie('cookie_consent', 'false', 365);
-            alert('Cookie tracking has been disabled.');
+            clearTrackingData();
+            alert('Cookie tracking has been disabled and all tracking data has been cleared.');
             location.reload();  // Reload the page to apply changes
         });
 
