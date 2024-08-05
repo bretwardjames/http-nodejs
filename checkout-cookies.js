@@ -152,7 +152,7 @@
 
     function clearTrackingData() {
         // Remove all relevant cookies
-        const trackingCookies = ['first_name', 'last_name', 'email', 'phone'];
+        const trackingCookies = ['first_name', 'last_name', 'email', 'phone', 'cookie_consent'];
         trackingCookies.forEach(cookie => deleteCookie(cookie));
 
         // Clear local storage
