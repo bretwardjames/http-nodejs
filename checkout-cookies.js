@@ -15,6 +15,10 @@
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
+    function deleteCookie(name) {
+        setCookie(name, '', -1);
+    }
+
     async function checkCookieConsent() {
         let consent = getCookie('cookie_consent')
         consent = consent === 'true' ? true : consent === 'false' ? false : undefined;
@@ -182,7 +186,9 @@
         revokeBtn.addEventListener('click', function () {
             clearTrackingData();
             alert('Cookie tracking has been disabled and all tracking data has been cleared.');
-            location.reload();  // Reload the page to apply changes
+            setTimeout(() => {
+                location.reload();  // Reload the page to apply changes
+            }, 500); // 500ms delay
         });
 
         revokeDiv.appendChild(revokeBtn);
