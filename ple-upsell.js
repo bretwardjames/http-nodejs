@@ -14,9 +14,10 @@
         const firstName = urlParams.get('inf_field_FirstName') || '';
         const lastName = urlParams.get('inf_field_LastName') || '';
         const email = urlParams.get('inf_field_Email') || '';
+        const source = urlParams.get('source') || '';
         let phone = urlParams.get('inf_field_Phone1') || '';
         let contactId = urlParams.get('inf_field_ContactId') || '';
-        let surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}`;
+        let surveyRedirect = `https://davidbayercoaching.com/ss-survey?inf_field_FirstName=${firstName}&inf_field_LastName=${lastName}&inf_field_Email=${email}&source=${source}`;
 
         if (isFromKeap) {
             try {
