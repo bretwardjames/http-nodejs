@@ -248,6 +248,7 @@ function getCookie(name) {
         console.log('Name', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
 
         if (cookieName === name) {
+            console.log('Cookie found:', cookieValue);
             try {
                 const parsed = JSON.parse(cookieValue);
                 return parsed.value; // If JSON, return .value
@@ -255,6 +256,7 @@ function getCookie(name) {
                 return cookieValue; // If not JSON, return the string value
             }
         }
+        console.log('Cookie not found');
     }
     return undefined;
 }
