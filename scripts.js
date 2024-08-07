@@ -237,17 +237,23 @@ function updateProgressBar(first = false) {
 }
 
 function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    console.log(document.cookie)
-    const parts = value.split(`; ${name}=`);
-    console.log(`Parts for ${name}`, parts);
-    if (parts.length === 2) {
-        const cookieValue = parts.pop().split(';').shift();
-        try {
-            const parsed = JSON.parse(cookieValue);
-            return parsed.value // If the value is JSON, parse and return as object
-        } catch (e) {
-            return cookieValue; // If not JSON, return the string value
+    const cookies = document.cookie.split('; ');
+    console.log('Cookies:', cookies);
+
+    for (let i = 0; i < cookies.length; i++) {
+        const parts = cookies[i].split('=');
+        const cookieName = parts[0];
+        const cookieValue = parts.slice(1).join('='); // Handle '=' in value
+
+        console.log('Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
+
+        if (cookieName === name) {
+            try {
+                const parsed = JSON.parse(cookieValue);
+                return parsed.value; // If JSON, return .value
+            } catch (e) {
+                return cookieValue; // If not JSON, return the string value
+            }
         }
     }
     return undefined;
