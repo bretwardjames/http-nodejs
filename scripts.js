@@ -279,6 +279,10 @@ async function applyPrefillAndSkip() {
     const lastNameCookie = getCookie('last_name');
     const emailCookie = getCookie('email');
     const phoneCookie = getCookie('phone');
+    console.log('First Name:', firstNameCookie);
+    console.log('Last Name:', lastNameCookie);
+    console.log('Email:', emailCookie);
+    console.log('Phone:', phoneCookie);
     if (!urlParams.has('inf_field_FirstName') && firstNameCookie) urlParams.set('inf_field_FirstName', firstNameCookie);
     if (!urlParams.has('inf_field_LastName') && lastNameCookie) urlParams.set('inf_field_LastName', lastNameCookie);
     if (!urlParams.has('inf_field_Email') && emailCookie) urlParams.set('inf_field_Email', emailCookie);
