@@ -6,19 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateElements(selector, content) {
-        console.log('Selector:', selector);
+        // console.log('Selector:', selector);
         // const elements = document.querySelectorAll(selector);
         const elements = document.getElementsByClassName(selector);
-        console.log('Elements found:', elements.length);
+        // console.log('Elements found:', elements.length);
         Array.from(elements).forEach(el => {
-            console.log('Element:', el);
+            // console.log('Element:', el);
             if (selector.toLowerCase().includes('graphic')) {
                 el.src = content;
             } else {
                 el.innerText = content;
                 el.style.padding = '0'
             }
-            console.log('Updated element:', el);
+            // console.log('Updated element:', el);
             // const innerDiv = el.querySelector('.elHeadline');
             // console.log('Inner div:', innerDiv);
             // if (innerDiv) {
@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function checkAndUpdate() {
-        console.log('Fetching PLE data');
+        // console.log('Fetching PLE data');
         const pleData = await getPleData();
-        console.log('PLE data:', pleData);
+        // console.log('PLE data:', pleData);
 
         Object.keys(pleData).forEach(key => {
             const shortKey = key.replace('PLE_', '').replace('promo_', '');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateElements(shortKey, pleData[key]);
         });
 
-        console.log('All elements updated');
+        // console.log('All elements updated');
     }
 
     checkAndUpdate();

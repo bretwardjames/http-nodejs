@@ -143,7 +143,7 @@
                                 console.error('Error during upsell or payment process:', error);
                                 window.location.href = surveyRedirect + getErrorString('Error%20processing%20payment');
                             }
-                            console.log('Image clicked:', event.currentTarget);
+                            // console.log('Image clicked:', event.currentTarget);
                         });
                     });
                 });

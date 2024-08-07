@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     // console.log('Resource to invest:', resourceToInvest);
     // console.log('Household income:', householdIncome);
     if (!name || !email || !phone || !resourceToInvest || !householdIncome) {
-        console.log('Something missing. Checking Local Storage')
+        // console.log('Something missing. Checking Local Storage')
         const localStorageItems = getItemsWithPrefix('submission_');
         const submissionUUID = getItemWithExpiry('submissionUUID');
-        console.log('Local Storage Items:', localStorageItems);
+        // console.log('Local Storage Items:', localStorageItems);
 
         for (const key in localStorageItems) {
             let shortKey = key.replace('submission_', '');
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (value) {
                 if (shortKey === 'source') shortKey = 'utm_source';
                 urlParams.set(shortKey, value);
-                console.log('Adding Key:', shortKey, 'Value:', value);
+                // console.log('Adding Key:', shortKey, 'Value:', value);
             }
 
         }
@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         // console.log('Resource to invest:', resourceToInvest);
         // console.log('Household income:', householdIncome);
         if (submissionUUID && (!name || !email || !phone || !resourceToInvest || !householdIncome)) {
-            console.log('Still missing. Fetching data from sheet');
+            // console.log('Still missing. Fetching data from sheet');
             const rowData = await getSheetRow(submissionUUID);
-            console.log('Row Data:', rowData);
+            // console.log('Row Data:', rowData);
             if (rowData) {
                 for (const key in rowData) {
                     let newKey = key;
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     if (key === 'email') newKey = 'Email';
                     if (key === 'source') newKey = 'utm_source';
                     urlParams.set(newKey, rowData[key]);
-                    console.log('Adding Key to :', key, 'Value:', rowData[key]);
+                    // console.log('Adding Key to :', key, 'Value:', rowData[key]);
                     setItemWithExpiry(`submission_${key}`, rowData[key], 7);
                 }
 
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 phone = phone || rowData['phone'];
                 resourceToInvest = resourceToInvest || rowData['resources_to_invest'];
                 householdIncome = householdIncome || rowData['household_income'];
-                console.log('Name:', name);
+                // console.log('Name:', name);
                 // console.log('Email:', email);
                 // console.log('Phone:', phone);
                 // console.log('Resource to invest:', resourceToInvest);
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        console.log('Some issue with the data. Redirecting to the same page');
+        // console.log('Some issue with the data. Redirecting to the same page');
         // console.log('Name:', name);
         // console.log('Email:', email);
         // console.log('Phone:', phone);
@@ -218,5 +218,5 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const button = document.querySelector('[data-title="buttonSurvey"]');
     button.querySelector('a').href += "?" + urlParams.toString();
-    console.log(button);
+    // console.log(button);
 });

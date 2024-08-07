@@ -5,7 +5,7 @@
         link.type = 'text/css';
         link.href = url;
         document.head.appendChild(link);
-        console.log('CSS loaded:', url);
+        // console.log('CSS loaded:', url);
     }
 
     function loadJS(url, callback) {
@@ -14,7 +14,7 @@
         script.src = url;
         script.onload = callback;
         document.body.appendChild(script);
-        console.log('JS loaded:', url);
+        // console.log('JS loaded:', url);
     }
 
     const containerId = 'embedded-form-container';
@@ -36,7 +36,7 @@
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const serverUrl = isLocal ? config.local : config.hosted;
 
-    console.log('Fetching from:', serverUrl + '/form.html');
+    // console.log('Fetching from:', serverUrl + '/form.html');
 
     // Load CSS
     loadCSS(`${serverUrl}/style.css`);
@@ -79,9 +79,9 @@
 
             // Load external scripts and then load the main script
             loadExternalScripts(externalScripts, function () {
-                console.log('External scripts loaded.');
+                // console.log('External scripts loaded.');
                 loadJS(`${serverUrl}/scripts.js`, function () {
-                    console.log('Main script loaded and executed.');
+                    //    console.log('Main script loaded and executed.');
                     // Place any additional initialization code here if necessary
                 });
             });

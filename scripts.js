@@ -1,4 +1,4 @@
-console.log('Form JavaScript executed');
+// console.log('Form JavaScript executed');
 const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
     try {
@@ -11,7 +11,7 @@ async function checkAndUpdateContact(data) {
         });
 
         const result = await response.json();
-        console.log('UUID:', result.uuid);
+        // console.log('UUID:', result.uuid);
 
         // Store the UUID locally
         localStorage.setItem('submissionUUID', result.uuid);
@@ -40,7 +40,7 @@ async function getContactId(email) {
         });
 
         const result = await response.json();
-        console.log('Response:', result);
+        // console.log('Response:', result);
 
         if (!result.contacts || result.contacts.length === 0) {
             throw new Error('No contacts found');
@@ -48,7 +48,7 @@ async function getContactId(email) {
 
         return result.contacts[0].id;
     } catch (error) {
-        console.log('Error:', error);
+        // console.log('Error:', error);
         return null;
     }
 }
@@ -70,28 +70,28 @@ const routingLogic = {
     },
 }
 const formElements = Array.from(document.querySelectorAll('.infusion-field'))
-console.log('Form Elements: ', formElements)
+// console.log('Form Elements: ', formElements)
 let formState = formElements.map(el => ({ element: el, isActive: false }));
-console.log('Form State: ', formState)
+// console.log('Form State: ', formState)
 let currentElementIndex = 0;
 let navigationHistory = [];
 function checkConditions(currentElement) {
-    console.log('Checking conditions for element:', currentElement);
+    // console.log('Checking conditions for element:', currentElement);
     const inputEls = currentElement.querySelectorAll('input, select, textarea');
     let elementName = currentElement.id === 'contact-info' ? 'contact-info' : (inputEls.length > 0 ? inputEls[0].name : null);
     let selectedValue = inputEls[0].value;
-    console.log('Selected Value: ', selectedValue, 'Routing Logic: ', routingLogic)
+    // console.log('Selected Value: ', selectedValue, 'Routing Logic: ', routingLogic)
     if (elementName && routingLogic[elementName]) {
         const conditions = routingLogic[elementName].answers[selectedValue];
-        console.log('Conditions: ', conditions)
+        // console.log('Conditions: ', conditions)
         if (conditions && conditions.activate) {
-            console.log('Activating elements:', conditions.activate);
+            // console.log('Activating elements:', conditions.activate);
             conditions.activate.forEach(id => {
-                console.log('Activating element:', id);
+                // console.log('Activating element:', id);
                 const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
-                console.log('Element Index:', elIndex)
+                // console.log('Element Index:', elIndex)
                 if (elIndex !== -1) {
-                    console.log('Activating element:', id);
+                    // console.log('Activating element:', id);
                     formState[elIndex].isActive = true;
                 }
             });
@@ -100,8 +100,8 @@ function checkConditions(currentElement) {
 }
 
 function showQuestion(index, firstTime = false) {
-    console.log('Showing question:', index);
-    console.log('Form Elements: ', formElements)
+    // console.log('Showing question:', index);
+    // console.log('Form Elements: ', formElements)
     formElements.forEach((el, i) => {
         const inputEl = el.querySelector('input, select, textarea');
         if (i === index) {
@@ -116,14 +116,14 @@ function showQuestion(index, firstTime = false) {
             }
         }
     });
-    console.log('Form State:', formState);
-    console.log('Updating buttons: ', index, formState.length - 1)
+    // console.log('Form State:', formState);
+    // console.log('Updating buttons: ', index, formState.length - 1)
     const activeElements = formState.filter(i => i.isActive)
-    console.log('Active Elements: ', activeElements)
+    // console.log('Active Elements: ', activeElements)
     const indexCheck = activeElements.length < 3 ? 3 : activeElements.findIndex(i => i.element === formElements[index])
-    console.log('Index Check: ', indexCheck)
+    // console.log('Index Check: ', indexCheck)
     const timeToSubmit = indexCheck === activeElements.length - 1
-    console.log('Time to Submit: ', timeToSubmit)
+    // console.log('Time to Submit: ', timeToSubmit)
     document.getElementById('backButton').style.display = index === 0 ? 'none' : 'inline-block';
     nextButton.textContent = timeToSubmit ? 'Submit' : 'Next';
     nextButton.type = timeToSubmit ? 'submit' : 'button';
@@ -136,7 +136,7 @@ function encodeCurlyApostrophe(str) {
 }
 
 function getNextIndex(currentElement) {
-    console.log('Getting next index for element:', currentElement);
+    // console.log('Getting next index for element:', currentElement);
     let nextIndex = currentElementIndex + 1;
 
     while (nextIndex < formState.length && !formState[nextIndex].isActive) {
@@ -146,15 +146,15 @@ function getNextIndex(currentElement) {
     if (nextIndex >= formState.length) {
         return 'submit';
     }
-    console.log('Next index:', nextIndex);
+    // console.log('Next index:', nextIndex);
     return nextIndex;
 }
 
 function handleBackButton() {
-    console.log('Handling back button');
+    // console.log('Handling back button');
     if (navigationHistory.length > 0) {
         currentElementIndex = navigationHistory.pop();
-        console.log('Navigating back to:', currentElementIndex);
+        // console.log('Navigating back to:', currentElementIndex);
         showQuestion(currentElementIndex);
     }
 }
@@ -171,7 +171,7 @@ async function validatePhone(phoneNumber) {
     });
 
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data; // Ensure the returned object has the expected structure
 }
 
@@ -214,38 +214,38 @@ function roundToZeroOrWhole(number) {
 }
 
 function updateProgressBar(first = false) {
-    console.log('Updating progress bar');
+    // console.log('Updating progress bar');
     const visibleElements = formState.filter(el => el.isActive).map(el => el.element);
-    console.log('Visible elements:', visibleElements);
+    // console.log('Visible elements:', visibleElements);
     const answeredElements = formElements.filter(el => el.answered);
-    console.log('Answered elements:', answeredElements);
+    // console.log('Answered elements:', answeredElements);
     const currentIndex = visibleElements.indexOf(formElements[currentElementIndex]);
-    console.log('Current index:', currentIndex);
+    // console.log('Current index:', currentIndex);
     if (currentIndex === -1) {
         return;
     }
     const totalQuestions = visibleElements.length;
-    console.log('Total questions:', totalQuestions);
+    // console.log('Total questions:', totalQuestions);
     const progress = first ? 1 : currentIndex === 1 ? 5 : ((answeredElements.length) / totalQuestions) * 100;
-    console.log('Progress:', progress);
+    // console.log('Progress:', progress);
     const progressBar = document.getElementById('progressBar');
     const progressPercent = document.getElementById('progress');
     progressBar.style.width = `${progress}%`;
     progressPercent.innerText = `${roundToZeroOrWhole(progress)}%`;
     progressBar.setAttribute('aria-valuenow', progress);
-    console.log('Progress bar updated');
+    // console.log('Progress bar updated');
 }
 
 function getCookie(name) {
     const cookies = document.cookie.split('; ');
-    console.log('Cookies:', cookies);
+    // console.log('Cookies:', cookies);
 
     for (let i = 0; i < cookies.length; i++) {
         const parts = cookies[i].split('=');
         const cookieName = parts[0];
         const cookieValue = parts.slice(1).join('='); // Handle '=' in value
 
-        console.log('Name:', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
+        // console.log('Name:', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
 
         if (cookieName === name) {
             // Check if the cookie value looks like JSON
@@ -269,12 +269,12 @@ function getCookie(name) {
 }
 
 async function applyPrefillAndSkip() {
-    console.log('Applying prefill and skip logic');
+    // console.log('Applying prefill and skip logic');
     const urlParams = new URLSearchParams(window.location.search);
-    console.log('URL Params:', urlParams);
+    // console.log('URL Params:', urlParams);
     if (urlParams.has('ContactId')) {
         contactId = urlParams.get('ContactId');
-        console.log('Found Contact ID:', contactId);
+        // console.log('Found Contact ID:', contactId);
     }
     // if (urlParams.has('message')) {
     //     const errorDiv = document.getElementById('message');
@@ -296,16 +296,16 @@ async function applyPrefillAndSkip() {
     const lastNameCookie = getCookie('last_name');
     const emailCookie = getCookie('email');
     const phoneCookie = getCookie('phone');
-    console.log('First Name:', firstNameCookie);
-    console.log('Last Name:', lastNameCookie);
-    console.log('Email:', emailCookie);
-    console.log('Phone:', phoneCookie);
+    // console.log('First Name:', firstNameCookie);
+    // console.log('Last Name:', lastNameCookie);
+    // console.log('Email:', emailCookie);
+    // console.log('Phone:', phoneCookie);
     if (!urlParams.has('inf_field_FirstName') && firstNameCookie) urlParams.set('inf_field_FirstName', firstNameCookie);
     if (!urlParams.has('inf_field_LastName') && lastNameCookie) urlParams.set('inf_field_LastName', lastNameCookie);
     if (!urlParams.has('inf_field_Email') && emailCookie) urlParams.set('inf_field_Email', emailCookie);
     if (!urlParams.has('inf_field_Phone1') && phoneCookie) urlParams.set('inf_field_Phone1', phoneCookie);
     const skipPrequal = urlParams.get('skipPrequal') === 'true';
-    console.log('Skip Prequal:', skipPrequal);
+    // console.log('Skip Prequal:', skipPrequal);
     let allDetailsProvided = true;
     const data = {};
 
@@ -331,7 +331,7 @@ async function applyPrefillAndSkip() {
                     } else if (paramName === 'inf_field_Email') {
                         const email = value;
                         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        console.log(value)
+                        // console.log(value)
                         if (!regex.test(email)) {
                             allDetailsProvided = false;
                             readOnly = false;
@@ -357,19 +357,19 @@ async function applyPrefillAndSkip() {
         }
 
         if (skipPrequal) {
-            console.log('Skipping prequal question and activating business questions');
+            // console.log('Skipping prequal question and activating business questions');
             const prequalQuestions = ['business_type', 'areas_for_support', 'ft_pt', 'income_goal', 'household_income', 'resources_to_invest', 'other_programs', 'comitment_level', 'urgency'];
             prequalQuestions.forEach(id => {
                 const elIndex = formElements.findIndex(el => el.querySelector(`[id=${id}]`));
                 if (elIndex !== -1) {
-                    console.log('Activating element:', formState[elIndex]);
+                    // console.log('Activating element:', formState[elIndex]);
                     formState[elIndex].isActive = true;
                 }
             });
         } else {
-            console.log('Not skipping prequal question');
+            // console.log('Not skipping prequal question');
             if (elementName === 'contact-info' || elementName === 'entrepreneur_or_no') {
-                console.log('Activating element:', elementName);
+                // console.log('Activating element:', elementName);
                 formState[index].isActive = true;
             }
         }
@@ -404,10 +404,10 @@ async function applyPrefillAndSkip() {
     }
 
     if (allDetailsProvided) {
-        console.log('All details provided, skipping contact-info');
+        // console.log('All details provided, skipping contact-info');
         currentElementIndex = getNextIndex(currentElementIndex); // Start with the first question after contact-info
     }
-    console.log('Showing question at index: ', currentElementIndex);
+    // console.log('Showing question at index: ', currentElementIndex);
     document.getElementById('loading').style.display = 'none';
     document.getElementById('loaded').style.display = 'block';
 
@@ -419,9 +419,9 @@ function init() {
 }
 
 function handleSubmit() {
-    console.log('Handling form submission');
+    // console.log('Handling form submission');
     const urlParams = new URLSearchParams(window.location.search);
-    console.log('URL Params:', urlParams);
+    // console.log('URL Params:', urlParams);
     let soSkip = false;
     formElements.forEach(el => {
         const inputEls = el.querySelectorAll('input, select, textarea');
@@ -460,10 +460,10 @@ function handleSubmit() {
     const resources = urlParams.get('resources_to_invest');
     const hhi = urlParams.get('household_income');
 
-    console.log('notEntrepreneur:', notEntrepreneur);
-    console.log('preQualified:', preQualified);
-    console.log('resources:', resources);
-    console.log('hhi:', hhi);
+    // console.log('notEntrepreneur:', notEntrepreneur);
+    // console.log('preQualified:', preQualified);
+    // console.log('resources:', resources);
+    // console.log('hhi:', hhi);
 
     let resourcesCategory;
     if (resources === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time.") {
@@ -474,7 +474,7 @@ function handleSubmit() {
         resourcesCategory = 'qualified';
     }
 
-    console.log('resourcesCategory:', resourcesCategory);
+    // console.log('resourcesCategory:', resourcesCategory);
 
     let hhiCategory;
     if (hhi === 'Less than $50k') {
@@ -485,13 +485,13 @@ function handleSubmit() {
         hhiCategory = 'qualified';
     }
 
-    console.log('hhiCategory:', hhiCategory);
+    // console.log('hhiCategory:', hhiCategory);
 
     if (!preQualified && (notEntrepreneur || (resourcesCategory === 'none' && (hhiCategory === 'none' || hhiCategory === 'low')) || (hhiCategory === 'none' && resourcesCategory === 'low'))) {
         redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
     }
 
-    console.log('Final Redirect URL:', redirectUrl);
+    // console.log('Final Redirect URL:', redirectUrl);
 
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
@@ -541,11 +541,11 @@ async function handleNextButton() {
     nextButton.disabled = true;
     nextButton.textContent = 'Saving...';
 
-    console.log('Handling next button');
+    // console.log('Handling next button');
     const currentElement = formElements[currentElementIndex];
-    console.log('Current element:', currentElement);
+    // console.log('Current element:', currentElement);
     const valid = await validateCurrentElement(currentElement);
-    console.log('Element is valid:', valid);
+    // console.log('Element is valid:', valid);
     if (!valid) {
         alert('Please fill in the required fields.');
         nextButton.disabled = false;
@@ -556,7 +556,7 @@ async function handleNextButton() {
     // Create the data object with key-value pairs from the form fields
     const formData = {};
     const fields = Array.from(currentElement.querySelectorAll('input[name], textarea[name], select[name]'));
-    console.log('Fields:', fields);
+    // console.log('Fields:', fields);
     const emailInvalid = fields.some(field => {
         if (field.name.toLowerCase().includes('email')) {
             const email = field.value;
@@ -571,7 +571,7 @@ async function handleNextButton() {
         return false;
     });
     if (emailInvalid) {
-        console.log('Email is invalid');
+        // console.log('Email is invalid');
         return;
     }
 
@@ -609,23 +609,23 @@ async function handleNextButton() {
     }
 
     // Check conditions and update the state based on the current element
-    console.log('Checking conditions for element:', currentElement);
+    // console.log('Checking conditions for element:', currentElement);
     checkConditions(currentElement);
 
     // Get the next active index
     const nextIndex = getNextIndex(currentElement);
-    console.log('Next index:', nextIndex);
+    // console.log('Next index:', nextIndex);
     if (nextIndex === 'submit') {
-        console.log('Submitting form');
+        // console.log('Submitting form');
         handleSubmit();
     } else {
         if (navigationHistory[navigationHistory.length - 1] !== currentElementIndex) {
             navigationHistory.push(currentElementIndex);
         }
         currentElementIndex = nextIndex;
-        console.log('Navigating to:', currentElementIndex);
+        // console.log('Navigating to:', currentElementIndex);
         showQuestion(currentElementIndex);
-        console.log(formElements, currentElementIndex, nextIndex);
+        // console.log(formElements, currentElementIndex, nextIndex);
         if (window.innerWidth <= 768) {
             document.getElementById('progressBar').scrollIntoView({ behavior: 'smooth' });
         }
@@ -861,4 +861,4 @@ selects.forEach(select => {
 
 init();
 
-console.log('Made it to the end of the script');
+// console.log('Made it to the end of the script');
