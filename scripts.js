@@ -235,10 +235,20 @@ function updateProgressBar(first = false) {
     progressBar.setAttribute('aria-valuenow', progress);
     console.log('Progress bar updated');
 }
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) {
+        const cookieValue = parts.pop().split(';').shift();
+        try {
+            const parsed = JSON.parse(cookieValue);
+            return parsed.value // If the value is JSON, parse and return as object
+        } catch (e) {
+            return cookieValue; // If not JSON, return the string value
+        }
+    }
+    return undefined;
 }
 
 async function applyPrefillAndSkip() {
