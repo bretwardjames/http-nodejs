@@ -91,65 +91,99 @@
         });
     }
 
+    // function attachInputListeners() {
+    //     // console.log('Attaching input listeners');
+    //     ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
+    //         // console.log('Key:', key);
+    //         const element = document.querySelector(`[name="${key}"]`);
+    //         // console.log('Element:', element);
+    //         if (element) {
+    //             if (element.value) {
+    //                 // console.log('Setting cookie:', key, element.value);
+    //                 setCookie(key, element.value, 7);
+    //             }
+    //             element.addEventListener('change', function () {
+    //                 // console.log('Setting cookie:', key, element.value);
+    //                 setCookie(key, element.value, 7);
+    //             });
+    //         }
+    //     });
+    //     // // Select all buttons
+    //     // const buttons = document.querySelectorAll('button');
+
+    //     // // Select all links
+    //     // const links = document.querySelectorAll('a[href]');
+
+
+    //     // // Combine all elements into a single NodeList
+    //     // const allClickableElements = Array.prototype.slice.call(buttons)
+    //     //     .concat(Array.prototype.slice.call(links));
+
+    //     // // Function to handle click event and redirect with parameters
+    //     // function handleClick(event) {
+    //     //     event.preventDefault();
+
+    //     //     const firstName = getCookie('first_name');
+    //     //     const lastName = getCookie('last_name');
+    //     //     const email = getCookie('email');
+    //     //     const phone = getCookie('phone');
+
+    //     //     const baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
+    //     //     if (baseUrl) {
+    //     //         let params = new URLSearchParams();
+    //     //         params.append('blank', 'true');
+    //     //         if (firstName) params.append('inf_field_FirstName', firstName);
+    //     //         if (lastName) params.append('inf_field_LastName', lastName);
+    //     //         if (email) params.append('inf_field_Email', email);
+    //     //         if (phone) params.append('inf_field_Phone1', phone);
+
+    //     //         const newUrl = baseUrl + '?' + params.toString();
+    //     //         window.location.href = newUrl;
+    //     //     }
+    //     // }
+
+    //     // // Attach click event listener to each clickable element
+    //     // allClickableElements.forEach(function (element) {
+    //     //     console.log('Element:', element);
+    //     //     // Check if the element is an anchor tag with an href or a button
+    //     //     element.addEventListener('click', handleClick);
+    //     //     console.log('Event listener added');
+
+    //     // });
+    // }
+
     function attachInputListeners() {
-        // console.log('Attaching input listeners');
+        // Define the listener function separately
+        function inputChangeListener(event) {
+            const key = event.target.name;
+            const value = event.target.value;
+            // console.log('Setting cookie:', key, value);
+            setCookie(key, value, 7);
+        }
+
         ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
-            // console.log('Key:', key);
             const element = document.querySelector(`[name="${key}"]`);
-            // console.log('Element:', element);
             if (element) {
                 if (element.value) {
                     // console.log('Setting cookie:', key, element.value);
                     setCookie(key, element.value, 7);
                 }
-                element.addEventListener('change', function () {
-                    // console.log('Setting cookie:', key, element.value);
-                    setCookie(key, element.value, 7);
-                });
+                element.addEventListener('change', inputChangeListener);
+                // Store the listener function on the element itself
+                element.listener = inputChangeListener;
             }
         });
-        // // Select all buttons
-        // const buttons = document.querySelectorAll('button');
+    }
 
-        // // Select all links
-        // const links = document.querySelectorAll('a[href]');
-
-
-        // // Combine all elements into a single NodeList
-        // const allClickableElements = Array.prototype.slice.call(buttons)
-        //     .concat(Array.prototype.slice.call(links));
-
-        // // Function to handle click event and redirect with parameters
-        // function handleClick(event) {
-        //     event.preventDefault();
-
-        //     const firstName = getCookie('first_name');
-        //     const lastName = getCookie('last_name');
-        //     const email = getCookie('email');
-        //     const phone = getCookie('phone');
-
-        //     const baseUrl = event.currentTarget.href || event.currentTarget.getAttribute('data-url');
-        //     if (baseUrl) {
-        //         let params = new URLSearchParams();
-        //         params.append('blank', 'true');
-        //         if (firstName) params.append('inf_field_FirstName', firstName);
-        //         if (lastName) params.append('inf_field_LastName', lastName);
-        //         if (email) params.append('inf_field_Email', email);
-        //         if (phone) params.append('inf_field_Phone1', phone);
-
-        //         const newUrl = baseUrl + '?' + params.toString();
-        //         window.location.href = newUrl;
-        //     }
-        // }
-
-        // // Attach click event listener to each clickable element
-        // allClickableElements.forEach(function (element) {
-        //     console.log('Element:', element);
-        //     // Check if the element is an anchor tag with an href or a button
-        //     element.addEventListener('click', handleClick);
-        //     console.log('Event listener added');
-
-        // });
+    function detachInputListeners() {
+        ['first_name', 'last_name', 'email', 'phone'].forEach(key => {
+            const element = document.querySelector(`[name="${key}"]`);
+            if (element && element.listener) {
+                element.removeEventListener('change', element.listener);
+                // Clean up the listener reference
+                delete element.listener;
+            }
+        });
     }
 
     function clearTrackingData() {
@@ -164,6 +198,8 @@
         sessionStorage.clear();
 
         // console.log('Tracking data cleared');
+
+        detachInputListeners();
     }
 
     function showRevokeConsentIcon() {
