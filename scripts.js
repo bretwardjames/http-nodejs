@@ -251,6 +251,7 @@ function getCookie(name) {
             console.log('Cookie found:', cookieValue);
             try {
                 const parsed = JSON.parse(cookieValue);
+                console.log('Parsed:', parsed);
                 return parsed.value; // If JSON, return .value
             } catch (e) {
                 return cookieValue; // If not JSON, return the string value
