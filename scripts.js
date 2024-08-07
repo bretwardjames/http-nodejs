@@ -239,6 +239,7 @@ function updateProgressBar(first = false) {
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
+    console.log(`Parts for ${name}`, parts);
     if (parts.length === 2) {
         const cookieValue = parts.pop().split(';').shift();
         try {
