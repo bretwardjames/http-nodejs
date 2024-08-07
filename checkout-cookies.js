@@ -164,8 +164,6 @@
         sessionStorage.clear();
 
         // console.log('Tracking data cleared');
-        alert('Cookie tracking has been disabled and all tracking data has been cleared.');
-
     }
 
     function showRevokeConsentIcon() {
@@ -189,7 +187,7 @@
 
         revokeBtn.addEventListener('click', function () {
             clearTrackingData();
-            // alert('Cookie tracking has been disabled and all tracking data has been cleared.');
+            alert('Cookie tracking has been disabled and all tracking data has been cleared.');
             setTimeout(() => {
                 location.reload();  // Reload the page to apply changes
             }, 500); // 500ms delay
