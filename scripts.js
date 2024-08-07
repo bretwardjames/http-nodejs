@@ -245,7 +245,7 @@ function getCookie(name) {
         const cookieName = parts[0];
         const cookieValue = parts.slice(1).join('='); // Handle '=' in value
 
-        console.log('Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
+        console.log('Name', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
 
         if (cookieName === name) {
             try {
