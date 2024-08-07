@@ -245,19 +245,25 @@ function getCookie(name) {
         const cookieName = parts[0];
         const cookieValue = parts.slice(1).join('='); // Handle '=' in value
 
-        console.log('Name', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
+        console.log('Name:', name, 'Cookie Name:', cookieName, 'Cookie Value:', cookieValue);
 
         if (cookieName === name) {
-            console.log('Cookie found:', cookieValue);
-            try {
-                const parsed = JSON.parse(cookieValue);
-                console.log('Parsed:', parsed);
-                return parsed.value; // If JSON, return .value
-            } catch (e) {
-                return cookieValue; // If not JSON, return the string value
+            // Check if the cookie value looks like JSON
+            if (cookieValue.startsWith('{') || cookieValue.startsWith('[')) {
+                try {
+                    const parsed = JSON.parse(cookieValue);
+                    if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                        return parsed.value;
+                    }
+                } catch (e) {
+                    // If parsing fails, return the cookie value as is
+                    return cookieValue;
+                }
+            } else {
+                // If it's just a number or plain string, return it as is
+                return cookieValue;
             }
         }
-        console.log('Cookie not found');
     }
     return undefined;
 }
