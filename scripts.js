@@ -320,6 +320,11 @@ async function applyPrefillAndSkip() {
                         if (!regex.test(email)) {
                             allDetailsProvided = false;
                             readOnly = false;
+                        } else {
+                            if (!contactId) {
+                                contactId = await getContactId(email);
+                                setItemWithExpiry('submission_Id', contactId, 7);
+                            }
                         }
                     }
                     inputEl.value = value;
