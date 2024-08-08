@@ -468,7 +468,7 @@ function handleSubmit() {
     let resourcesCategory;
     if (resources === "I know I need to invest to grow my business but I'm in a tight spot and don't have any resources available at this time.") {
         resourcesCategory = 'none';
-    } else if (resources === "$500 - $2k") {
+    } else if (resources === "$500 to $2k") {
         resourcesCategory = 'low';
     } else {
         resourcesCategory = 'qualified';
