@@ -113,6 +113,7 @@ app.get('/calendar-scripts.js', (req, res) => {
 });
 
 app.get('/ple-scripts.js', (req, res) => {
+  console.log(req);
   res.sendFile(path.join(__dirname, 'ple-scripts.js'));
 });
 
