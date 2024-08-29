@@ -1,4 +1,4 @@
-(function () {
+(function (config) {
     function loadCSS(url) {
         var link = document.createElement('link');
         link.rel = 'stylesheet';
@@ -87,4 +87,7 @@
             });
         })
         .catch(err => console.error('Failed to load the form:', err));
-})();
+})({
+    local: 'http://localhost:3000',
+    hosted: 'https://http-nodejs-production-5fbc.up.railway.app'
+});

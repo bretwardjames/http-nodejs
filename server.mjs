@@ -129,7 +129,28 @@ app.get('/checkout-cookies.js', (req, res) => {
 
 // Serve the JavaScript file
 app.get('/embedForm.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'embedForm.js'));
+  // Read the embedForm.js file
+  const filePath = path.join(__dirname, 'embedForm.js');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading embedForm.js');
+      return;
+    }
+
+    // Define the parameters you want to inject
+    const config = {
+      local: req.query.local || 'http://localhost:3000',
+      hosted: serverUrl || 'https://http-nodejs-production-5fbc.up.railway.app'
+    };
+
+    // Inject parameters into the script
+    let modifiedData = data
+      .replace(/'https:\/\/http-nodejs-production-5fbc.up.railway.app'/g, `'${config.hosted}'`);
+
+    // Send the modified script
+    res.type('application/javascript');
+    res.send(modifiedData);
+  });
 });
 
 // Middleware to handle API requests
