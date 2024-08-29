@@ -143,6 +143,7 @@ app.get('/embedForm.js', (req, res) => {
       local: req.query.local || 'http://localhost:3000',
       hosted: serverUrl || 'https://http-nodejs-production-5fbc.up.railway.app'
     };
+    console.log(config)
 
     // Inject parameters into the script
     let modifiedData = data
