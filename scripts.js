@@ -584,6 +584,7 @@ async function handleNextButton() {
     fields.forEach(field => {
         formData[field.name] = field.value;
     });
+    console.log('Form Data:', formData);
 
     // Check for existing UUID in local storage
     let uuid = getItemWithExpiry('submissionUUID');
@@ -782,6 +783,8 @@ function updateHiddenInput() {
             options[i].selected = false;
         }
     }
+    console.log('Selected Options:', selectedOptions);
+    console.log('Hidden Select:', hiddenSelect);
 }
 
 document.querySelectorAll('#button-container-describesyou .btn').forEach(button => {
