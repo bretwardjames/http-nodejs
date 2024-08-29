@@ -5,6 +5,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import libphonenumber from 'google-libphonenumber';
@@ -127,16 +128,15 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
-// Serve the JavaScript file
 app.get('/embedForm.js', (req, res) => {
-  // Read the embedForm.js file
-  const filePath = path.join(__dirname, 'embedForm.js');
-  fs.readFile(filePath, 'utf8', (err, data) => {
+  const originalFilePath = path.join(__dirname, 'embedForm.js');
+  console.log('reading file', originalFilePath);
+  fs.readFile(originalFilePath, 'utf8', (err, data) => {
     if (err) {
       res.status(500).send('Error reading embedForm.js');
       return;
     }
-
+    console.log('modifying file')
     // Define the parameters you want to inject
     const config = {
       local: req.query.local || 'http://localhost:3000',
@@ -147,9 +147,27 @@ app.get('/embedForm.js', (req, res) => {
     let modifiedData = data
       .replace(/'https:\/\/http-nodejs-production-5fbc.up.railway.app'/g, `'${config.hosted}'`);
 
-    // Send the modified script
-    res.type('application/javascript');
-    res.send(modifiedData);
+    // Write the modified content to a temporary file
+    const tempFilePath = path.join(os.tmpdir(), 'embedForm_temp.js');
+    console.log('saving file')
+    fs.writeFile(tempFilePath, modifiedData, 'utf8', (err) => {
+      if (err) {
+        res.status(500).send('Error writing modified embedForm.js');
+        return;
+      }
+      console.log('sending file')
+      // Send the modified file
+      res.sendFile(tempFilePath, (err) => {
+        if (err) {
+          res.status(500).send('Error sending modified embedForm.js');
+        } else {
+          // Optionally, delete the temporary file after sending it
+          fs.unlink(tempFilePath, (err) => {
+            if (err) console.error('Error deleting temporary file:', err);
+          });
+        }
+      });
+    });
   });
 });
 
