@@ -585,6 +585,7 @@ async function handleNextButton() {
         formData[field.name] = field.value;
     });
     console.log('Form Data:', formData);
+    console.log('Fields:', fields);
 
     // Check for existing UUID in local storage
     let uuid = getItemWithExpiry('submissionUUID');
