@@ -497,9 +497,9 @@ function handleSubmit() {
         redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
     }
 
-    // console.log('Final Redirect URL:', redirectUrl);
+    console.log('Final Redirect URL:', redirectUrl);
 
-    window.location.href = `${redirectUrl}?${urlParams.toString()}`;
+    // window.location.href = `${redirectUrl}?${urlParams.toString()}`;
 }
 
 // Function to set an item with an expiry in local storage
