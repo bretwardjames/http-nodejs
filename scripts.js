@@ -582,7 +582,11 @@ async function handleNextButton() {
     }
 
     fields.forEach(field => {
-        formData[field.name] = field.value;
+        if (field.multiple) {
+            formData[field.name] = Array.from(field.selectedOptions).map(opt => opt.value).join(', ');
+        } else {
+            formData[field.name] = field.value;
+        }
     });
     console.log('Form Data:', formData);
     console.log('Fields:', fields);
