@@ -440,6 +440,7 @@ function handleSubmit() {
                 name = 'mobile';
             } else if (inputEl.name === 'areas_for_support') {
                 inputEl.value = Array.from(inputEl.selectedOptions).map(opt => opt.value).join(', ');
+                console.log('Areas for Support:', inputEl.value);
             }
             if (inputEl && inputEl.value) {
                 const encodedValue = inputEl.value.replace(/\+/g, '%20');
