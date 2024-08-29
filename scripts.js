@@ -1,7 +1,5 @@
 // console.log('Form JavaScript executed');
-import dotenv from 'dotenv';
-dotenv.config();
-const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
+const serverUrl = window.serverUrl || 'http://localhost:3000';
 const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
     try {

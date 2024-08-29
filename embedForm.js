@@ -74,6 +74,7 @@
             // Load external scripts and then load the main script
             loadExternalScripts(externalScripts, function () {
                 console.log('External scripts loaded.');
+                window.serverUrl = serverUrl;
                 loadJS(`${serverUrl}/scripts.js`, function () {
                     console.log('Main script loaded and executed.');
                     // Place any additional initialization code here if necessary
