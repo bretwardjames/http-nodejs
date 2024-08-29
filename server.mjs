@@ -19,6 +19,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
+console.log('Server URL:', serverUrl);
 
 const app = express();
 
