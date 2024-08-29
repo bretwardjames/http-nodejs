@@ -11,6 +11,7 @@ import { dirname } from 'path';
 import libphonenumber from 'google-libphonenumber';
 import { google } from 'googleapis';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
