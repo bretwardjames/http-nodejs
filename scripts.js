@@ -1,8 +1,11 @@
 // console.log('Form JavaScript executed');
+import dotenv from 'dotenv';
+dotenv.config();
+const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
 const nextButton = document.getElementById('nextButton');
 async function checkAndUpdateContact(data) {
     try {
-        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', { // Update to your server URL
+        const response = await fetch(`${serverUrl}/check-and-update-sheet`, { // Update to your server URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +34,7 @@ async function getContactId(email) {
     };
 
     try {
-        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/proxy', {
+        const response = await fetch(`${serverUrl}/proxy`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -160,7 +163,7 @@ function handleBackButton() {
 }
 
 async function validatePhone(phoneNumber) {
-    const response = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/validatePhone`, {
+    const response = await fetch(`${serverUrl}/validatePhone`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -384,7 +387,7 @@ async function applyPrefillAndSkip() {
     // Send data to server
     if (Object.keys(data).length > 0) {
         try {
-            const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', {
+            const response = await fetch(`${serverUrl}/check-and-update-sheet`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -435,6 +438,8 @@ function handleSubmit() {
                 soSkip = true;
             } else if (inputEl.name === 'inf_field_Phone1') {
                 name = 'mobile';
+            } else if (inputEl.name === 'areas_for_support') {
+                inputEl.value = Array.from(inputEl.selectedOptions).map(opt => opt.value).join(', ');
             }
             if (inputEl && inputEl.value) {
                 const encodedValue = inputEl.value.replace(/\+/g, '%20');
@@ -587,7 +592,7 @@ async function handleNextButton() {
 
     // Send data to server
     try {
-        const response = await fetch('https://http-nodejs-production-5fbc.up.railway.app/check-and-update-sheet', {
+        const response = await fetch(`${serverUrl}/check-and-update-sheet`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -17,13 +17,15 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 
+const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
+
 const app = express();
 
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://http-nodejs-production-5fbc.up.railway.app/', 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'], // Replace with your allowed domain(s)
+  origin: [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'], // Replace with your allowed domain(s)
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
@@ -35,7 +37,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Allowed domains
-const allowedDomains = ['https://http-nodejs-production-5fbc.up.railway.app/', 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'];
+const allowedDomains = [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'];
 
 const adminPassword = process.env.ADMIN_PASSWORD || 'defaultPassword';
 
