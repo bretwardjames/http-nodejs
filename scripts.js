@@ -437,8 +437,10 @@ function handleSubmit() {
             } else if (inputEl.name === 'inf_field_Phone1') {
                 name = 'mobile';
             } else if (inputEl.name === 'areas_for_support') {
-                inputEl.value = Array.from(inputEl.selectedOptions).map(opt => opt.value).join(', ');
-                console.log('Areas for Support:', inputEl.value);
+                const arrayString = Array.from(inputEl.selectedOptions).map(opt => opt.value).join(', ');
+                const encodedValue = arrayString.replace(/\+/g, '%20');
+                urlParams.append(name, encodedValue);
+                return;
             }
             if (inputEl && inputEl.value) {
                 const encodedValue = inputEl.value.replace(/\+/g, '%20');
