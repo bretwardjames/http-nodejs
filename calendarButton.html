@@ -1,49 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+<button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+    id="addToCalendar">Add to Calendar</button>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-    <title>Calendar Event Button</title>
-</head>
+<script>
+    // Function to get URL parameters
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const title = params.get('title') || 'Master the Inner Game of Business';
+        const description = params.get('description') || params.get('wj_event_description');
+        const location = params.get('location') || params.get('wj_lead_unique_link_live_room');
+        const start = params.get('start') || params.get('wj_event_ts');
+        const end = new Date(start);
+        end.setMinutes(end.getMinutes() + 90);
 
-<body>
-    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-        id="addToCalendar">Add to Calendar</button>
+        return {
+            title,
+            description,
+            location,
+            start: new Date(start).toISOString(),
+            end: end.toISOString()
+        };
+    }
 
-    <script>
-        // Function to get URL parameters
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            const title = params.get('title') || '{{title}}';
-            const description = params.get('description') || params.get('wj_event_description');
-            const location = params.get('location') || params.get('wj_lead_unique_link_live_room');
-            const start = params.get('start') || params.get('wj_event_ts');
-            const end = new Date(start);
-            end.setMinutes(end.getMinutes() + 90);
+    // Function to generate Google Calendar URL
+    function generateGoogleCalendarUrl(params) {
+        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(params.title)}&details=${encodeURIComponent(params.description)}&location=${encodeURIComponent(params.location)}&dates=${encodeURIComponent(params.start)}/${encodeURIComponent(params.end)}`;
+    }
 
-            return {
-                title,
-                description,
-                location,
-                start: new Date(start).toISOString(),
-                end: end.toISOString()
-            };
-        }
-
-        // Function to generate Google Calendar URL
-        function generateGoogleCalendarUrl(params) {
-            return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(params.title)}&details=${encodeURIComponent(params.description)}&location=${encodeURIComponent(params.location)}&dates=${encodeURIComponent(params.start)}/${encodeURIComponent(params.end)}`;
-        }
-
-        // Function to generate iCal download link
-        function generateICalUrl(params) {
-            const icsData = `BEGIN:VCALENDAR
+    // Function to generate iCal download link
+    function generateICalUrl(params) {
+        const icsData = `BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
 SUMMARY:${params.title}
@@ -53,32 +38,29 @@ DTSTART:${params.start.replace(/[-:]/g, '')}
 DTEND:${params.end.replace(/[-:]/g, '')}
 END:VEVENT
 END:VCALENDAR`;
-            const blob = new Blob([icsData], { type: 'text/calendar' });
-            return URL.createObjectURL(blob);
-        }
+        const blob = new Blob([icsData], { type: 'text/calendar' });
+        return URL.createObjectURL(blob);
+    }
 
-        // Function to generate Outlook Calendar URL
-        function generateOutlookCalendarUrl(params) {
-            return `https://outlook.live.com/owa/?path=/calendar/action/compose&subject=${encodeURIComponent(params.title)}&body=${encodeURIComponent(params.description)}&location=${encodeURIComponent(params.location)}&startdt=${encodeURIComponent(params.start)}&enddt=${encodeURIComponent(params.end)}`;
-        }
+    // Function to generate Outlook Calendar URL
+    function generateOutlookCalendarUrl(params) {
+        return `https://outlook.live.com/owa/?path=/calendar/action/compose&subject=${encodeURIComponent(params.title)}&body=${encodeURIComponent(params.description)}&location=${encodeURIComponent(params.location)}&startdt=${encodeURIComponent(params.start)}&enddt=${encodeURIComponent(params.end)}`;
+    }
 
-        document.getElementById('addToCalendar').addEventListener('click', () => {
-            const params = getUrlParams();
+    document.getElementById('addToCalendar').addEventListener('click', () => {
+        const params = getUrlParams();
 
-            const googleUrl = generateGoogleCalendarUrl(params);
-            const icalUrl = generateICalUrl(params);
-            const outlookUrl = generateOutlookCalendarUrl(params);
+        const googleUrl = generateGoogleCalendarUrl(params);
+        const icalUrl = generateICalUrl(params);
+        const outlookUrl = generateOutlookCalendarUrl(params);
 
-            const calendarLinks = `
-                <a class="dropdown-item" href="${googleUrl}" target="_blank">Google Calendar</a><br>
-                <a class="dropdown-item" href="${icalUrl}" download="event.ics">iCal</a><br>
-                <a class="dropdown-item" href="${outlookUrl}" target="_blank">Outlook Calendar</a>
-            `;
+        const calendarLinks = `
+            <a class="dropdown-item" href="${googleUrl}" target="_blank">Google Calendar</a><br>
+            <a class="dropdown-item" href="${icalUrl}" download="event.ics">iCal</a><br>
+            <a class="dropdown-item" href="${outlookUrl}" target="_blank">Outlook Calendar</a>
+        `;
 
-            // Open the calendar options (you can customize this part)
-            document.body.innerHTML += `<ul class="dropdown-menu" aria-labelledby="addToCalendar">${calendarLinks}</ul>`;
-        });
-    </script>
-</body>
-
-</html>
+        // Inject the calendar options into the dropdown
+        document.body.innerHTML += `<ul class="dropdown-menu" aria-labelledby="addToCalendar">${calendarLinks}</ul>`;
+    });
+</script>

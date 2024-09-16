@@ -130,29 +130,35 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
-app.get('/embedForm.js', (req, res) => {
-  console.log('Requesting embedForm.js');
-  const originalFilePath = path.join(__dirname, 'embedForm.js');
-  console.log('Original file path:', originalFilePath);
+app.get('/embed-calendar-button', (req, res) => {
+  console.log('Requesting embed-calendar-button');
+  const title = req.query.title || 'Master the Inner Game of Business';
+  const originalFilePath = path.join(__dirname, 'calendarButton.html');
+
   fs.readFile(originalFilePath, 'utf8', (err, data) => {
     if (err) {
-      res.status(500).send('Error reading embedForm.js');
+      res.status(500).send('Error reading calendarButton.html');
       return;
     }
-    console.log('Read embedForm.js');
-    // Define the parameters you want to inject
-    const config = {
-      hosted: serverUrl || 'https://http-nodejs-production-5fbc.up.railway.app'
-    };
 
-    // Inject parameters into the script
-    let modifiedData = data
-      .replace(/'https:\/\/http-nodejs-production-5fbc.up.railway.app'/g, `'${config.hosted}'`);
-    console.log('Modified embedForm.js');
-    // Send the modified script content directly
+    // Replace {{title}} with the actual title
+    let modifiedData = data.replace(/{{title}}/g, title);
+
+    // Escape backticks inside the HTML content to avoid breaking the JavaScript string
+    modifiedData = modifiedData.replace(/`/g, '\\`');
+
+    // Wrap it in JavaScript that will insert it into the DOM
+    const injectedScript = `
+      (function() {
+        var container = document.createElement('div');
+        container.innerHTML = \`${modifiedData}\`;
+        document.body.appendChild(container);
+      })();
+    `;
+
+    // Send the script as the response
     res.type('application/javascript');
-    res.send(modifiedData);
-    console.log('Sent embedForm.js');
+    res.send(injectedScript);
   });
 });
 
