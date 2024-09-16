@@ -160,16 +160,29 @@ app.get('/embed-calendar-button', (req, res) => {
   console.log('Requesting embed-calendar-button');
   const title = req.query.title || 'Master the Inner Game of Business';
   const originalFilePath = path.join(__dirname, 'calendarButton.html');
+
   fs.readFile(originalFilePath, 'utf8', (err, data) => {
     if (err) {
       res.status(500).send('Error reading calendarButton.html');
       return;
     }
-    let modifiedData = data
-      .replace(/{{title}}/g, title);
-    res.send(modifiedData);
-  }
-  )
+
+    // Replace {{title}} with the actual title
+    let modifiedData = data.replace(/{{title}}/g, title);
+
+    // Wrap it in JavaScript that will insert it into the DOM
+    const injectedScript = `
+      (function() {
+        var container = document.createElement('div');
+        container.innerHTML = \`${modifiedData}\`;
+        document.body.appendChild(container);
+      })();
+    `;
+
+    // Send the script as the response
+    res.type('application/javascript');
+    res.send(injectedScript);
+  });
 });
 
 // Middleware to handle API requests
