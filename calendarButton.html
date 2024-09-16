@@ -20,12 +20,19 @@
         // Function to get URL parameters
         function getUrlParams() {
             const params = new URLSearchParams(window.location.search);
+            const title = params.get('title') || 'Master the Inner Game of Business';
+            const description = params.get('description') || params.get('wj_event_description');
+            const location = params.get('location') || params.get('wj_lead_unique_link_live_room');
+            const start = params.get('start') || params.get('wj_event_ts');
+            const end = new Date(start);
+            end.setMinutes(end.getMinutes() + 90);
+
             return {
-                title: params.get('title') || 'Event Title',
-                description: params.get('description') || 'Event Description',
-                location: params.get('location') || 'Event Location',
-                start: params.get('start') || '2024-01-01T10:00:00',
-                end: params.get('end') || '2024-01-01T11:00:00'
+                title,
+                description,
+                location,
+                start: new Date(start).toISOString(),
+                end: end.toISOString()
             };
         }
 
