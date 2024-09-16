@@ -156,6 +156,9 @@ app.get('/embedForm.js', (req, res) => {
   });
 });
 
+app.get('/embed-calendar-button', (req, res) => {
+  res.sendFile(path.join(__dirname, 'embed-calendar-button.html'));
+});
 
 // Middleware to handle API requests
 app.post('/proxy', async (req, res) => {
