@@ -38,7 +38,7 @@
 
         // Function to generate Google Calendar URL
         function generateGoogleCalendarUrl(params) {
-            return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(params.title)}&details=${encodeURIComponent(params.description)}&location=${encodeURIComponent(params.location)}&dates=${encodeURIComponent(params.start)}/${encodeURIComponent(params.end)}`;
+            return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}&dates=${encodeURIComponent(start)}/${encodeURIComponent(end)}`;
         }
 
         // Function to generate iCal download link
