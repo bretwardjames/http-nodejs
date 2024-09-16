@@ -170,6 +170,9 @@ app.get('/embed-calendar-button', (req, res) => {
     // Replace {{title}} with the actual title
     let modifiedData = data.replace(/{{title}}/g, title);
 
+    // Escape backticks inside the HTML content to avoid breaking the JavaScript string
+    modifiedData = modifiedData.replace(/`/g, '\\`');
+
     // Wrap it in JavaScript that will insert it into the DOM
     const injectedScript = `
       (function() {
