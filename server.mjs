@@ -147,12 +147,20 @@ app.get('/embed-calendar-button', (req, res) => {
     // Escape backticks inside the HTML content to avoid breaking the JavaScript string
     modifiedData = modifiedData.replace(/`/g, '\\`');
 
-    // Wrap it in JavaScript that will insert it into the DOM
+    // Wrap it in JavaScript that will insert it into the DOM and execute the script
     const injectedScript = `
       (function() {
         var container = document.createElement('div');
         container.innerHTML = \`${modifiedData}\`;
         document.body.appendChild(container);
+
+        // Manually execute script
+        var scripts = container.getElementsByTagName('script');
+        for (var i = 0; i < scripts.length; i++) {
+          var script = document.createElement('script');
+          script.innerHTML = scripts[i].innerHTML;
+          document.body.appendChild(script);
+        }
       })();
     `;
 
