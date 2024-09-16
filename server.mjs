@@ -158,7 +158,18 @@ app.get('/embedForm.js', (req, res) => {
 
 app.get('/embed-calendar-button', (req, res) => {
   console.log('Requesting embed-calendar-button');
-  res.sendFile(path.join(__dirname, 'calendarButton.html'));
+  const title = req.query.title || 'Master the Inner Game of Business';
+  const originalFilePath = path.join(__dirname, 'calendarButton.html');
+  fs.readFile(originalFilePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading calendarButton.html');
+      return;
+    }
+    let modifiedData = data
+      .replace(/{{title}}/g, title);
+    res.send(modifiedData);
+  }
+  )
 });
 
 // Middleware to handle API requests
