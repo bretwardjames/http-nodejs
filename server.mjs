@@ -130,6 +130,10 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
+app.get('/calendarButton.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'calendarButton.js'));
+});
+
 app.get('/embedForm.js', (req, res) => {
   console.log('Requesting embedForm.js');
   const originalFilePath = path.join(__dirname, 'embedForm.js');
@@ -158,7 +162,14 @@ app.get('/embedForm.js', (req, res) => {
 
 app.get('/embed-calendar-button', (req, res) => {
   console.log('Requesting embed-calendar-button');
+
+  // Extract parameters from the query string
   const title = req.query.title || 'Master the Inner Game of Business';
+  const description = req.query.description || 'Default Description';
+  const location = req.query.location || 'Default Location';
+  const start = req.query.start || '2024-09-16T10:00:00';
+
+  // Read the HTML template
   const originalFilePath = path.join(__dirname, 'calendarButton.html');
 
   fs.readFile(originalFilePath, 'utf8', (err, data) => {
@@ -167,24 +178,19 @@ app.get('/embed-calendar-button', (req, res) => {
       return;
     }
 
-    // Replace {{title}} with the actual title
+    // Replace placeholders in the HTML
     let modifiedData = data.replace(/{{title}}/g, title);
 
-    // Escape backticks inside the HTML content to avoid breaking the JavaScript string
-    modifiedData = modifiedData.replace(/`/g, '\\`');
+    // Create a query string with all the parameters
+    const queryString = `title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}&start=${encodeURIComponent(start)}`;
 
-    // Wrap it in JavaScript that will insert it into the DOM
-    const injectedScript = `
-      (function() {
-        var container = document.createElement('div');
-        container.innerHTML = \`${modifiedData}\`;
-        document.body.appendChild(container);
-      })();
+    // Inject the external JS script in the HTML with all parameters
+    modifiedData += `
+      <script src="/calendarButton.js?${queryString}"></script>
     `;
 
-    // Send the script as the response
-    res.type('application/javascript');
-    res.send(injectedScript);
+    // Send the modified HTML
+    res.send(modifiedData);
   });
 });
 
