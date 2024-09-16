@@ -4,11 +4,10 @@
 <script>
     // Function to get URL parameters
     function getUrlParams() {
-        const params = new URLSearchParams(window.location.search);
-        const title = params.get('title') || 'Master the Inner Game of Business';
-        const description = params.get('description') || params.get('wj_event_description');
-        const location = params.get('location') || params.get('wj_lead_unique_link_live_room');
-        const start = params.get('start') || params.get('wj_event_ts');
+        const title = '{{title}}'
+        const description = '{{description}}'
+        const location = '{{location}}'
+        const start = '{{start}}'
         const end = new Date(start);
         end.setMinutes(end.getMinutes() + 90);
 
