@@ -157,6 +157,7 @@ app.get('/embedForm.js', (req, res) => {
 });
 
 app.get('/embed-calendar-button', (req, res) => {
+  console.log('Requesting embed-calendar-button');
   res.sendFile(path.join(__dirname, 'calendarButton.html'));
 });
 
