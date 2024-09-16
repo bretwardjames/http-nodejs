@@ -130,8 +130,8 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
-app.get('/calendarButton.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'calendarButton.js'));
+app.get('/calendar-button.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'calendar-button.js'));
 });
 
 app.get('/embedForm.js', (req, res) => {
@@ -157,40 +157,6 @@ app.get('/embedForm.js', (req, res) => {
     res.type('application/javascript');
     res.send(modifiedData);
     console.log('Sent embedForm.js');
-  });
-});
-
-app.get('/embed-calendar-button', (req, res) => {
-  console.log('Requesting embed-calendar-button');
-
-  // Extract parameters from the query string
-  const title = req.query.title || 'Master the Inner Game of Business';
-  const description = req.query.description || 'Default Description';
-  const location = req.query.location || 'Default Location';
-  const start = req.query.start || '2024-09-16T10:00:00';
-
-  // Read the HTML template
-  const originalFilePath = path.join(__dirname, 'calendarButton.html');
-
-  fs.readFile(originalFilePath, 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).send('Error reading calendarButton.html');
-      return;
-    }
-
-    // Replace placeholders in the HTML
-    let modifiedData = data.replace(/{{title}}/g, title);
-
-    // Create a query string with all the parameters
-    const queryString = `title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}&start=${encodeURIComponent(start)}`;
-
-    // Inject the external JS script in the HTML with all parameters
-    modifiedData += `
-      <script src="/calendarButton.js?${queryString}"></script>
-    `;
-
-    // Send the modified HTML
-    res.send(modifiedData);
   });
 });
 
