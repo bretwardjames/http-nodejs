@@ -26,6 +26,50 @@ const app = express();
 
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
+app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
+  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const currentDate = new Date();
+
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_ticketGraphicDesktop_next) {
+    res.redirect(process.env.PLE_promo_ticketGraphicDesktop_next);
+  } else {
+    res.redirect(process.env.PLE_promo_ticketGraphicDesktop);
+  }
+});
+
+app.get('/ticket-graphic-ga-mobile.png', (req, res) => {
+  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const currentDate = new Date();
+
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_ticketGraphicMobile_next) {
+    res.redirect(process.env.PLE_promo_ticketGraphicMobile_next);
+  } else {
+    res.redirect(process.env.PLE_promo_ticketGraphicMobile);
+  }
+});
+
+app.get('/ticket-graphic-comp-desktop.png', (req, res) => {
+  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const currentDate = new Date();
+
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_compTicketGraphicDesktop_next) {
+    res.redirect(process.env.PLE_promo_compTicketGraphicDesktop_next);
+  } else {
+    res.redirect(process.env.PLE_promo_compTicketGraphicDesktop);
+  }
+});
+
+app.get('/ticket-graphic-comp-mobile.png', (req, res) => {
+  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const currentDate = new Date();
+
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_compTicketGraphicMobile_next) {
+    res.redirect(process.env.PLE_promo_compTicketGraphicMobile_next);
+  } else {
+    res.redirect(process.env.PLE_promo_compTicketGraphicMobile);
+  }
+});
+
 // CORS configuration
 const corsOptions = {
   origin: [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com', 'https://davidbayer-app.clickfunnels.com/'], // Replace with your allowed domain(s)
@@ -130,38 +174,7 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
-app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_ticketGraphicDesktop_next) {
-    res.sendFile(process.env.PLE_promo_ticketGraphicDesktop_next);
-  } else {
-    res.sendFile(process.env.PLE_promo_ticketGraphicDesktop);
-  }
 
-});
-
-app.get('/ticket-graphic-ga-mobile.png', (req, res) => {
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_ticketGraphicMobile_next) {
-    res.sendFile(process.env.PLE_promo_ticketGraphicMobile_next);
-  } else {
-    res.sendFile(process.env.PLE_promo_ticketGraphicMobile);
-  }
-});
-
-app.get('/ticket-graphic-comp-desktop.png', (req, res) => {
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_compTicketGraphicDesktop_next) {
-    res.sendFile(process.env.PLE_promo_compTicketGraphicDesktop_next);
-  } else {
-    res.sendFile(process.env.PLE_promo_compTicketGraphicDesktop);
-  }
-});
-
-app.get('/ticket-graphic-comp-mobile.png', (req, res) => {
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_compTicketGraphicMobile_next) {
-    res.sendFile(process.env.PLE_promo_compTicketGraphicMobile_next);
-  } else {
-    res.sendFile(process.env.PLE_promo_compTicketGraphicMobile);
-  }
-});
 
 app.get('/calendar-button.js', (req, res) => {
   const typeMappings = {
