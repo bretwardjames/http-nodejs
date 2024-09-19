@@ -28,7 +28,7 @@ const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 // CORS configuration
 const corsOptions = {
-  origin: [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'], // Replace with your allowed domain(s)
+  origin: [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com', 'https://davidbayer-app.clickfunnels.com/'], // Replace with your allowed domain(s)
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
@@ -40,7 +40,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Allowed domains
-const allowedDomains = [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com'];
+const allowedDomains = [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com', "https://davidbayer-app.clickfunnels.com/"];
 
 const adminPassword = process.env.ADMIN_PASSWORD || 'defaultPassword';
 
