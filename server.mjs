@@ -130,8 +130,56 @@ app.get('/checkout-cookies.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'checkout-cookies.js'));
 });
 
+app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_ticketGraphicDesktop_next) {
+    res.sendFile(process.env.PLE_promo_ticketGraphicDesktop_next);
+  } else {
+    res.sendFile(process.env.PLE_promo_ticketGraphicDesktop);
+  }
+
+});
+
+app.get('/ticket-graphic-ga-mobile.png', (req, res) => {
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_ticketGraphicMobile_next) {
+    res.sendFile(process.env.PLE_promo_ticketGraphicMobile_next);
+  } else {
+    res.sendFile(process.env.PLE_promo_ticketGraphicMobile);
+  }
+});
+
+app.get('/ticket-graphic-comp-desktop.png', (req, res) => {
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_compTicketGraphicDesktop_next) {
+    res.sendFile(process.env.PLE_promo_compTicketGraphicDesktop_next);
+  } else {
+    res.sendFile(process.env.PLE_promo_compTicketGraphicDesktop);
+  }
+});
+
+app.get('/ticket-graphic-comp-mobile.png', (req, res) => {
+  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && new Date(process.env.PLE_promo_promo_switchDate) < new Date() && process.env.PLE_promo_compTicketGraphicMobile_next) {
+    res.sendFile(process.env.PLE_promo_compTicketGraphicMobile_next);
+  } else {
+    res.sendFile(process.env.PLE_promo_compTicketGraphicMobile);
+  }
+});
+
 app.get('/calendar-button.js', (req, res) => {
-  res.sendFile(path.join(__dirname, 'calendar-button.js'));
+  const typeMappings = {
+    mhWeb: { title: 'Master the Inner Game of Business', description: '', location: 'wj_lead_unique_link_live_room', start: 'wj_event_ts' },
+    type2: { title: 'eventTitle', description: 'eventDesc', location: 'eventLocation', start: 'eventStart' }
+  };
+  const type = req.query.type || 'type1';  // Default to 'type1' if no type is provided
+  const mappings = typeMappings[type];    // Get the corresponding mappings for this type
+
+  if (!mappings) {
+    return res.status(400).send('Invalid type');
+  }
+
+  // Build a query string with the mappings
+  const queryString = `title=${mappings.title}&description=${mappings.description}&location=${mappings.location}&start=${mappings.start}`;
+
+  // Redirect to the script with the query string
+  res.redirect(`/calendar-button.js?${queryString}`);
 });
 
 app.get('/embedForm.js', (req, res) => {

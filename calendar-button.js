@@ -4,14 +4,22 @@
     const scriptSrc = scriptTag.src;
     const params = new URLSearchParams(scriptSrc.split('?')[1]);
 
-    const title = params.get('title') || 'Default Title';
-    const description = params.get('description') || 'Default Description';
-    const location = params.get('location') || 'Default Location';
-    const start = params.get('start') || '2024-09-16T10:00:00';
+    // Map query parameters to variables
+    const titleParam = params.get('title') || 'title';
+    const descriptionParam = params.get('description') || 'description';
+    const locationParam = params.get('location') || 'location';
+    const startParam = params.get('start') || 'start';
+
+    // Step 2: Extract values from document.href using the mapped params
+    const documentParams = new URLSearchParams(window.location.search);
+    const title = documentParams.get(titleParam) || 'Default Title';
+    const description = documentParams.get(descriptionParam) || 'Default Description';
+    const location = documentParams.get(locationParam) || 'Default Location';
+    const start = documentParams.get(startParam) || '2024-09-16T10:00:00';
     const end = new Date(start);
     end.setMinutes(end.getMinutes() + 90);
 
-    // Step 2: Create the calendar button HTML and inject into a parent div
+    // Step 3: Inject the calendar button HTML and logic into the page
     const container = document.getElementById('calendar-button-container') || document.body;
     container.innerHTML = `
         <div class="dropdown">
@@ -22,7 +30,7 @@
         </div>
     `;
 
-    // Step 3: Calendar event link generation (Google Calendar, iCal, Outlook)
+    // Step 4: Calendar link generation (Google Calendar, iCal, Outlook)
     function generateGoogleCalendarUrl() {
         return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}&dates=${encodeURIComponent(start)}/${encodeURIComponent(end.toISOString())}`;
     }
@@ -46,7 +54,7 @@ END:VCALENDAR`;
         return `https://outlook.live.com/owa/?path=/calendar/action/compose&subject=${encodeURIComponent(title)}&body=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}&startdt=${encodeURIComponent(start)}&enddt=${encodeURIComponent(end.toISOString())}`;
     }
 
-    // Step 4: Inject the calendar links when the button is clicked
+    // Inject the links when the button is clicked
     document.getElementById('addToCalendar').addEventListener('click', () => {
         const googleUrl = generateGoogleCalendarUrl();
         const icalUrl = generateICalUrl();
