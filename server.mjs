@@ -353,9 +353,9 @@ async function checkAndUpdateSheet(data) {
       }
     }
     for (let i = 0; i < rows2.length; i++) {
-      const row = rows2[i];
-      if (row.uuid === data.uuid) {
-        matchingRow = row;
+      const row2 = rows2[i];
+      if (row2.uuid === data.uuid) {
+        matchingRow = row2;
         matchingRowIndex = i;
         matchingSheet = 'raw_ss_applications';
         break;
@@ -375,10 +375,10 @@ async function checkAndUpdateSheet(data) {
       }
     }
     for (let i = 0; i < rows2.length; i++) {
-      const row = rows2[i];
-      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase()) || row.ipAddress === data.ipAddress) {
-        console.log('Matching row found: ', row, 'data: ', data);
-        matchingRow = row;
+      const row2 = rows2[i];
+      if ((row2.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase())) {
+        console.log('Matching row found: ', row2, 'data: ', data);
+        matchingRow = row2;
         matchingRowIndex = i;
         matchingSheet = 'raw_ss_applications';
         break;
@@ -395,7 +395,7 @@ async function checkAndUpdateSheet(data) {
       } else if (key === 'inf_field_Phone1') {
         matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        // matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
+        matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
       } else if (key === 'inf_field_LastName') {
         // matchingRow['lastName'] = data[key];
       } else {
