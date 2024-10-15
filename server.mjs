@@ -304,7 +304,7 @@ async function getAuth() {
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
+  const range = 'Registrants!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -322,16 +322,44 @@ async function checkAndUpdateSheet(data) {
     return rowData;
   });
 
+  const range2 = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
+
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  // Fetch the data from the sheet
+  const response2 = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range
+  });
+  const headers2 = response.data.values.shift();
+  const rows2 = response.data.values.map(row => {
+    const rowData = {};
+    row.forEach((cell, i) => {
+      rowData[headers[i]] = cell;
+    });
+    return rowData;
+  });
+
   let matchingRow = null;
   let matchingRowIndex = -1;
+  let matchingSheet = 'Registrants';
 
   // Find matching row by UUID first
   if (data.uuid) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
+      if (row.uuid === data.uuid) {
         matchingRow = row;
         matchingRowIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < rows2.length; i++) {
+      const row = rows2[i];
+      if (row.uuid === data.uuid) {
+        matchingRow = row;
+        matchingRowIndex = i;
+        matchingSheet = 'raw_ss_applications';
         break;
       }
     }
@@ -341,10 +369,20 @@ async function checkAndUpdateSheet(data) {
   if (!matchingRow) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if ((row.email?.toLowerCase() === data.inf_field_Email?.toLowerCase()) || row.ipAddress === data.ipAddress) {
+      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase()) || row.ipAddress === data.ipAddress) {
         console.log('Matching row found: ', row, 'data: ', data);
         matchingRow = row;
         matchingRowIndex = i;
+        break;
+      }
+    }
+    for (let i = 0; i < rows2.length; i++) {
+      const row = rows2[i];
+      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase()) || row.ipAddress === data.ipAddress) {
+        console.log('Matching row found: ', row, 'data: ', data);
+        matchingRow = row;
+        matchingRowIndex = i;
+        matchingSheet = 'raw_ss_applications';
         break;
       }
     }
@@ -355,13 +393,13 @@ async function checkAndUpdateSheet(data) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        matchingRow['email'] = data[key].toLowerCase();
+        // matchingRow['email'] = data[key].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
-        matchingRow['phone'] = data[key];
+        matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow['firstName'] = data[key];
+        // matchingRow['firstName'] = data[key];
       } else if (key === 'inf_field_LastName') {
-        matchingRow['lastName'] = data[key];
+        // matchingRow['lastName'] = data[key];
       } else {
         matchingRow[key] = data[key];
       }
@@ -371,7 +409,7 @@ async function checkAndUpdateSheet(data) {
     updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `raw_ss_applications!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
+      range: `${matchingSheet}!A${matchingRowIndex + 2}:AB${matchingRowIndex + 2}`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [updatedRow]
