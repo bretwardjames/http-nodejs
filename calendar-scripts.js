@@ -75,41 +75,9 @@ async function getSheetRow(uuid) {
     }
 }
 
-// Function to check if 'vip=true' is in the URL parameters
-function checkVipParam() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const isVip = urlParams.get('vip'); // Get the 'vip' parameter from the URL
-    let embedDiv;
-    if (isVip === 'true') {
-        // If 'vip=true' is present
-        embedDiv = `
-            <!-- ScheduleOnce embed START -->
-            <div id="SOIDIV_VirtualEventVIP" data-so-page="VirtualEventVIP" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
-            <!-- ScheduleOnce embed END -->
-        `;
-    } else {
-        // If 'vip' is not present or not 'true'
-        embedDiv = `
-            <!-- ScheduleOnce embed START -->
-            <div id="SOIDIV_VirtualEventGA" data-so-page="VirtualEventGA" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
-            <!-- ScheduleOnce embed END -->
-        `;
-    }
-    // Find the placeholder div and insert the embed HTML there
-    const placeholder = document.getElementById('calendarEmbed');
-    if (placeholder) {
-        placeholder.innerHTML = embedDiv;
-        // Create and append the ScheduleOnce script
-        const script = document.createElement('script');
-        script.src = 'https://cdn.scheduleonce.com/mergedjs/so.js';
-        document.body.appendChild(script);
-        document.querySelector('[data-title="loadingGif"]').style.display = 'none'
-    }
-}
 // Run the function when the page loads
 
 document.addEventListener('DOMContentLoaded', async function () {
-    checkVipParam();
     let currentUrl = window.location.href;
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.has('utm_source')) {
@@ -248,6 +216,34 @@ document.addEventListener('DOMContentLoaded', async function () {
     } else {
         loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
+    }
+
+    const isVip = urlParams.get('vip'); // Get the 'vip' parameter from the URL
+    let embedDiv;
+    if (isVip === 'true') {
+        // If 'vip=true' is present
+        embedDiv = `
+            <!-- ScheduleOnce embed START -->
+            <div id="SOIDIV_VirtualEventVIP" data-so-page="VirtualEventVIP" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
+            <!-- ScheduleOnce embed END -->
+        `;
+    } else {
+        // If 'vip' is not present or not 'true'
+        embedDiv = `
+            <!-- ScheduleOnce embed START -->
+            <div id="SOIDIV_VirtualEventGA" data-so-page="VirtualEventGA" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
+            <!-- ScheduleOnce embed END -->
+        `;
+    }
+    // Find the placeholder div and insert the embed HTML there
+    const placeholder = document.getElementById('calendarEmbed');
+    if (placeholder) {
+        placeholder.innerHTML = embedDiv;
+        // Create and append the ScheduleOnce script
+        const script = document.createElement('script');
+        script.src = 'https://cdn.scheduleonce.com/mergedjs/so.js';
+        document.body.appendChild(script);
+        document.querySelector('[data-title="loadingGif"]').style.display = 'none'
     }
 
     const button = document.querySelector('[data-title="buttonSurvey"]');
