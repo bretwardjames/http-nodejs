@@ -395,7 +395,7 @@ async function checkAndUpdateSheet(data) {
       } else if (key === 'inf_field_Phone1') {
         matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
+        matchingRow['Name'] = data[key];
       } else if (key === 'inf_field_LastName') {
         // matchingRow['lastName'] = data[key];
       } else {
@@ -420,7 +420,7 @@ async function checkAndUpdateSheet(data) {
     newRow[headers.indexOf('ipAddress')] = data.ipAddress;
     newRow[headers.indexOf('Email')] = data['inf_field_Email'];
     newRow[headers.indexOf('Phone')] = data['inf_field_Phone1'];
-    newRow[headers.indexOf('Name')] = data['inf_field_FirstName'] + ' ' + data['inf_field_LastName'];
+    newRow[headers.indexOf('Name')] = data['inf_field_FirstName'];
     // newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
     newRow[headers.indexOf('updated')] = new Date()
 
