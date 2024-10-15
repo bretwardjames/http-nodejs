@@ -381,6 +381,7 @@ async function applyPrefillAndSkip() {
     if (uuid) {
         data.uuid = uuid;
     }
+    data.SurveyComplete = 'started'
 
     // Send data to server
     if (Object.keys(data).length > 0) {
@@ -506,6 +507,7 @@ function handleSubmit() {
             formData[field.name] = field.value;
         }
     });
+    formData.SurveyComplete = 'completed';
     formData.qualified = qualified;
     checkAndUpdateContact(formData)
     // console.log('Final Redirect URL:', redirectUrl);
@@ -607,7 +609,7 @@ async function handleNextButton() {
     if (uuid) {
         formData.uuid = uuid;
     }
-
+    formData.SurveyComplete = 'in progress';
     // Send data to server
     try {
         const response = await fetch(`${serverUrl}/check-and-update-sheet`, {
