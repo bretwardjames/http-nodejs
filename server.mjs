@@ -304,7 +304,7 @@ async function getAuth() {
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'Registrants!A:Z'; // Adjust the range according to your sheet structure
+  const range = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -371,7 +371,7 @@ async function checkAndUpdateSheet(data) {
     updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `Registrants!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
+      range: `raw_ss_applications!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [updatedRow]
@@ -379,18 +379,18 @@ async function checkAndUpdateSheet(data) {
     });
   } else {
     const newRow = headers.map(header => data[header] || '');
-    newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
+    // newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
     newRow[headers.indexOf('created')] = new Date()
     newRow[headers.indexOf('ipAddress')] = data.ipAddress;
     newRow[headers.indexOf('email')] = data['inf_field_Email'];
     newRow[headers.indexOf('phone')] = data['inf_field_Phone1'];
-    newRow[headers.indexOf('firstName')] = data['inf_field_FirstName'];
-    newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
+    newRow[headers.indexOf('name')] = data['inf_field_FirstName'] + ' ' + data['inf_field_LastName'];
+    // newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
     newRow[headers.indexOf('updated')] = new Date()
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'app-booking_exceptions!A:Z',
+      range: 'app-raw_ss_applications!A:Z',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
