@@ -322,7 +322,7 @@ async function checkAndUpdateSheet(data) {
     return rowData;
   });
 
-  const range2 = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
+  const range2 = 'raw_ss_applications!A:AB'; // Adjust the range according to your sheet structure
 
   // Fetch the data from the sheet
   const response2 = await sheets.spreadsheets.values.get({
