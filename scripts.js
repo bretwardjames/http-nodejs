@@ -492,11 +492,22 @@ function handleSubmit() {
     }
 
     // console.log('hhiCategory:', hhiCategory);
-
+    let qualified = true;
     if (!preQualified && (notEntrepreneur || (resourcesCategory === 'none' && (hhiCategory === 'none' || hhiCategory === 'low')) || (hhiCategory === 'none' && resourcesCategory === 'low'))) {
         redirectUrl = 'https://davidbayercoaching.com/accelerator-intensive-ss-waitlist';
+        qualified = false;
     }
-
+    let formData = {};
+    const fields = Array.from(currentElement.querySelectorAll('input[name], textarea[name], select[name]'));
+    fields.forEach(field => {
+        if (field.multiple) {
+            formData[field.name] = Array.from(field.selectedOptions).map(opt => opt.value).join(', ');
+        } else {
+            formData[field.name] = field.value;
+        }
+    });
+    formData.qualified = qualified;
+    checkAndUpdateContact(formData)
     // console.log('Final Redirect URL:', redirectUrl);
 
     window.location.href = `${redirectUrl}?${urlParams.toString()}`;
