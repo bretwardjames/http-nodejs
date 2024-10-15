@@ -359,9 +359,9 @@ async function checkAndUpdateSheet(data) {
       } else if (key === 'inf_field_Phone1') {
         matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
+        matchingRow['firstName'] = data[key];
       } else if (key === 'inf_field_LastName') {
-        // matchingRow['lastName'] = data[key];
+        matchingRow['lastName'] = data[key];
       } else {
         matchingRow[key] = data[key];
       }
