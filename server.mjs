@@ -404,6 +404,7 @@ async function checkAndUpdateSheet(data) {
       newUUID = matchingRow.uuid;
     });
     const updatedRow = headers.map(header => matchingRow[header] || '');
+    updatedRow.qualified = data.qualified || false;
     updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
