@@ -498,7 +498,7 @@ function handleSubmit() {
         qualified = false;
     }
     let formData = {};
-    const fields = Array.from(currentElement.querySelectorAll('input[name], textarea[name], select[name]'));
+    const fields = Array.from(document.querySelectorAll('input[name], textarea[name], select[name]'));
     fields.forEach(field => {
         if (field.multiple) {
             formData[field.name] = Array.from(field.selectedOptions).map(opt => opt.value).join(', ');
