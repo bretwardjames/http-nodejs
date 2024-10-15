@@ -418,10 +418,10 @@ async function checkAndUpdateSheet(data) {
     newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
     newRow[headers.indexOf('created')] = new Date()
     newRow[headers.indexOf('ipAddress')] = data.ipAddress;
-    newRow[headers.indexOf('email')] = data['inf_field_Email'];
-    newRow[headers.indexOf('phone')] = data['inf_field_Phone1'];
-    newRow[headers.indexOf('firstName')] = data['inf_field_FirstName'];
-    newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
+    newRow[headers.indexOf('Email')] = data['inf_field_Email'];
+    newRow[headers.indexOf('Phone')] = data['inf_field_Phone1'];
+    newRow[headers.indexOf('Name')] = data['inf_field_FirstName'] + ' ' + data['inf_field_LastName'];
+    // newRow[headers.indexOf('lastName')] = data['inf_field_LastName'];
     newRow[headers.indexOf('updated')] = new Date()
 
     await sheets.spreadsheets.values.append({
