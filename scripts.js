@@ -459,7 +459,7 @@ function handleSubmit() {
         urlParams.append('Id', contactId);
     }
     urlParams.append('submissionUUID', getItemWithExpiry('submissionUUID'));
-    let redirectUrl = 'https://davidbayercoaching.com/ss-app-results'; // Default thank you page
+    let redirectUrl = 'https://davidbayercoaching.com/accelerator-intensive-schedule-ss'; // Default thank you page
 
     const notEntrepreneur = urlParams.get('entrepreneur_or_no') === "I'm not a business owner and am not actively wanting to start one at this time.";
     const preQualified = urlParams.get('preQualified') === 'true';
@@ -494,7 +494,7 @@ function handleSubmit() {
     // console.log('hhiCategory:', hhiCategory);
 
     if (!preQualified && (notEntrepreneur || (resourcesCategory === 'none' && (hhiCategory === 'none' || hhiCategory === 'low')) || (hhiCategory === 'none' && resourcesCategory === 'low'))) {
-        redirectUrl = 'https://davidbayercoaching.com/ss-app-results-unq';
+        redirectUrl = 'https://davidbayercoaching.com/accelerator-intensive-ss-waitlist';
     }
 
     // console.log('Final Redirect URL:', redirectUrl);
