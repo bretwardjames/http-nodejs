@@ -56,7 +56,7 @@ function getItemFromStorage(key) {
 
 async function getSheetRow(uuid) {
     try {
-        const response = await fetch(`https://http-nodejs-production-5fbc.up.railway.app/get-sheet-row?uuid=${uuid}`, {
+        const response = await fetch(`https://http-nodejs-ve-staging.up.railway.app/get-sheet-row?uuid=${uuid}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
