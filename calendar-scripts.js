@@ -197,8 +197,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     window.history.replaceState({}, document.title, updatedUrl);
-
+    const isVip = urlParams.get('vip'); // Get the 'vip' parameter from the URL
     const qualifiedSection = document.querySelector('[data-title="qualified"]');
+    const qualifiedVIPSection = document.querySelector('[data-title="qualifiedVIP"]');
     const subSection = document.querySelector('[data-title="qualifiedSubSection"]');
     const noSurveySection = document.querySelector('[data-title="noSurvey"]');
     const loadingSection = document.querySelector('[data-title="loadingGif"]');
@@ -208,7 +209,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (resourceToInvest && name && email && householdIncome) {
         loadingSection.style.display = 'none';
-        qualifiedSection.style.display = 'block';
+        if (isVip === 'true') {
+            qualifiedVIPSection.style.display = 'block';
+        } else {
+            qualifiedSection.style.display = 'block';
+        }
         subSection.style.display = 'block';
         // PTPageTriggers.listen({
         //     feature: "2339-Q7F4DdRnndNpBxB9WICjNIxFVedO3dWjqNEyXVZp"
@@ -216,35 +221,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     } else {
         loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
-    }
-
-    const isVip = urlParams.get('vip'); // Get the 'vip' parameter from the URL
-    let embedDiv;
-    if (isVip === 'true') {
-        // If 'vip=true' is present
-        embedDiv = `
-            <!-- ScheduleOnce embed START -->
-            <div id="SOIDIV_VirtualEventVIP" data-so-page="VirtualEventVIP" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
-            <!-- ScheduleOnce embed END -->
-        `;
-    } else {
-        // If 'vip' is not present or not 'true'
-        embedDiv = `
-            <!-- ScheduleOnce embed START -->
-            <div id="SOIDIV_VirtualEventGA" data-so-page="VirtualEventGA" data-height="550" data-style="border: 1px solid #d8d8d8; min-width: 290px; max-width: 900px;" data-psz="11"></div>
-            <!-- ScheduleOnce embed END -->
-        `;
-    }
-    // Find the placeholder div and insert the embed HTML there
-    const placeholder = document.getElementById('calendarEmbed');
-    console.log(placeholder);
-    if (placeholder) {
-        placeholder.innerHTML = embedDiv;
-        // Create and append the ScheduleOnce script
-        const script = document.createElement('script');
-        script.src = 'https://cdn.scheduleonce.com/mergedjs/so.js';
-        document.body.appendChild(script);
-        document.querySelector('[data-title="loadingGif"]').style.display = 'none'
     }
 
     const button = document.querySelector('[data-title="buttonSurvey"]');
