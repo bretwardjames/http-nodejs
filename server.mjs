@@ -324,8 +324,6 @@ async function checkAndUpdateSheet(data) {
 
   const range2 = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
 
-  const sheets = google.sheets({ version: 'v4', auth });
-
   // Fetch the data from the sheet
   const response2 = await sheets.spreadsheets.values.get({
     spreadsheetId,
