@@ -391,11 +391,11 @@ async function checkAndUpdateSheet(data) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        // matchingRow['email'] = data[key].toLowerCase();
+        matchingRow['Email'] = data[key].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
         matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        // matchingRow['firstName'] = data[key];
+        matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
       } else if (key === 'inf_field_LastName') {
         // matchingRow['lastName'] = data[key];
       } else {
