@@ -303,8 +303,8 @@ async function getAuth() {
 
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
-  const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
-  const range = 'raw_applications!A:Z'; // Adjust the range according to your sheet structure
+  const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
+  const range = 'Registrants!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -326,22 +326,22 @@ async function checkAndUpdateSheet(data) {
   let matchingRowIndex = -1;
 
   // Find matching row by UUID first
-  if (data.uuid) {
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
-        matchingRow = row;
-        matchingRowIndex = i;
-        break;
-      }
-    }
-  }
+  // if (data.uuid) {
+  //   for (let i = 0; i < rows.length; i++) {
+  //     const row = rows[i];
+  //     if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
+  //       matchingRow = row;
+  //       matchingRowIndex = i;
+  //       break;
+  //     }
+  //   }
+  // }
 
   // If no matching UUID, find by other fields
   if (!matchingRow) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if ((row.email?.toLowerCase() === data.email?.toLowerCase() || row.ipAddress === data.ip || row.phone === data.phone) && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
+      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase() || row.ipAddress === data.ip || row.phone === data.phone)) {
         matchingRow = row;
         matchingRowIndex = i;
         break;
@@ -354,13 +354,13 @@ async function checkAndUpdateSheet(data) {
     // Update existing row
     Object.keys(data).forEach(key => {
       if (key === 'inf_field_Email') {
-        matchingRow['email'] = data[key].toLowerCase();
+        matchingRow['Email'] = data[key].toLowerCase();
       } else if (key === 'inf_field_Phone1') {
-        matchingRow['phone'] = data[key];
+        matchingRow['Phone'] = data[key];
       } else if (key === 'inf_field_FirstName') {
-        matchingRow['firstName'] = data[key];
+        matchingRow['Name'] = data[key] + ' ' + data['inf_field_LastName'];
       } else if (key === 'inf_field_LastName') {
-        matchingRow['lastName'] = data[key];
+        // matchingRow['lastName'] = data[key];
       } else {
         matchingRow[key] = data[key];
       }
@@ -370,7 +370,7 @@ async function checkAndUpdateSheet(data) {
     updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `raw_applications!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
+      range: `Registrants!A${matchingRowIndex + 2}:Z${matchingRowIndex + 2}`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [updatedRow]
@@ -389,7 +389,7 @@ async function checkAndUpdateSheet(data) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'raw_applications!A:Z',
+      range: 'app-booking_exceptions!A:Z',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
@@ -419,8 +419,8 @@ app.post('/check-and-update-sheet', async (req, res) => {
 
 app.get('/get-sheet-row', async (req, res) => {
   const auth = await getAuth();
-  const spreadsheetId = '117qpB4qG_yIQSkPFApYDKmFieVer1b9Jj2sKYz1cyk4'; // Replace with your Google Sheets ID
-  const range = 'raw_applications!A:Z'; // Adjust the range according to your sheet structure
+  const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
+  const range = 'Registrants!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
   // Fetch the data from the sheet
@@ -440,10 +440,10 @@ app.get('/get-sheet-row', async (req, res) => {
   let matchingRow = null;
 
   // Find matching row by UUID
-  if (req.query.uuid) {
+  if (req.query.inf_field_Email) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if (row.uuid === req.query.uuid) {
+      if (row.Email === req.query.inf_field_Email) {
         matchingRow = row;
         break;
       }
