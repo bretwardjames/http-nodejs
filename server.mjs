@@ -325,7 +325,7 @@ async function checkAndUpdateSheet(data) {
   let matchingRow = null;
   let matchingRowIndex = -1;
 
-  Find matching row by UUID first
+  // Find matching row by UUID first
   if (data.uuid) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
