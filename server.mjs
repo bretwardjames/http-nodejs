@@ -390,7 +390,7 @@ async function checkAndUpdateSheet(data) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'app-raw_ss_applications!A:Z',
+      range: 'raw_ss_applications!A:Z',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
