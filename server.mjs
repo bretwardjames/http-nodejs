@@ -327,7 +327,7 @@ async function checkAndUpdateSheet(data) {
   // Fetch the data from the sheet
   const response2 = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range2
+    range: range2
   });
   const headers2 = response2.data.values.shift();
   const rows2 = response2.data.values.map(row => {
