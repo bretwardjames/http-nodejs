@@ -325,23 +325,23 @@ async function checkAndUpdateSheet(data) {
   let matchingRow = null;
   let matchingRowIndex = -1;
 
-  // Find matching row by UUID first
-  // if (data.uuid) {
-  //   for (let i = 0; i < rows.length; i++) {
-  //     const row = rows[i];
-  //     if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
-  //       matchingRow = row;
-  //       matchingRowIndex = i;
-  //       break;
-  //     }
-  //   }
-  // }
+  Find matching row by UUID first
+  if (data.uuid) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (row.uuid === data.uuid && new Date(row.created) > new Date(new Date() - 7 * 24 * 60 * 60 * 1000)) {
+        matchingRow = row;
+        matchingRowIndex = i;
+        break;
+      }
+    }
+  }
 
   // If no matching UUID, find by other fields
   if (!matchingRow) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase())) {
+      if ((row.email?.toLowerCase() === data.inf_field_Email?.toLowerCase())) {
         console.log('Matching row found: ', row, 'data: ', data);
         matchingRow = row;
         matchingRowIndex = i;
@@ -379,7 +379,7 @@ async function checkAndUpdateSheet(data) {
     });
   } else {
     const newRow = headers.map(header => data[header] || '');
-    // newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
+    newRow[headers.indexOf('uuid')] = newUUID; // Ensure the UUID is set in the correct column
     newRow[headers.indexOf('created')] = new Date()
     newRow[headers.indexOf('ipAddress')] = data.ipAddress;
     newRow[headers.indexOf('email')] = data['inf_field_Email'];
