@@ -449,11 +449,11 @@ function handleSubmit() {
         });
     });
     if (soSkip) {
-        urlParams.append('soSkip', 1);
-        setItemWithExpiry('soSkip', 1, 7);
+        urlParams.append('skip', 1);
+        setItemWithExpiry('skip', 1, 7);
     } else {
-        urlParams.append('soSkip', 0);
-        setItemWithExpiry('soSkip', 0, 7);
+        urlParams.append('skip', 0);
+        setItemWithExpiry('skip', 0, 7);
     }
     if (contactId) {
         urlParams.append('Id', contactId);
