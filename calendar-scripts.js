@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     // Find the placeholder div and insert the embed HTML there
     const placeholder = document.getElementById('calendarEmbed');
+    console.log(placeholder);
     if (placeholder) {
         placeholder.innerHTML = embedDiv;
         // Create and append the ScheduleOnce script
