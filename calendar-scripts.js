@@ -242,9 +242,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         loadingSection.style.display = 'none';
         qualifiedSection.style.display = 'block';
         subSection.style.display = 'block';
-        PTPageTriggers.listen({
-            feature: "2339-Q7F4DdRnndNpBxB9WICjNIxFVedO3dWjqNEyXVZp"
-        });
+        // PTPageTriggers.listen({
+        //     feature: "2339-Q7F4DdRnndNpBxB9WICjNIxFVedO3dWjqNEyXVZp"
+        // });
     } else {
         loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
