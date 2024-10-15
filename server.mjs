@@ -367,7 +367,7 @@ async function checkAndUpdateSheet(data) {
   if (!matchingRow) {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
-      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase()) || row.ipAddress === data.ipAddress) {
+      if ((row.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase())) {
         console.log('Matching row found: ', row, 'data: ', data);
         matchingRow = row;
         matchingRowIndex = i;
