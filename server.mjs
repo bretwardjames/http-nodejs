@@ -421,7 +421,7 @@ app.post('/check-and-update-sheet', async (req, res) => {
 app.get('/get-sheet-row', async (req, res) => {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'Registrants!A:Z'; // Adjust the range according to your sheet structure
+  const range = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
   // Fetch the data from the sheet
