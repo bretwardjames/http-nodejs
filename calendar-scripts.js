@@ -215,9 +215,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             qualifiedSection.style.display = 'block';
         }
         subSection.style.display = 'block';
-        // PTPageTriggers.listen({
-        //     feature: "2339-Q7F4DdRnndNpBxB9WICjNIxFVedO3dWjqNEyXVZp"
-        // });
+        PTPageTriggers.listen({
+            feature: "2339-vkkPrJwA2Z31qx6x5O4MEPcteUAlCZ50gme5uFiL"
+        });
     } else {
         loadingSection.style.display = 'none';
         noSurveySection.style.display = 'block';
