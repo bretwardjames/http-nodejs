@@ -322,7 +322,7 @@ async function checkAndUpdateSheet(data) {
     return rowData;
   });
 
-  const range2 = 'raw_ss_applications!A:AB'; // Adjust the range according to your sheet structure
+  const range2 = 'unmatched_ss_applications!A:AB'; // Adjust the range according to your sheet structure
 
   // Fetch the data from the sheet
   const response2 = await sheets.spreadsheets.values.get({
@@ -357,7 +357,7 @@ async function checkAndUpdateSheet(data) {
       if (row2.uuid === data.uuid) {
         matchingRow = row2;
         matchingRowIndex = i;
-        matchingSheet = 'raw_ss_applications';
+        matchingSheet = 'unmatched_ss_applications';
         break;
       }
     }
@@ -380,7 +380,7 @@ async function checkAndUpdateSheet(data) {
         console.log('Matching row found: ', row2, 'data: ', data);
         matchingRow = row2;
         matchingRowIndex = i;
-        matchingSheet = 'raw_ss_applications';
+        matchingSheet = 'unmatched_ss_applications';
         break;
       }
     }
@@ -427,7 +427,7 @@ async function checkAndUpdateSheet(data) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'raw_ss_applications!A:Z',
+      range: 'unmatched_ss_applications!A:Z',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
@@ -458,7 +458,7 @@ app.post('/check-and-update-sheet', async (req, res) => {
 app.get('/get-sheet-row', async (req, res) => {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'raw_ss_applications!A:Z'; // Adjust the range according to your sheet structure
+  const range = 'unmatched_ss_applications!A:Z'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
   // Fetch the data from the sheet
