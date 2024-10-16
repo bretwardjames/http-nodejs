@@ -304,7 +304,7 @@ async function getAuth() {
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'Registrants!a:ac'; // Adjust the range according to your sheet structure
+  const range = 'raw_ss_applications!a:ac'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -322,25 +322,8 @@ async function checkAndUpdateSheet(data) {
     return rowData;
   });
 
-  const range2 = 'unmatched_ss_applications!a:ac'; // Adjust the range according to your sheet structure
-
-  // Fetch the data from the sheet
-  const response2 = await sheets.spreadsheets.values.get({
-    spreadsheetId,
-    range: range2
-  });
-  const headers2 = response2.data.values.shift();
-  const rows2 = response2.data.values.map(row => {
-    const rowData = {};
-    row.forEach((cell, i) => {
-      rowData[headers[i]] = cell;
-    });
-    return rowData;
-  });
-
   let matchingRow = null;
   let matchingRowIndex = -1;
-  let matchingSheet = 'Registrants';
 
   // Find matching row by UUID first
   if (data.uuid) {
@@ -349,15 +332,6 @@ async function checkAndUpdateSheet(data) {
       if (row.uuid === data.uuid) {
         matchingRow = row;
         matchingRowIndex = i;
-        break;
-      }
-    }
-    for (let i = 0; i < rows2.length; i++) {
-      const row2 = rows2[i];
-      if (row2.uuid === data.uuid) {
-        matchingRow = row2;
-        matchingRowIndex = i;
-        matchingSheet = 'unmatched_ss_applications';
         break;
       }
     }
@@ -371,16 +345,6 @@ async function checkAndUpdateSheet(data) {
         console.log('Matching row found: ', row, 'data: ', data);
         matchingRow = row;
         matchingRowIndex = i;
-        break;
-      }
-    }
-    for (let i = 0; i < rows2.length; i++) {
-      const row2 = rows2[i];
-      if ((row2.Email?.toLowerCase() === data.inf_field_Email?.toLowerCase())) {
-        console.log('Matching row found: ', row2, 'data: ', data);
-        matchingRow = row2;
-        matchingRowIndex = i;
-        matchingSheet = 'unmatched_ss_applications';
         break;
       }
     }
@@ -408,7 +372,7 @@ async function checkAndUpdateSheet(data) {
     updatedRow[headers.indexOf('updated')] = new Date();
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: `${matchingSheet}!A${matchingRowIndex + 2}:AB${matchingRowIndex + 2}`,
+      range: `raw_ss_applications!A${matchingRowIndex + 2}:AC${matchingRowIndex + 2}`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [updatedRow]
@@ -427,7 +391,7 @@ async function checkAndUpdateSheet(data) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'unmatched_ss_applications!A:Z',
+      range: 'raw_ss_applications!A:AC',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
@@ -458,7 +422,7 @@ app.post('/check-and-update-sheet', async (req, res) => {
 app.get('/get-sheet-row', async (req, res) => {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'unmatched_ss_applications!A:Z'; // Adjust the range according to your sheet structure
+  const range = 'raw_ss_applications!A:AC'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
   // Fetch the data from the sheet
