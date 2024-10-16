@@ -304,7 +304,7 @@ async function getAuth() {
 async function checkAndUpdateSheet(data) {
   const auth = await getAuth();
   const spreadsheetId = '14cYWSvkotngWsvvVYhrx5knb_BHrgi-1_qHhZy_YYF0'; // Replace with your Google Sheets ID
-  const range = 'Registrants!A:AB'; // Adjust the range according to your sheet structure
+  const range = 'Registrants!a:ac'; // Adjust the range according to your sheet structure
 
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -322,7 +322,7 @@ async function checkAndUpdateSheet(data) {
     return rowData;
   });
 
-  const range2 = 'unmatched_ss_applications!A:AB'; // Adjust the range according to your sheet structure
+  const range2 = 'unmatched_ss_applications!a:ac'; // Adjust the range according to your sheet structure
 
   // Fetch the data from the sheet
   const response2 = await sheets.spreadsheets.values.get({
