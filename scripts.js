@@ -434,7 +434,7 @@ function handleSubmit() {
                 inputEl.value += ' ' + inputEls[idx + 1].value;
             } else if (inputEl.name === 'inf_field_Email') {
                 name = 'Email';
-                soSkip = true;
+                // soSkip = true;
             } else if (inputEl.name === 'inf_field_Phone1') {
                 name = 'mobile';
             } else if (inputEl.name === 'areas_for_support') {
