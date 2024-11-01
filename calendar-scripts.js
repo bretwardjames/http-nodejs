@@ -99,6 +99,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         areasForSupport = areasForSupport.substring(0, 199);
         urlParams.set('areas_for_support', areasForSupport);
     }
+    let biggestChallenge = urlParams.get('biggest_challenge');
+    if (biggestChallenge && biggestChallenge.length > 199) {
+        biggestChallenge = biggestChallenge.substring(0, 199);
+        urlParams.set('biggest_challenge', biggestChallenge);
+    }
     urlParams.set('soSkip', 0);
     let baseUrl = getCurrentUrlWithoutParameters();
     let updatedUrl = `${baseUrl}?${urlParams.toString()}`.replace(/\+/g, '%20');
