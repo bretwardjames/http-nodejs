@@ -95,8 +95,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
     let areasForSupport = urlParams.get('areas_for_support');
-    if (areasForSupport && areasForSupport.length > 249) {
-        areasForSupport = areasForSupport.substring(0, 249);
+    if (areasForSupport && areasForSupport.length > 199) {
+        areasForSupport = areasForSupport.substring(0, 199);
         urlParams.set('areas_for_support', areasForSupport);
     }
     urlParams.set('soSkip', 0);
