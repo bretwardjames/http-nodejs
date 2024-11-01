@@ -450,8 +450,8 @@ function handleSubmit() {
         });
     });
     if (soSkip) {
-        urlParams.append('soSkip', 1);
-        setItemWithExpiry('soSkip', 1, 7);
+        urlParams.append('soSkip', 0);
+        setItemWithExpiry('soSkip', 0, 7);
     } else {
         urlParams.append('soSkip', 0);
         setItemWithExpiry('soSkip', 0, 7);

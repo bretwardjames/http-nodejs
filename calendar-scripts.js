@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             setItemWithExpiry(`submission_${key}`, value, 7);
         });
     }
-
+    urlParams.set('soSkip', 0);
     let baseUrl = getCurrentUrlWithoutParameters();
     let updatedUrl = `${baseUrl}?${urlParams.toString()}`.replace(/\+/g, '%20');
     let name = urlParams.get('Name');
