@@ -94,6 +94,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             setItemWithExpiry(`submission_${key}`, value, 7);
         });
     }
+    let areasForSupport = urlParams.get('areas_for_support');
+    if (areasForSupport && areasForSupport.length > 249) {
+        areasForSupport = areasForSupport.substring(0, 249);
+        urlParams.set('areas_for_support', areasForSupport);
+    }
     urlParams.set('soSkip', 0);
     let baseUrl = getCurrentUrlWithoutParameters();
     let updatedUrl = `${baseUrl}?${urlParams.toString()}`.replace(/\+/g, '%20');
