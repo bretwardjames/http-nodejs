@@ -188,8 +188,8 @@ async function validateCurrentElement(element) {
             if (inputEl.type === 'tel') {
                 const validatedPhone = await validatePhone(inputEl.value.trim());
                 if (!validatedPhone.valid) {
-                    alert('Please enter a valid phone number with 7 to 15 digits.');
-                    isValid = false;
+                    // alert('Please enter a valid phone number with 7 to 15 digits.');
+                    // isValid = false;
                 } else {
                     inputEl.value = validatedPhone.local_format;
                 }
@@ -326,8 +326,8 @@ async function applyPrefillAndSkip() {
                         if (validatedPhone.valid) {
                             value = validatedPhone.local_format;
                         } else {
-                            allDetailsProvided = false;
-                            readOnly = false;
+                            // allDetailsProvided = false;
+                            // readOnly = false;
                         }
                     } else if (paramName === 'inf_field_Email') {
                         const email = value;
