@@ -1,125 +1,78 @@
-import Database from 'better-sqlite3';
 import bcrypt from 'bcrypt';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, 'data');
-const DB_PATH = path.join(DATA_DIR, 'config.db');
+const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
+const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
 
 // Ensure data directory exists
-import fs from 'fs';
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Initialize database
-const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
-
-// Create tables if they don't exist
+// Initialize database (JSON files)
 export function initializeDatabase() {
-  // Users table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  // Initialize config file
+  if (!fs.existsSync(CONFIG_FILE)) {
+    const pleVars = Object.entries(process.env)
+      .filter(([key]) => key.startsWith('PLE_'))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(pleVars, null, 2));
+  }
 
-  // Config values table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS config_values (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      key TEXT UNIQUE NOT NULL,
-      value TEXT,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  // Initialize users file
+  if (!fs.existsSync(USERS_FILE)) {
+    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'password';
+    const hashedPassword = bcrypt.hashSync(adminPassword, 10);
 
-  // Change history table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS change_history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      key TEXT NOT NULL,
-      old_value TEXT,
-      new_value TEXT,
-      username TEXT,
-      changed_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // Migrate existing environment variables to database
-  migrateEnvVars();
-
-  // Create initial admin user if it doesn't exist
-  createAdminUserIfNeeded();
-}
-
-// Migrate PLE variables from environment to database
-function migrateEnvVars() {
-  const pleVars = Object.entries(process.env)
-    .filter(([key]) => key.startsWith('PLE_'))
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
-
-  for (const [key, value] of Object.entries(pleVars)) {
-    try {
-      const existing = db.prepare('SELECT value FROM config_values WHERE key = ?').get(key);
-      if (!existing) {
-        db.prepare('INSERT INTO config_values (key, value) VALUES (?, ?)').run(key, value);
+    const users = {
+      [adminUsername]: {
+        id: 1,
+        username: adminUsername,
+        password: hashedPassword,
+        created_at: new Date().toISOString()
       }
-    } catch (err) {
-      console.error(`Error migrating env var ${key}:`, err);
-    }
+    };
+
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+    console.log(`Created initial admin user: ${adminUsername}`);
+  }
+
+  // Initialize history file
+  if (!fs.existsSync(HISTORY_FILE)) {
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify([], null, 2));
   }
 }
 
-// Create admin user from environment variables if not exists
-function createAdminUserIfNeeded() {
-  const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'password';
-
-  try {
-    const existing = db.prepare('SELECT id FROM users WHERE username = ?').get(adminUsername);
-    if (!existing) {
-      const hashedPassword = bcrypt.hashSync(adminPassword, 10);
-      db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(
-        adminUsername,
-        hashedPassword
-      );
-      console.log(`Created initial admin user: ${adminUsername}`);
-    }
-  } catch (err) {
-    console.error('Error creating admin user:', err);
-  }
-}
-
-// Get all config values (with fallback to env vars if DB is empty)
+// Get all config values
 export function getAllConfig() {
   try {
-    const configs = db.prepare('SELECT key, value FROM config_values').all();
-    const result = {};
-    configs.forEach(({ key, value }) => {
-      result[key] = value;
-    });
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      const config = JSON.parse(data);
 
-    // If database is empty, fallback to PLE environment variables
-    if (Object.keys(result).length === 0) {
-      const pleVars = Object.entries(process.env)
-        .filter(([key]) => key.startsWith('PLE_'))
-        .reduce((acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        }, {});
-      return pleVars;
+      // If config file has values, return them
+      if (Object.keys(config).length > 0) {
+        return config;
+      }
     }
 
-    return result;
+    // Fallback to environment variables
+    const pleVars = Object.entries(process.env)
+      .filter(([key]) => key.startsWith('PLE_'))
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+    return pleVars;
   } catch (err) {
     console.error('Error getting config:', err);
     // Fallback to environment variables on error
@@ -133,18 +86,20 @@ export function getAllConfig() {
   }
 }
 
-// Get single config value (with fallback to env var if not in DB)
+// Get single config value
 export function getConfigValue(key) {
   try {
-    const row = db.prepare('SELECT value FROM config_values WHERE key = ?').get(key);
-    if (row) {
-      return row.value;
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      const config = JSON.parse(data);
+      if (config[key]) {
+        return config[key];
+      }
     }
     // Fallback to environment variable
     return process.env[key] || null;
   } catch (err) {
     console.error(`Error getting config value for ${key}:`, err);
-    // Fallback to environment variable on error
     return process.env[key] || null;
   }
 }
@@ -152,20 +107,40 @@ export function getConfigValue(key) {
 // Set config value
 export function setConfigValue(key, value, username = 'system') {
   try {
-    const oldValue = getConfigValue(key);
+    let config = {};
 
-    const existing = db.prepare('SELECT id FROM config_values WHERE key = ?').get(key);
-    if (existing) {
-      db.prepare('UPDATE config_values SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?').run(value, key);
-    } else {
-      db.prepare('INSERT INTO config_values (key, value) VALUES (?, ?)').run(key, value);
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      config = JSON.parse(data);
     }
 
+    const oldValue = config[key] || null;
+    config[key] = value;
+
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+
     // Log to change history
-    db.prepare(`
-      INSERT INTO change_history (key, old_value, new_value, username)
-      VALUES (?, ?, ?, ?)
-    `).run(key, oldValue, value, username);
+    let history = [];
+    if (fs.existsSync(HISTORY_FILE)) {
+      const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+      history = JSON.parse(data);
+    }
+
+    history.unshift({
+      id: history.length + 1,
+      key,
+      old_value: oldValue,
+      new_value: value,
+      username,
+      changed_at: new Date().toISOString()
+    });
+
+    // Keep only last 500 entries to avoid huge file
+    if (history.length > 500) {
+      history = history.slice(0, 500);
+    }
+
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
 
     return true;
   } catch (err) {
@@ -177,13 +152,12 @@ export function setConfigValue(key, value, username = 'system') {
 // Get change history
 export function getChangeHistory(limit = 50) {
   try {
-    const history = db.prepare(`
-      SELECT id, key, old_value, new_value, username, changed_at
-      FROM change_history
-      ORDER BY changed_at DESC
-      LIMIT ?
-    `).all(limit);
-    return history;
+    if (fs.existsSync(HISTORY_FILE)) {
+      const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+      const history = JSON.parse(data);
+      return history.slice(0, limit);
+    }
+    return [];
   } catch (err) {
     console.error('Error getting change history:', err);
     return [];
@@ -193,7 +167,14 @@ export function getChangeHistory(limit = 50) {
 // Authenticate user
 export function authenticateUser(username, password) {
   try {
-    const user = db.prepare('SELECT id, username, password FROM users WHERE username = ?').get(username);
+    if (!fs.existsSync(USERS_FILE)) {
+      return null;
+    }
+
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    const users = JSON.parse(data);
+    const user = users[username];
+
     if (!user) {
       return null;
     }
@@ -213,8 +194,19 @@ export function authenticateUser(username, password) {
 // Get user by ID
 export function getUserById(id) {
   try {
-    const user = db.prepare('SELECT id, username FROM users WHERE id = ?').get(id);
-    return user || null;
+    if (!fs.existsSync(USERS_FILE)) {
+      return null;
+    }
+
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    const users = JSON.parse(data);
+
+    for (const user of Object.values(users)) {
+      if (user.id === id) {
+        return { id: user.id, username: user.username };
+      }
+    }
+    return null;
   } catch (err) {
     console.error('Error getting user by ID:', err);
     return null;
@@ -224,8 +216,29 @@ export function getUserById(id) {
 // Create new user
 export function createUser(username, password) {
   try {
+    let users = {};
+
+    if (fs.existsSync(USERS_FILE)) {
+      const data = fs.readFileSync(USERS_FILE, 'utf8');
+      users = JSON.parse(data);
+    }
+
+    // Check if user already exists
+    if (users[username]) {
+      return false;
+    }
+
     const hashedPassword = bcrypt.hashSync(password, 10);
-    db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, hashedPassword);
+    const newId = Math.max(...Object.values(users).map(u => u.id || 0)) + 1;
+
+    users[username] = {
+      id: newId,
+      username,
+      password: hashedPassword,
+      created_at: new Date().toISOString()
+    };
+
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
     return true;
   } catch (err) {
     console.error('Error creating user:', err);
@@ -233,15 +246,23 @@ export function createUser(username, password) {
   }
 }
 
-// Get all users (without passwords)
+// Get all users
 export function getAllUsers() {
   try {
-    const users = db.prepare('SELECT id, username, created_at FROM users').all();
-    return users;
+    if (!fs.existsSync(USERS_FILE)) {
+      return [];
+    }
+
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    const users = JSON.parse(data);
+
+    return Object.values(users).map(user => ({
+      id: user.id,
+      username: user.username,
+      created_at: user.created_at
+    }));
   } catch (err) {
     console.error('Error getting all users:', err);
     return [];
   }
 }
-
-export default db;
