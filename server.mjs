@@ -38,6 +38,9 @@ const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
 
 const app = express();
 
+// Trust proxy (Railway puts HTTPS termination in front)
+app.set('trust proxy', 1);
+
 // Configure session middleware (using memory store)
 app.use(
   session({
@@ -45,8 +48,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       httpOnly: true,
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     }
   })
