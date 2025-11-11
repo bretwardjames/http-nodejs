@@ -323,7 +323,6 @@ app.get('/calendar-scripts.js', (req, res) => {
 });
 
 app.get('/ple-scripts.js', (req, res) => {
-  console.log(req);
   res.sendFile(path.join(__dirname, 'ple-scripts.js'));
 });
 
@@ -357,15 +356,12 @@ app.get('/calendar-button.js', (req, res) => {
 });
 
 app.get('/embedForm.js', (req, res) => {
-  console.log('Requesting embedForm.js');
   const originalFilePath = path.join(__dirname, 'embedForm.js');
-  console.log('Original file path:', originalFilePath);
   fs.readFile(originalFilePath, 'utf8', (err, data) => {
     if (err) {
       res.status(500).send('Error reading embedForm.js');
       return;
     }
-    console.log('Read embedForm.js');
     // Define the parameters you want to inject
     const config = {
       hosted: serverUrl || 'https://http-nodejs-production-5fbc.up.railway.app'
@@ -374,11 +370,9 @@ app.get('/embedForm.js', (req, res) => {
     // Inject parameters into the script
     let modifiedData = data
       .replace(/'https:\/\/http-nodejs-production-5fbc.up.railway.app'/g, `'${config.hosted}'`);
-    console.log('Modified embedForm.js');
     // Send the modified script content directly
     res.type('application/javascript');
     res.send(modifiedData);
-    console.log('Sent embedForm.js');
   });
 });
 
