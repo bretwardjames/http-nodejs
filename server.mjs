@@ -242,6 +242,47 @@ app.post('/validate-url', requireAuth, async (req, res) => {
   }
 });
 
+// Get all users
+app.get('/admin/users', requireAuth, (req, res) => {
+  try {
+    const users = getAllUsers();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// Create new user
+app.post('/admin/create-user', requireAuth, (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password required' });
+    }
+
+    if (username.length < 3) {
+      return res.status(400).json({ error: 'Username must be at least 3 characters' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const success = createUser(username, password);
+
+    if (!success) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
+    res.json({ success: true, message: `User '${username}' created successfully` });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
 // Middleware to check referring domain
 const checkReferer = (req, res, next) => {
   const referer = req.get('Referer');

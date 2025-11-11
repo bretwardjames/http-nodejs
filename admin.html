@@ -477,6 +477,7 @@
       <button class="tab-btn active" onclick="switchTab('config')">Configuration</button>
       <button class="tab-btn" onclick="switchTab('preview')">Preview</button>
       <button class="tab-btn" onclick="switchTab('history')">Change History</button>
+      <button class="tab-btn" onclick="switchTab('users')">User Management</button>
     </div>
 
     <!-- Configuration Tab -->
@@ -707,6 +708,50 @@
         </table>
       </div>
     </div>
+
+    <!-- User Management Tab -->
+    <div id="users" class="tab-content">
+      <div class="card">
+        <h2>User Management</h2>
+        <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
+          Create new admin users for managing PLE configuration.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+          <!-- Create User Form -->
+          <div>
+            <div class="section-header">
+              <h3>Create New User</h3>
+            </div>
+
+            <div class="form-group">
+              <label for="newUsername">Username</label>
+              <input type="text" id="newUsername" placeholder="Enter username (min 3 characters)">
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword">Password</label>
+              <input type="password" id="newPassword" placeholder="Enter password (min 6 characters)">
+            </div>
+
+            <button class="btn-save" onclick="createNewUser()" style="width: 100%;">Create User</button>
+          </div>
+
+          <!-- Users List -->
+          <div>
+            <div class="section-header">
+              <h3>Existing Users</h3>
+            </div>
+
+            <div id="usersList" style="max-height: 400px; overflow-y: auto;">
+              <div style="text-align: center; color: #999; padding: 20px;">
+                Loading users...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -749,6 +794,9 @@
 
       // Load history
       await loadHistory();
+
+      // Load users
+      await loadUsers();
 
       // Add input listeners for image preview on blur
       Object.keys(fieldMappings).forEach(fieldId => {
@@ -837,6 +885,76 @@
         `).join('');
       } catch (error) {
         console.error('Load history error:', error);
+      }
+    }
+
+    async function loadUsers() {
+      try {
+        const response = await fetch('/admin/users');
+        if (!response.ok) throw new Error('Failed to load users');
+
+        const users = await response.json();
+        const usersList = document.getElementById('usersList');
+
+        if (users.length === 0) {
+          usersList.innerHTML = '<div style="color: #999;">No users found</div>';
+          return;
+        }
+
+        usersList.innerHTML = users.map(user => `
+          <div style="padding: 12px; background: #f9f9f9; border-radius: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 500; color: #333;">${user.username}</div>
+              <div style="font-size: 12px; color: #999;">Created: ${new Date(user.created_at).toLocaleDateString()}</div>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Load users error:', error);
+        document.getElementById('usersList').innerHTML = '<div style="color: #e74c3c;">Failed to load users</div>';
+      }
+    }
+
+    async function createNewUser() {
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newPassword').value.trim();
+
+      if (!username || !password) {
+        showMessage('Username and password are required', 'error');
+        return;
+      }
+
+      if (username.length < 3) {
+        showMessage('Username must be at least 3 characters', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/admin/create-user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showMessage(`User '${username}' created successfully!`, 'success');
+          document.getElementById('newUsername').value = '';
+          document.getElementById('newPassword').value = '';
+          // Reload users list
+          await loadUsers();
+        } else {
+          showMessage(data.error || 'Failed to create user', 'error');
+        }
+      } catch (error) {
+        console.error('Create user error:', error);
+        showMessage('Error creating user: ' + error.message, 'error');
       }
     }
 
