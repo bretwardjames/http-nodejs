@@ -231,6 +231,7 @@
       max-height: 300px;
       border-radius: 4px;
       margin-bottom: 10px;
+      border: 2px solid #667eea;
     }
 
     .preview-label {
@@ -325,6 +326,27 @@
 
     .btn-reset:hover {
       background: #7f8c8d;
+    }
+
+    .btn-copy-next {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-copy-next:hover {
+      background: #2980b9;
+    }
+
+    .btn-copy-next:disabled {
+      background: #ccc;
+      cursor: not-allowed;
     }
 
     .message {
@@ -457,6 +479,27 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
     }
+
+    .before-switch-section {
+      padding: 15px;
+      border: 3px solid #667eea;
+      border-radius: 8px;
+      background: rgba(102, 126, 234, 0.03);
+    }
+
+    #settingsForm .form-group {
+      margin-bottom: 5px;
+    }
+
+    .preview-item.before-switch {
+      border: 3px solid #667eea !important;
+      background: rgba(102, 126, 234, 0.03) !important;
+    }
+
+    .preview-item.after-switch-current {
+      border: 3px solid #667eea !important;
+      background: rgba(102, 126, 234, 0.03) !important;
+    }
   </style>
 </head>
 <body>
@@ -474,8 +517,9 @@
     <div class="message" id="infoMessage"></div>
 
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('config')">Configuration</button>
+      <button class="tab-btn active" onclick="switchTab('config')">Ticket Graphics</button>
       <button class="tab-btn" onclick="switchTab('preview')">Preview</button>
+      <button class="tab-btn" onclick="switchTab('settings')">Other Settings</button>
       <button class="tab-btn" onclick="switchTab('history')">Change History</button>
       <button class="tab-btn" onclick="switchTab('users')">User Management</button>
     </div>
@@ -498,10 +542,10 @@
       <div class="card">
         <h2>General Admission Tickets</h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- GA Desktop Current -->
+          <!-- GA Desktop Before Switch -->
           <div>
             <div class="section-header">
-              <h3>Desktop - Current</h3>
+              <h3>Desktop - Before switch</h3>
             </div>
             <div class="form-group">
               <label for="gaDesktop">URL</label>
@@ -514,10 +558,10 @@
             </div>
           </div>
 
-          <!-- GA Desktop Next -->
+          <!-- GA Desktop After Switch -->
           <div>
             <div class="section-header">
-              <h3>Desktop - Next</h3>
+              <h3>Desktop - After switch</h3>
             </div>
             <div class="form-group">
               <label for="gaDesktopNext">URL</label>
@@ -530,10 +574,10 @@
             </div>
           </div>
 
-          <!-- GA Mobile Current -->
+          <!-- GA Mobile Before Switch -->
           <div>
             <div class="section-header">
-              <h3>Mobile - Current</h3>
+              <h3>Mobile - Before switch</h3>
             </div>
             <div class="form-group">
               <label for="gaMobile">URL</label>
@@ -546,10 +590,10 @@
             </div>
           </div>
 
-          <!-- GA Mobile Next -->
+          <!-- GA Mobile After Switch -->
           <div>
             <div class="section-header">
-              <h3>Mobile - Next</h3>
+              <h3>Mobile - After switch</h3>
             </div>
             <div class="form-group">
               <label for="gaMobileNext">URL</label>
@@ -567,10 +611,10 @@
       <div class="card">
         <h2>Complimentary Tickets</h2>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- Comp Desktop Current -->
+          <!-- Comp Desktop Before Switch -->
           <div>
             <div class="section-header">
-              <h3>Desktop - Current</h3>
+              <h3>Desktop - Before switch</h3>
             </div>
             <div class="form-group">
               <label for="compDesktop">URL</label>
@@ -583,10 +627,10 @@
             </div>
           </div>
 
-          <!-- Comp Desktop Next -->
+          <!-- Comp Desktop After Switch -->
           <div>
             <div class="section-header">
-              <h3>Desktop - Next</h3>
+              <h3>Desktop - After switch</h3>
             </div>
             <div class="form-group">
               <label for="compDesktopNext">URL</label>
@@ -599,10 +643,10 @@
             </div>
           </div>
 
-          <!-- Comp Mobile Current -->
+          <!-- Comp Mobile Before Switch -->
           <div>
             <div class="section-header">
-              <h3>Mobile - Current</h3>
+              <h3>Mobile - Before switch</h3>
             </div>
             <div class="form-group">
               <label for="compMobile">URL</label>
@@ -615,10 +659,10 @@
             </div>
           </div>
 
-          <!-- Comp Mobile Next -->
+          <!-- Comp Mobile After Switch -->
           <div>
             <div class="section-header">
-              <h3>Mobile - Next</h3>
+              <h3>Mobile - After switch</h3>
             </div>
             <div class="form-group">
               <label for="compMobileNext">URL</label>
@@ -634,7 +678,8 @@
       </div>
 
       <div class="button-group">
-        <button class="btn-save" onclick="saveConfig()">Save Configuration</button>
+        <button class="btn-save" onclick="previewConfig()">Preview Configuration</button>
+        <button class="btn-copy-next" onclick="copyAfterSwitchToBefore()">Copy all After switch to Before switch</button>
         <button class="btn-reset" onclick="resetForm()">Reset</button>
       </div>
     </div>
@@ -642,43 +687,63 @@
     <!-- Preview Tab -->
     <div id="preview" class="tab-content">
       <div class="card">
-        <h2>Current vs Next Graphics Preview</h2>
+        <h2>Graphics Preview</h2>
         <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
-          This shows a side-by-side comparison of current and next graphics. Save your configuration to update these previews.
+          This shows a side-by-side comparison of Before switch and After switch graphics. The column highlighted in blue indicates which images are currently live based on your switch date. Review your changes and click Save Configuration to persist them.
         </p>
         <div class="side-by-side">
           <div class="preview-item" id="previewGADesktop">
-            <h4>GA Desktop - Current</h4>
+            <h4>GA Desktop - Before switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewGADesktopNext">
-            <h4>GA Desktop - Next</h4>
+            <h4>GA Desktop - After switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewGAMobile">
-            <h4>GA Mobile - Current</h4>
+            <h4>GA Mobile - Before switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewGAMobileNext">
-            <h4>GA Mobile - Next</h4>
+            <h4>GA Mobile - After switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewCompDesktop">
-            <h4>Comp Desktop - Current</h4>
+            <h4>Comp Desktop - Before switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewCompDesktopNext">
-            <h4>Comp Desktop - Next</h4>
+            <h4>Comp Desktop - After switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewCompMobile">
-            <h4>Comp Mobile - Current</h4>
+            <h4>Comp Mobile - Before switch</h4>
             <div class="no-image">No image URL</div>
           </div>
           <div class="preview-item" id="previewCompMobileNext">
-            <h4>Comp Mobile - Next</h4>
+            <h4>Comp Mobile - After switch</h4>
             <div class="no-image">No image URL</div>
           </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-save" onclick="saveConfig()">Save Configuration</button>
+        <button class="btn-reset" onclick="switchTab('config')">Back to Configuration</button>
+      </div>
+    </div>
+
+    <!-- Other Settings Tab -->
+    <div id="settings" class="tab-content">
+      <div class="card">
+        <h2>Other Settings</h2>
+        <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
+          Edit additional event and configuration settings such as event dates, location, venue, and checkout page graphics.
+        </p>
+        <div id="settingsForm"></div>
+        <div class="button-group" style="margin-top: 20px;">
+          <button class="btn-save" onclick="saveOtherSettings()">Save Settings</button>
+          <button class="btn-reset" onclick="resetSettingsForm()">Reset</button>
         </div>
       </div>
     </div>
@@ -792,24 +857,40 @@
       // Load configuration
       await loadConfig();
 
+      // Update preview highlights based on loaded switch date
+      setTimeout(() => {
+        updatePreviewHighlights();
+      }, 100);
+
+      // Load other settings
+      await loadOtherSettings();
+
       // Load history
       await loadHistory();
 
       // Load users
       await loadUsers();
 
-      // Add input listeners for image preview on blur
+      // Add input listeners for live preview updates
       Object.keys(fieldMappings).forEach(fieldId => {
         const element = document.getElementById(fieldId);
-        if (element && fieldId.includes('Desktop') || fieldId.includes('Mobile')) {
-          element.addEventListener('blur', () => {
-            const url = element.value;
-            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
-              showPreview(fieldId, url);
-            }
+        if (element && (fieldId.includes('Desktop') || fieldId.includes('Mobile'))) {
+          element.addEventListener('input', () => {
+            updateLivePreview(fieldId);
           });
         }
       });
+
+      // Add listener to switch date to update config page highlighting
+      const switchDateInput = document.getElementById('switchDate');
+      if (switchDateInput) {
+        switchDateInput.addEventListener('change', () => {
+          updateConfigPageHighlights();
+        });
+      }
+
+      // Initial highlight on load
+      updateConfigPageHighlights();
     });
 
     async function loadConfig() {
@@ -1039,12 +1120,121 @@
 
       const img = new Image();
       img.onload = () => {
-        previewElement.innerHTML = `<h4>${previewElement.querySelector('h4').textContent}</h4><img src="${url}" alt="Preview">`;
+        const headerText = previewElement.querySelector('h4') ? previewElement.querySelector('h4').textContent : '';
+        previewElement.innerHTML = `<h4>${headerText}</h4><img src="${url}" alt="Preview">`;
       };
       img.onerror = () => {
-        previewElement.innerHTML = `<h4>${previewElement.querySelector('h4').textContent}</h4><div class="no-image">Failed to load</div>`;
+        const headerText = previewElement.querySelector('h4') ? previewElement.querySelector('h4').textContent : '';
+        previewElement.innerHTML = `<h4>${headerText}</h4><div class="no-image">Failed to load</div>`;
       };
       img.src = url;
+    }
+
+    function updateLivePreview(fieldId) {
+      const url = document.getElementById(fieldId).value.trim();
+      if (!url) return;
+
+      // Map field IDs to preview IDs
+      const previewMap = {
+        gaDesktop: 'previewGADesktop',
+        gaDesktopNext: 'previewGADesktopNext',
+        gaMobile: 'previewGAMobile',
+        gaMobileNext: 'previewGAMobileNext',
+        compDesktop: 'previewCompDesktop',
+        compDesktopNext: 'previewCompDesktopNext',
+        compMobile: 'previewCompMobile',
+        compMobileNext: 'previewCompMobileNext'
+      };
+
+      const previewId = previewMap[fieldId];
+      if (previewId && (url.startsWith('http://') || url.startsWith('https://'))) {
+        updatePreview(previewId, url);
+      }
+    }
+
+    function updateConfigPageHighlights() {
+      const switchDateStr = document.getElementById('switchDate').value;
+      const isAfterSwitch = isDateInPast(switchDateStr);
+
+      // Find all "Before switch" and "After switch" sections in config tab
+      const configCard = document.getElementById('config');
+      const allSections = configCard.querySelectorAll('[class*="section"]').parentElement;
+
+      // Get all form groups that contain Desktop or Mobile inputs
+      const gaDesktopSection = document.getElementById('gaDesktop').closest('div').closest('div').closest('div');
+      const gaDesktopNextSection = document.getElementById('gaDesktopNext').closest('div').closest('div').closest('div');
+      const gaMobileSection = document.getElementById('gaMobile').closest('div').closest('div').closest('div');
+      const gaMobileNextSection = document.getElementById('gaMobileNext').closest('div').closest('div').closest('div');
+      const compDesktopSection = document.getElementById('compDesktop').closest('div').closest('div').closest('div');
+      const compDesktopNextSection = document.getElementById('compDesktopNext').closest('div').closest('div').closest('div');
+      const compMobileSection = document.getElementById('compMobile').closest('div').closest('div').closest('div');
+      const compMobileNextSection = document.getElementById('compMobileNext').closest('div').closest('div').closest('div');
+
+      const sections = [
+        { before: gaDesktopSection, after: gaDesktopNextSection },
+        { before: gaMobileSection, after: gaMobileNextSection },
+        { before: compDesktopSection, after: compDesktopNextSection },
+        { before: compMobileSection, after: compMobileNextSection }
+      ];
+
+      sections.forEach(({ before, after }) => {
+        if (before) {
+          before.classList.remove('before-switch-section');
+          if (!isAfterSwitch) {
+            before.classList.add('before-switch-section');
+          }
+        }
+        if (after) {
+          after.classList.remove('before-switch-section');
+          if (isAfterSwitch) {
+            after.classList.add('before-switch-section');
+          }
+        }
+      });
+    }
+
+    function previewConfig() {
+      // Update preview highlights based on switch date
+      updatePreviewHighlights();
+      switchTab('preview');
+    }
+
+    function updatePreviewHighlights() {
+      const switchDateStr = document.getElementById('switchDate').value;
+      const isAfterSwitch = isDateInPast(switchDateStr);
+
+      // Get all preview items and remove all highlighting classes
+      const previewItems = document.querySelectorAll('.preview-item');
+      previewItems.forEach(item => {
+        item.classList.remove('before-switch');
+        item.classList.remove('after-switch-current');
+      });
+
+      // Now add highlighting based on switch date
+      previewItems.forEach(item => {
+        const headerText = item.querySelector('h4') ? item.querySelector('h4').textContent : '';
+        const isBeforeSwitchItem = headerText.includes('Before switch');
+
+        if (isAfterSwitch) {
+          // After switch date - highlight "After switch" items
+          if (!isBeforeSwitchItem) {
+            item.classList.add('after-switch-current');
+          }
+        } else {
+          // Before switch date - highlight "Before switch" items
+          if (isBeforeSwitchItem) {
+            item.classList.add('before-switch');
+          }
+        }
+      });
+    }
+
+    function isDateInPast(dateStr) {
+      if (!dateStr || dateStr === 'TBD') return false;
+      const switchDate = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return switchDate < today;
     }
 
     async function saveConfig() {
@@ -1072,8 +1262,6 @@
 
         if (response.ok) {
           showMessage('Configuration saved successfully!', 'success');
-          // Reload previews
-          await loadConfig();
           // Reload history
           await loadHistory();
         } else {
@@ -1122,6 +1310,233 @@
       setTimeout(() => {
         element.classList.remove('show');
       }, 5000);
+    }
+
+    function copyAfterSwitchToBefore() {
+      if (confirm('Are you sure? This will copy all "After switch" image URLs to their corresponding "Before switch" fields and clear the "After switch" fields.')) {
+        // Copy GA Desktop
+        const gaDesktopNext = document.getElementById('gaDesktopNext').value;
+        if (gaDesktopNext) {
+          document.getElementById('gaDesktop').value = gaDesktopNext;
+          document.getElementById('gaDesktopNext').value = '';
+        }
+
+        // Copy GA Mobile
+        const gaMobileNext = document.getElementById('gaMobileNext').value;
+        if (gaMobileNext) {
+          document.getElementById('gaMobile').value = gaMobileNext;
+          document.getElementById('gaMobileNext').value = '';
+        }
+
+        // Copy Comp Desktop
+        const compDesktopNext = document.getElementById('compDesktopNext').value;
+        if (compDesktopNext) {
+          document.getElementById('compDesktop').value = compDesktopNext;
+          document.getElementById('compDesktopNext').value = '';
+        }
+
+        // Copy Comp Mobile
+        const compMobileNext = document.getElementById('compMobileNext').value;
+        if (compMobileNext) {
+          document.getElementById('compMobile').value = compMobileNext;
+          document.getElementById('compMobileNext').value = '';
+        }
+
+        showMessage('All "After switch" values copied to "Before switch" fields and cleared. Click Save Configuration to persist changes.', 'info');
+      }
+    }
+
+    // Store for other settings
+    let otherSettingsData = {};
+
+    async function loadOtherSettings() {
+      try {
+        const response = await fetch('/ple-data-to-update');
+        if (!response.ok) throw new Error('Failed to load settings');
+
+        const data = await response.json();
+        console.log('All config data:', data);
+
+        // Filter out variables we already manage (ticket graphics and switch date)
+        const managedKeys = [
+          'PLE_promo_promo_switchDate',
+          'PLE_promo_ticketGraphicDesktop',
+          'PLE_promo_ticketGraphicDesktop_next',
+          'PLE_promo_ticketGraphicMobile',
+          'PLE_promo_ticketGraphicMobile_next',
+          'PLE_promo_compTicketGraphicDesktop',
+          'PLE_promo_compTicketGraphicDesktop_next',
+          'PLE_promo_compTicketGraphicMobile',
+          'PLE_promo_compTicketGraphicMobile_next',
+          'PLE_promo_compTicketPromoLine',
+          'PLE_promo_compTicketPromoLine_next',
+          'PLE_promo_ticketPromoLine',
+          'PLE_promo_ticketPromoLine_next'
+        ];
+
+        // Get all remaining PLE variables
+        otherSettingsData = {};
+        Object.entries(data).forEach(([key, value]) => {
+          if (key.startsWith('PLE_') && !managedKeys.includes(key)) {
+            otherSettingsData[key] = value;
+          }
+        });
+
+        console.log('Other settings data:', otherSettingsData);
+        renderOtherSettings();
+      } catch (error) {
+        console.error('Load other settings error:', error);
+        const formContainer = document.getElementById('settingsForm');
+        if (formContainer) {
+          formContainer.innerHTML = '<p style="color: #e74c3c;">Error loading settings</p>';
+        }
+      }
+    }
+
+    function renderOtherSettings() {
+      const formContainer = document.getElementById('settingsForm');
+
+      if (!formContainer) {
+        console.error('settingsForm container not found');
+        return;
+      }
+
+      if (Object.keys(otherSettingsData).length === 0) {
+        formContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No additional settings to configure. Only ticket graphics settings are available.</p>';
+        return;
+      }
+
+      const isImageField = (key) => {
+        const lowerKey = key.toLowerCase();
+        return lowerKey.includes('image') || lowerKey.includes('url') || lowerKey.includes('graphic');
+      };
+
+      let html = '';
+
+      Object.entries(otherSettingsData).forEach(([key, value]) => {
+        // Skip _next versions - only show base fields
+        if (key.endsWith('_next')) {
+          return;
+        }
+
+        const label = key
+          .replace('PLE_', '')
+          .replace(/_/g, ' ')
+          .replace(/([A-Z])/g, ' $1')
+          .trim()
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+
+        const isImage = isImageField(key);
+        const fieldId = `setting_${key}`;
+
+        html += `
+          <div class="form-group">
+            <label for="${fieldId}">${label}</label>
+            <input type="text" id="${fieldId}" value="${value || ''}" placeholder="Enter value">
+            ${isImage ? `<div class="image-preview" id="${fieldId}-preview" style="display: none;"></div>` : ''}
+          </div>
+        `;
+      });
+
+      try {
+        formContainer.innerHTML = html;
+      } catch (e) {
+        console.error('Error rendering form HTML:', e);
+        formContainer.innerHTML = '<p style="color: #e74c3c;">Error rendering settings form</p>';
+        return;
+      }
+
+      // Add event listeners and load previews for image fields
+      Object.entries(otherSettingsData).forEach(([key, value]) => {
+        if (key.endsWith('_next')) {
+          return; // Skip _next versions
+        }
+
+        const isImage = isImageField(key);
+        if (isImage) {
+          const fieldId = `setting_${key}`;
+          const element = document.getElementById(fieldId);
+
+          if (element) {
+            // Load preview on initial load
+            const url = element.value.trim();
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+              showImagePreview(fieldId, url);
+            }
+
+            // Add listener for when user updates the URL
+            element.addEventListener('blur', () => {
+              const newUrl = element.value.trim();
+              if (newUrl && (newUrl.startsWith('http://') || newUrl.startsWith('https://'))) {
+                showImagePreview(fieldId, newUrl);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    function showImagePreview(fieldId, url) {
+      const previewElement = document.getElementById(fieldId + '-preview');
+      if (!previewElement) return;
+
+      previewElement.style.display = 'block';
+      previewElement.className = 'image-preview loading';
+      previewElement.innerHTML = 'Loading preview...';
+
+      const img = new Image();
+      img.onload = () => {
+        previewElement.className = 'image-preview';
+        previewElement.innerHTML = `<img src="${url}" alt="Preview">`;
+      };
+      img.onerror = () => {
+        previewElement.className = 'image-preview';
+        previewElement.innerHTML = 'Failed to load image';
+      };
+      img.src = url;
+    }
+
+    async function saveOtherSettings() {
+      try {
+        const updates = {};
+        const formContainer = document.getElementById('settingsForm');
+        const allInputs = formContainer.querySelectorAll('input[type="text"], input[type="date"]');
+
+        allInputs.forEach(input => {
+          const fieldId = input.id;
+          if (fieldId.startsWith('setting_')) {
+            const pleKey = fieldId.replace('setting_', '');
+            updates[pleKey] = input.value.trim();
+          }
+        });
+
+        const response = await fetch('/update-ple', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showMessage('Settings saved successfully!', 'success');
+          // Reload history
+          await loadHistory();
+        } else {
+          showMessage('Error: ' + (data.error || 'Failed to save'), 'error');
+        }
+      } catch (error) {
+        showMessage('Error: ' + error.message, 'error');
+        console.error('Save settings error:', error);
+      }
+    }
+
+    function resetSettingsForm() {
+      if (confirm('Are you sure? This will reload the current values from the server.')) {
+        loadOtherSettings();
+      }
     }
 
     async function logout() {
