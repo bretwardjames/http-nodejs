@@ -12,6 +12,18 @@ import libphonenumber from 'google-libphonenumber';
 import { google } from 'googleapis';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
+import session from 'express-session';
+import {
+  initializeDatabase,
+  getAllConfig,
+  getConfigValue,
+  setConfigValue,
+  getChangeHistory,
+  authenticateUser,
+  getUserById,
+  createUser,
+  getAllUsers
+} from './database.mjs';
 
 // ES6 __dirname workaround
 const __filename = fileURLToPath(import.meta.url);
@@ -19,56 +31,78 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 
+// Initialize database and load config
+initializeDatabase();
+
 const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
 console.log('Server URL:', serverUrl);
 
 const app = express();
 
+// Configure session middleware (using memory store)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    }
+  })
+);
+
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
-  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
+  const switchDate = new Date(switchDateStr);
   const currentDate = new Date();
 
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_ticketGraphicDesktop_next) {
-    res.redirect(process.env.PLE_promo_ticketGraphicDesktop_next);
+  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_ticketGraphicDesktop_next')) {
+    res.redirect(getConfigValue('PLE_promo_ticketGraphicDesktop_next'));
   } else {
-    res.redirect(process.env.PLE_promo_ticketGraphicDesktop);
+    res.redirect(getConfigValue('PLE_promo_ticketGraphicDesktop'));
   }
 });
 
 app.get('/ticket-graphic-ga-mobile.png', (req, res) => {
-  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
+  const switchDate = new Date(switchDateStr);
   const currentDate = new Date();
 
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_ticketGraphicMobile_next) {
-    res.redirect(process.env.PLE_promo_ticketGraphicMobile_next);
+  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_ticketGraphicMobile_next')) {
+    res.redirect(getConfigValue('PLE_promo_ticketGraphicMobile_next'));
   } else {
-    res.redirect(process.env.PLE_promo_ticketGraphicMobile);
+    res.redirect(getConfigValue('PLE_promo_ticketGraphicMobile'));
   }
 });
 
 app.get('/ticket-graphic-comp-desktop.png', (req, res) => {
-  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
+  const switchDate = new Date(switchDateStr);
   const currentDate = new Date();
 
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_compTicketGraphicDesktop_next) {
-    res.redirect(process.env.PLE_promo_compTicketGraphicDesktop_next);
+  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_compTicketGraphicDesktop_next')) {
+    res.redirect(getConfigValue('PLE_promo_compTicketGraphicDesktop_next'));
   } else {
-    res.redirect(process.env.PLE_promo_compTicketGraphicDesktop);
+    res.redirect(getConfigValue('PLE_promo_compTicketGraphicDesktop'));
   }
 });
 
 app.get('/ticket-graphic-comp-mobile.png', (req, res) => {
-  const switchDate = new Date(process.env.PLE_promo_promo_switchDate);
+  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
+  const switchDate = new Date(switchDateStr);
   const currentDate = new Date();
 
-  if (process.env.PLE_promo_promo_switchDate !== 'TBD' && switchDate < currentDate && process.env.PLE_promo_compTicketGraphicMobile_next) {
-    res.redirect(process.env.PLE_promo_compTicketGraphicMobile_next);
+  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_compTicketGraphicMobile_next')) {
+    res.redirect(getConfigValue('PLE_promo_compTicketGraphicMobile_next'));
   } else {
-    res.redirect(process.env.PLE_promo_compTicketGraphicMobile);
+    res.redirect(getConfigValue('PLE_promo_compTicketGraphicMobile'));
   }
 });
+
 
 // CORS configuration
 const corsOptions = {
@@ -86,40 +120,126 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Allowed domains
 const allowedDomains = [serverUrl, 'https://davidbayercoaching.com', 'https://davidbayer.com', 'https://mindhackprogram.com', 'https://powerfullivingexperience.com', 'https://tx227.infusionsoft.app', 'https://tx227.infusionsoft.com', "https://davidbayer-app.clickfunnels.com/"];
 
-const adminPassword = process.env.ADMIN_PASSWORD || 'defaultPassword';
-
-function authMiddleware(req, res, next) {
-  const password = req.body.password || req.query.password;
-  if (password === adminPassword) {
+// Session-based authentication middleware
+function requireAuth(req, res, next) {
+  if (req.session && req.session.userId) {
     next();
   } else {
-    res.status(401).send('Unauthorized');
+    res.status(401).json({ error: 'Unauthorized - please log in' });
   }
 }
 
-app.get('/admin', authMiddleware, (req, res) => {
-  res.sendFile(__dirname + '/admin.html');
+// Login endpoint
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password required' });
+  }
+
+  const user = authenticateUser(username, password);
+
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  req.session.userId = user.id;
+  req.session.username = user.username;
+
+  res.json({ success: true, username: user.username });
 });
 
-app.get('/ple-data-to-update', authMiddleware, (req, res) => {
-  const pleVariables = Object.keys(process.env)
-    .filter(key => key.startsWith('PLE_'))
-    .reduce((obj, key) => {
-      obj[key] = process.env[key];
-      return obj;
-    }, {});
+// Logout endpoint
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to log out' });
+    }
+    res.json({ success: true });
+  });
+});
 
+// Check auth status
+app.get('/check-auth', (req, res) => {
+  if (req.session && req.session.userId) {
+    res.json({ authenticated: true, username: req.session.username });
+  } else {
+    res.json({ authenticated: false });
+  }
+});
+
+// Admin page - serve login page if not authenticated, admin page if authenticated
+app.get('/admin', (req, res) => {
+  if (req.session && req.session.userId) {
+    res.sendFile(__dirname + '/admin.html');
+  } else {
+    res.sendFile(__dirname + '/login.html');
+  }
+});
+
+// Get config values for admin
+app.get('/ple-data-to-update', requireAuth, (req, res) => {
+  const pleVariables = getAllConfig();
   res.json(pleVariables);
 });
 
-app.post('/update-ple', authMiddleware, async (req, res) => {
-  const updates = req.body;
-  Object.keys(updates).forEach(key => {
-    if (key.startsWith('PLE_')) {
-      process.env[key] = updates[key];
+// Update PLE config
+app.post('/update-ple', requireAuth, async (req, res) => {
+  try {
+    const updates = req.body;
+    const username = req.session.username;
+
+    for (const key of Object.keys(updates)) {
+      if (key.startsWith('PLE_')) {
+        const success = setConfigValue(key, updates[key], username);
+        if (!success) {
+          return res.status(500).json({ error: `Failed to update ${key}` });
+        }
+        // Also update process.env for immediate effect
+        process.env[key] = updates[key];
+      }
     }
-  });
-  res.send('Variables updated successfully');
+
+    res.json({ success: true, message: 'Variables updated successfully' });
+  } catch (error) {
+    console.error('Error updating PLE variables:', error);
+    res.status(500).json({ error: 'Failed to update variables' });
+  }
+});
+
+// Get change history
+app.get('/config-history', requireAuth, (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const history = getChangeHistory(limit);
+    res.json(history);
+  } catch (error) {
+    console.error('Error fetching change history:', error);
+    res.status(500).json({ error: 'Failed to fetch history' });
+  }
+});
+
+// Validate URL (check if image URL is accessible)
+app.post('/validate-url', requireAuth, async (req, res) => {
+  try {
+    const { url } = req.body;
+
+    if (!url) {
+      return res.status(400).json({ valid: false, error: 'URL required' });
+    }
+
+    // Use HEAD request to check if URL is accessible
+    const response = await axios.head(url, {
+      timeout: 5000,
+      maxRedirects: 5
+    });
+
+    const isValid = response.status >= 200 && response.status < 300;
+    res.json({ valid: isValid, status: response.status });
+  } catch (error) {
+    console.error('Error validating URL:', error.message);
+    res.json({ valid: false, error: error.message });
+  }
 });
 
 // Middleware to check referring domain
@@ -266,12 +386,7 @@ app.post('/proxy', async (req, res) => {
 });
 
 app.get('/ple-data', (req, res) => {
-  const pleVariables = Object.keys(process.env)
-    .filter(key => key.startsWith('PLE_'))
-    .reduce((obj, key) => {
-      obj[key] = process.env[key];
-      return obj;
-    }, {});
+  const pleVariables = getAllConfig();
 
   const today = new Date();
 

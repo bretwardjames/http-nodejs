@@ -1,54 +1,1021 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLE Configuration Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    .top-bar {
+      background: white;
+      border-bottom: 1px solid #e1e8ed;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .top-bar h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .top-bar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-info span {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e1e8ed;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      position: relative;
+      bottom: -2px;
+    }
+
+    .tab-btn.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e1e8ed;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .input-group input {
+      flex: 1;
+    }
+
+    .input-group button {
+      padding: 10px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: background 0.3s;
+    }
+
+    .input-group button:hover {
+      background: #5568d3;
+    }
+
+    .validation-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      margin-top: 5px;
+      min-height: 20px;
+    }
+
+    .validation-status.valid {
+      color: #27ae60;
+    }
+
+    .validation-status.invalid {
+      color: #e74c3c;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .validation-status.valid .status-indicator {
+      background: #27ae60;
+    }
+
+    .validation-status.invalid .status-indicator {
+      background: #e74c3c;
+    }
+
+    .validation-status.checking .status-indicator {
+      background: #f39c12;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .image-preview {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      border: 1px solid #e1e8ed;
+    }
+
+    .image-preview.loading {
+      text-align: center;
+      color: #999;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .preview-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .side-by-side {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .preview-item {
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      border: 1px solid #e1e8ed;
+    }
+
+    .preview-item h4 {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .preview-item.no-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 150px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-save {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-save:hover {
+      background: #229954;
+    }
+
+    .btn-save:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-reset {
+      background: #95a5a6;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-reset:hover {
+      background: #7f8c8d;
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #d5f4e6;
+      color: #27ae60;
+      border-left: 4px solid #27ae60;
+    }
+
+    .message.error {
+      background: #fadbd8;
+      color: #e74c3c;
+      border-left: 4px solid #e74c3c;
+    }
+
+    .message.info {
+      background: #d6eaf8;
+      color: #3498db;
+      border-left: 4px solid #3498db;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .history-table th {
+      background: #f5f7fa;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e1e8ed;
+    }
+
+    .history-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e1e8ed;
+    }
+
+    .history-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    .variable-name {
+      font-family: monospace;
+      background: #f5f7fa;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .timestamp {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .username {
+      color: #667eea;
+      font-weight: 500;
+    }
+
+    .value-change {
+      font-family: monospace;
+      font-size: 12px;
+      color: #666;
+      word-break: break-all;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .section-header {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e1e8ed;
+    }
+
+    .section-header h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .section-header p {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .grid-cols-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Manage PLE Variables</h1>
-    <form action="/update-ple" method="POST">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+  <div class="top-bar">
+    <h1>PLE Configuration</h1>
+    <div class="user-info">
+      <span>Logged in as: <strong id="usernameDisplay">Loading...</strong></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
-        <div id="ple-variables">
-            <!-- PLE variables will be loaded here by JavaScript -->
+  <div class="container">
+    <div class="message" id="successMessage"></div>
+    <div class="message" id="errorMessage"></div>
+    <div class="message" id="infoMessage"></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('config')">Configuration</button>
+      <button class="tab-btn" onclick="switchTab('preview')">Preview</button>
+      <button class="tab-btn" onclick="switchTab('history')">Change History</button>
+    </div>
+
+    <!-- Configuration Tab -->
+    <div id="config" class="tab-content active">
+      <div class="card">
+        <h2>Promo Switch Configuration</h2>
+        <div class="section-header">
+          <h3>Switch Date</h3>
+          <p>When you change this date, the ticket graphics will automatically switch to the "next" versions</p>
         </div>
 
-        <button type="submit">Update Variables</button>
-    </form>
+        <div class="form-group">
+          <label for="switchDate">Promo Switch Date (or "TBD" to disable)</label>
+          <input type="text" id="switchDate" class="datepicker" placeholder="YYYY-MM-DD or TBD">
+        </div>
+      </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            document.getElementById('password').value = urlParams.get('password');
-            console.log('Fetching PLE data...');
-            const response = await fetch('/ple-data-to-update?password=' + urlParams.get('password'));
-            const data = await response.json();
-            console.log('PLE data:', data);
-            const pleVariablesDiv = document.getElementById('ple-variables');
-            console.log('Populating PLE variables...');
-            Object.keys(data).forEach(key => {
-                const strippedKey = key.replace('PLE_', '').replace('promo_', '');
-                console.log('Adding input for', key);
-                const value = data[key];
-                const label = document.createElement('label');
-                label.setAttribute('for', strippedKey);
-                label.textContent = strippedKey + ':';
-                const input = document.createElement('input');
-                input.setAttribute('type', 'text');
-                input.setAttribute('id', key);
-                input.setAttribute('name', key);
-                input.setAttribute('value', value);
-                pleVariablesDiv.appendChild(label);
-                pleVariablesDiv.appendChild(input);
-                pleVariablesDiv.appendChild(document.createElement('br'));
-                console.log('Added input for', key);
-            });
+      <div class="card">
+        <h2>General Admission Tickets</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- GA Desktop Current -->
+          <div>
+            <div class="section-header">
+              <h3>Desktop - Current</h3>
+            </div>
+            <div class="form-group">
+              <label for="gaDesktop">URL</label>
+              <div class="input-group">
+                <input type="text" id="gaDesktop" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('gaDesktop')">Validate</button>
+              </div>
+              <div class="validation-status" id="gaDesktop-status"></div>
+              <div class="image-preview" id="gaDesktop-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- GA Desktop Next -->
+          <div>
+            <div class="section-header">
+              <h3>Desktop - Next</h3>
+            </div>
+            <div class="form-group">
+              <label for="gaDesktopNext">URL</label>
+              <div class="input-group">
+                <input type="text" id="gaDesktopNext" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('gaDesktopNext')">Validate</button>
+              </div>
+              <div class="validation-status" id="gaDesktopNext-status"></div>
+              <div class="image-preview" id="gaDesktopNext-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- GA Mobile Current -->
+          <div>
+            <div class="section-header">
+              <h3>Mobile - Current</h3>
+            </div>
+            <div class="form-group">
+              <label for="gaMobile">URL</label>
+              <div class="input-group">
+                <input type="text" id="gaMobile" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('gaMobile')">Validate</button>
+              </div>
+              <div class="validation-status" id="gaMobile-status"></div>
+              <div class="image-preview" id="gaMobile-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- GA Mobile Next -->
+          <div>
+            <div class="section-header">
+              <h3>Mobile - Next</h3>
+            </div>
+            <div class="form-group">
+              <label for="gaMobileNext">URL</label>
+              <div class="input-group">
+                <input type="text" id="gaMobileNext" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('gaMobileNext')">Validate</button>
+              </div>
+              <div class="validation-status" id="gaMobileNext-status"></div>
+              <div class="image-preview" id="gaMobileNext-preview" style="display: none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Complimentary Tickets</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Comp Desktop Current -->
+          <div>
+            <div class="section-header">
+              <h3>Desktop - Current</h3>
+            </div>
+            <div class="form-group">
+              <label for="compDesktop">URL</label>
+              <div class="input-group">
+                <input type="text" id="compDesktop" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('compDesktop')">Validate</button>
+              </div>
+              <div class="validation-status" id="compDesktop-status"></div>
+              <div class="image-preview" id="compDesktop-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Comp Desktop Next -->
+          <div>
+            <div class="section-header">
+              <h3>Desktop - Next</h3>
+            </div>
+            <div class="form-group">
+              <label for="compDesktopNext">URL</label>
+              <div class="input-group">
+                <input type="text" id="compDesktopNext" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('compDesktopNext')">Validate</button>
+              </div>
+              <div class="validation-status" id="compDesktopNext-status"></div>
+              <div class="image-preview" id="compDesktopNext-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Comp Mobile Current -->
+          <div>
+            <div class="section-header">
+              <h3>Mobile - Current</h3>
+            </div>
+            <div class="form-group">
+              <label for="compMobile">URL</label>
+              <div class="input-group">
+                <input type="text" id="compMobile" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('compMobile')">Validate</button>
+              </div>
+              <div class="validation-status" id="compMobile-status"></div>
+              <div class="image-preview" id="compMobile-preview" style="display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Comp Mobile Next -->
+          <div>
+            <div class="section-header">
+              <h3>Mobile - Next</h3>
+            </div>
+            <div class="form-group">
+              <label for="compMobileNext">URL</label>
+              <div class="input-group">
+                <input type="text" id="compMobileNext" placeholder="https://example.com/image.png">
+                <button type="button" onclick="validateUrl('compMobileNext')">Validate</button>
+              </div>
+              <div class="validation-status" id="compMobileNext-status"></div>
+              <div class="image-preview" id="compMobileNext-preview" style="display: none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-save" onclick="saveConfig()">Save Configuration</button>
+        <button class="btn-reset" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Preview Tab -->
+    <div id="preview" class="tab-content">
+      <div class="card">
+        <h2>Current vs Next Graphics Preview</h2>
+        <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
+          This shows a side-by-side comparison of current and next graphics. Save your configuration to update these previews.
+        </p>
+        <div class="side-by-side">
+          <div class="preview-item" id="previewGADesktop">
+            <h4>GA Desktop - Current</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewGADesktopNext">
+            <h4>GA Desktop - Next</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewGAMobile">
+            <h4>GA Mobile - Current</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewGAMobileNext">
+            <h4>GA Mobile - Next</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewCompDesktop">
+            <h4>Comp Desktop - Current</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewCompDesktopNext">
+            <h4>Comp Desktop - Next</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewCompMobile">
+            <h4>Comp Mobile - Current</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+          <div class="preview-item" id="previewCompMobileNext">
+            <h4>Comp Mobile - Next</h4>
+            <div class="no-image">No image URL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="history" class="tab-content">
+      <div class="card">
+        <h2>Change History</h2>
+        <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
+          All configuration changes are logged here for audit purposes.
+        </p>
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Variable</th>
+              <th>Changed By</th>
+              <th>Old Value</th>
+              <th>New Value</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="5" class="empty-state">Loading history...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Field mappings for API calls
+    const fieldMappings = {
+      switchDate: 'PLE_promo_promo_switchDate',
+      gaDesktop: 'PLE_promo_ticketGraphicDesktop',
+      gaDesktopNext: 'PLE_promo_ticketGraphicDesktop_next',
+      gaMobile: 'PLE_promo_ticketGraphicMobile',
+      gaMobileNext: 'PLE_promo_ticketGraphicMobile_next',
+      compDesktop: 'PLE_promo_compTicketGraphicDesktop',
+      compDesktopNext: 'PLE_promo_compTicketGraphicDesktop_next',
+      compMobile: 'PLE_promo_compTicketGraphicMobile',
+      compMobileNext: 'PLE_promo_compTicketGraphicMobile_next'
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check authentication
+      const authResponse = await fetch('/check-auth');
+      const authData = await authResponse.json();
+
+      if (!authData.authenticated) {
+        window.location.href = '/admin';
+        return;
+      }
+
+      document.getElementById('usernameDisplay').textContent = authData.username;
+
+      // Initialize date picker
+      flatpickr('#switchDate', {
+        enableTime: false,
+        dateFormat: 'Y-m-d',
+        minDate: new Date()
+      });
+
+      // Load configuration
+      await loadConfig();
+
+      // Load history
+      await loadHistory();
+
+      // Add input listeners for image preview on blur
+      Object.keys(fieldMappings).forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element && fieldId.includes('Desktop') || fieldId.includes('Mobile')) {
+          element.addEventListener('blur', () => {
+            const url = element.value;
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+              showPreview(fieldId, url);
+            }
+          });
+        }
+      });
+    });
+
+    async function loadConfig() {
+      try {
+        const response = await fetch('/ple-data-to-update');
+        if (!response.ok) {
+          if (response.status === 401) {
+            window.location.href = '/admin';
+            return;
+          }
+          throw new Error('Failed to load configuration');
+        }
+
+        const data = await response.json();
+
+        // Populate form fields
+        Object.entries(fieldMappings).forEach(([fieldId, apiKey]) => {
+          const element = document.getElementById(fieldId);
+          if (element) {
+            element.value = data[apiKey] || '';
+          }
         });
-    </script>
-</body>
 
+        // Load and show previews
+        await loadPreviews(data);
+      } catch (error) {
+        showMessage('Error loading configuration: ' + error.message, 'error');
+        console.error('Load config error:', error);
+      }
+    }
+
+    async function loadPreviews(data) {
+      const previewMappings = [
+        { dataKey: 'PLE_promo_ticketGraphicDesktop', previewId: 'previewGADesktop' },
+        { dataKey: 'PLE_promo_ticketGraphicDesktop_next', previewId: 'previewGADesktopNext' },
+        { dataKey: 'PLE_promo_ticketGraphicMobile', previewId: 'previewGAMobile' },
+        { dataKey: 'PLE_promo_ticketGraphicMobile_next', previewId: 'previewGAMobileNext' },
+        { dataKey: 'PLE_promo_compTicketGraphicDesktop', previewId: 'previewCompDesktop' },
+        { dataKey: 'PLE_promo_compTicketGraphicDesktop_next', previewId: 'previewCompDesktopNext' },
+        { dataKey: 'PLE_promo_compTicketGraphicMobile', previewId: 'previewCompMobile' },
+        { dataKey: 'PLE_promo_compTicketGraphicMobile_next', previewId: 'previewCompMobileNext' }
+      ];
+
+      for (const mapping of previewMappings) {
+        const url = data[mapping.dataKey];
+        if (url) {
+          updatePreview(mapping.previewId, url);
+        }
+      }
+    }
+
+    async function loadHistory() {
+      try {
+        const response = await fetch('/config-history?limit=100');
+        if (!response.ok) throw new Error('Failed to load history');
+
+        const history = await response.json();
+        const tbody = document.getElementById('historyBody');
+
+        if (history.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No changes yet</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = history.map(entry => `
+          <tr>
+            <td class="timestamp">${new Date(entry.changed_at).toLocaleString()}</td>
+            <td><span class="variable-name">${entry.key}</span></td>
+            <td><span class="username">${entry.username || 'System'}</span></td>
+            <td><div class="value-change">${entry.old_value ? truncate(entry.old_value) : '(new)'}</div></td>
+            <td><div class="value-change">${entry.new_value ? truncate(entry.new_value) : '(deleted)'}</div></td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        console.error('Load history error:', error);
+      }
+    }
+
+    function truncate(str, length = 50) {
+      if (str.length > length) {
+        return str.substring(0, length) + '...';
+      }
+      return str;
+    }
+
+    async function validateUrl(fieldId) {
+      const input = document.getElementById(fieldId);
+      const url = input.value.trim();
+
+      if (!url) {
+        showValidationStatus(fieldId, false, 'URL is required');
+        return;
+      }
+
+      showValidationStatus(fieldId, 'checking', 'Checking...');
+
+      try {
+        const response = await fetch('/validate-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+          showValidationStatus(fieldId, true, 'URL is accessible');
+          showPreview(fieldId, url);
+        } else {
+          showValidationStatus(fieldId, false, `URL not accessible: ${data.error}`);
+        }
+      } catch (error) {
+        showValidationStatus(fieldId, false, 'Validation error: ' + error.message);
+      }
+    }
+
+    function showValidationStatus(fieldId, isValid, message) {
+      const statusElement = document.getElementById(fieldId + '-status');
+      statusElement.className = 'validation-status';
+      statusElement.innerHTML = '';
+
+      if (isValid === 'checking') {
+        statusElement.classList.add('checking');
+        statusElement.innerHTML = '<span class="status-indicator"></span>' + message;
+      } else if (isValid) {
+        statusElement.classList.add('valid');
+        statusElement.innerHTML = '✓ ' + message;
+      } else if (isValid === false) {
+        statusElement.classList.add('invalid');
+        statusElement.innerHTML = '✗ ' + message;
+      }
+    }
+
+    function showPreview(fieldId, url) {
+      const previewElement = document.getElementById(fieldId + '-preview');
+      if (!previewElement) return;
+
+      previewElement.style.display = 'block';
+      previewElement.className = 'image-preview loading';
+      previewElement.innerHTML = 'Loading preview...';
+
+      const img = new Image();
+      img.onload = () => {
+        previewElement.className = 'image-preview';
+        previewElement.innerHTML = `<img src="${url}" alt="Preview">`;
+      };
+      img.onerror = () => {
+        previewElement.className = 'image-preview';
+        previewElement.innerHTML = 'Failed to load image';
+      };
+      img.src = url;
+    }
+
+    function updatePreview(previewId, url) {
+      const previewElement = document.getElementById(previewId);
+      if (!previewElement || !url) return;
+
+      const img = new Image();
+      img.onload = () => {
+        previewElement.innerHTML = `<h4>${previewElement.querySelector('h4').textContent}</h4><img src="${url}" alt="Preview">`;
+      };
+      img.onerror = () => {
+        previewElement.innerHTML = `<h4>${previewElement.querySelector('h4').textContent}</h4><div class="no-image">Failed to load</div>`;
+      };
+      img.src = url;
+    }
+
+    async function saveConfig() {
+      const saveBtn = document.querySelector('.btn-save');
+      saveBtn.disabled = true;
+      const originalText = saveBtn.textContent;
+      saveBtn.innerHTML = '<span class="loading-spinner"></span> Saving...';
+
+      try {
+        const updates = {};
+        Object.entries(fieldMappings).forEach(([fieldId, apiKey]) => {
+          const element = document.getElementById(fieldId);
+          if (element) {
+            updates[apiKey] = element.value.trim();
+          }
+        });
+
+        const response = await fetch('/update-ple', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showMessage('Configuration saved successfully!', 'success');
+          // Reload previews
+          await loadConfig();
+          // Reload history
+          await loadHistory();
+        } else {
+          showMessage('Error: ' + (data.error || 'Failed to save'), 'error');
+        }
+      } catch (error) {
+        showMessage('Error: ' + error.message, 'error');
+        console.error('Save error:', error);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
+      }
+    }
+
+    function resetForm() {
+      if (confirm('Are you sure? This will reload the current values from the server.')) {
+        loadConfig();
+      }
+    }
+
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showMessage(message, type) {
+      const elements = {
+        success: document.getElementById('successMessage'),
+        error: document.getElementById('errorMessage'),
+        info: document.getElementById('infoMessage')
+      };
+
+      const element = elements[type];
+      element.textContent = message;
+      element.className = `message ${type} show`;
+
+      setTimeout(() => {
+        element.classList.remove('show');
+      }, 5000);
+    }
+
+    async function logout() {
+      if (confirm('Are you sure you want to log out?')) {
+        try {
+          await fetch('/logout', { method: 'POST' });
+          window.location.href = '/admin';
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
+      }
+    }
+  </script>
+</body>
 </html>
