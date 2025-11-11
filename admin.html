@@ -1522,13 +1522,17 @@
 
         if (response.ok) {
           showMessage('Settings saved successfully!', 'success');
+          // Scroll to top to show the message
+          window.scrollTo(0, 0);
           // Reload history
           await loadHistory();
         } else {
           showMessage('Error: ' + (data.error || 'Failed to save'), 'error');
+          window.scrollTo(0, 0);
         }
       } catch (error) {
         showMessage('Error: ' + error.message, 'error');
+        window.scrollTo(0, 0);
         console.error('Save settings error:', error);
       }
     }
