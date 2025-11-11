@@ -349,6 +349,60 @@
       cursor: not-allowed;
     }
 
+    .btn-primary {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 4px rgba(149, 165, 166, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: #7f8c8d;
+      box-shadow: 0 4px 8px rgba(149, 165, 166, 0.3);
+    }
+
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+    }
+
     .message {
       padding: 15px;
       border-radius: 4px;
@@ -518,7 +572,7 @@
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('config')">Ticket Graphics</button>
-      <button class="tab-btn" onclick="switchTab('preview')">Preview</button>
+      <button class="tab-btn" onclick="switchToPreviewTab()">Preview</button>
       <button class="tab-btn" onclick="switchTab('settings')">Other Settings</button>
       <button class="tab-btn" onclick="switchTab('history')">Change History</button>
       <button class="tab-btn" onclick="switchTab('users')">User Management</button>
@@ -527,160 +581,125 @@
     <!-- Configuration Tab -->
     <div id="config" class="tab-content active">
       <div class="card">
-        <h2>Promo Switch Configuration</h2>
-        <div class="section-header">
-          <h3>Switch Date</h3>
-          <p>When you change this date, the ticket graphics will automatically switch to the "next" versions</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>Graphic Sets Management</h2>
+          <button class="btn-primary" onclick="showNewGraphicSetForm()">+ Add New Set</button>
         </div>
-
-        <div class="form-group">
-          <label for="switchDate">Promo Switch Date (or "TBD" to disable)</label>
-          <input type="text" id="switchDate" class="datepicker" placeholder="YYYY-MM-DD or TBD">
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+          Manage multiple sets of ticket graphics with individual start dates. The system automatically shows the set with the most recent start date that hasn't arrived yet.
+        </p>
+        <div id="graphicSetsList" style="display: none;">
+          <!-- Accordion items will be inserted here -->
         </div>
-      </div>
-
-      <div class="card">
-        <h2>General Admission Tickets</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- GA Desktop Before Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Desktop - Before switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="gaDesktop">URL</label>
-              <div class="input-group">
-                <input type="text" id="gaDesktop" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('gaDesktop')">Validate</button>
-              </div>
-              <div class="validation-status" id="gaDesktop-status"></div>
-              <div class="image-preview" id="gaDesktop-preview" style="display: none;"></div>
-            </div>
-          </div>
-
-          <!-- GA Desktop After Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Desktop - After switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="gaDesktopNext">URL</label>
-              <div class="input-group">
-                <input type="text" id="gaDesktopNext" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('gaDesktopNext')">Validate</button>
-              </div>
-              <div class="validation-status" id="gaDesktopNext-status"></div>
-              <div class="image-preview" id="gaDesktopNext-preview" style="display: none;"></div>
-            </div>
-          </div>
-
-          <!-- GA Mobile Before Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Mobile - Before switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="gaMobile">URL</label>
-              <div class="input-group">
-                <input type="text" id="gaMobile" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('gaMobile')">Validate</button>
-              </div>
-              <div class="validation-status" id="gaMobile-status"></div>
-              <div class="image-preview" id="gaMobile-preview" style="display: none;"></div>
-            </div>
-          </div>
-
-          <!-- GA Mobile After Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Mobile - After switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="gaMobileNext">URL</label>
-              <div class="input-group">
-                <input type="text" id="gaMobileNext" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('gaMobileNext')">Validate</button>
-              </div>
-              <div class="validation-status" id="gaMobileNext-status"></div>
-              <div class="image-preview" id="gaMobileNext-preview" style="display: none;"></div>
-            </div>
-          </div>
+        <div id="noGraphicSets" style="text-align: center; padding: 40px 20px; color: #999;">
+          <p>No graphic sets found. Create one to get started.</p>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Complimentary Tickets</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- Comp Desktop Before Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Desktop - Before switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="compDesktop">URL</label>
-              <div class="input-group">
-                <input type="text" id="compDesktop" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('compDesktop')">Validate</button>
-              </div>
-              <div class="validation-status" id="compDesktop-status"></div>
-              <div class="image-preview" id="compDesktop-preview" style="display: none;"></div>
-            </div>
+      <!-- New/Edit Set Form Modal -->
+      <div id="graphicSetFormModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card" style="max-width: 800px; max-height: 90vh; overflow-y: auto; width: 90%;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 id="formModalTitle">New Graphic Set</h3>
+            <button type="button" onclick="closeGraphicSetForm()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
           </div>
 
-          <!-- Comp Desktop After Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Desktop - After switch</h3>
-            </div>
-            <div class="form-group">
-              <label for="compDesktopNext">URL</label>
-              <div class="input-group">
-                <input type="text" id="compDesktopNext" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('compDesktopNext')">Validate</button>
-              </div>
-              <div class="validation-status" id="compDesktopNext-status"></div>
-              <div class="image-preview" id="compDesktopNext-preview" style="display: none;"></div>
-            </div>
-          </div>
+          <form id="graphicSetForm" onsubmit="saveGraphicSet(event)">
+            <input type="hidden" id="setId">
 
-          <!-- Comp Mobile Before Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Mobile - Before switch</h3>
-            </div>
             <div class="form-group">
-              <label for="compMobile">URL</label>
-              <div class="input-group">
-                <input type="text" id="compMobile" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('compMobile')">Validate</button>
-              </div>
-              <div class="validation-status" id="compMobile-status"></div>
-              <div class="image-preview" id="compMobile-preview" style="display: none;"></div>
+              <label for="setName">Set Name *</label>
+              <input type="text" id="setName" required placeholder="e.g., Spring 2025, Early Bird">
             </div>
-          </div>
 
-          <!-- Comp Mobile After Switch -->
-          <div>
-            <div class="section-header">
-              <h3>Mobile - After switch</h3>
-            </div>
             <div class="form-group">
-              <label for="compMobileNext">URL</label>
-              <div class="input-group">
-                <input type="text" id="compMobileNext" placeholder="https://example.com/image.png">
-                <button type="button" onclick="validateUrl('compMobileNext')">Validate</button>
-              </div>
-              <div class="validation-status" id="compMobileNext-status"></div>
-              <div class="image-preview" id="compMobileNext-preview" style="display: none;"></div>
+              <label for="setDescription">Description</label>
+              <input type="text" id="setDescription" placeholder="Optional description">
             </div>
-          </div>
+
+            <div class="form-group">
+              <label for="setStartDate">Start Date & Time *</label>
+              <input type="text" id="setStartDate" class="datepicker-time" required placeholder="YYYY-MM-DD HH:MM">
+            </div>
+
+            <div class="form-group">
+              <label for="setTimezone">Timezone</label>
+              <select id="setTimezone" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                <option value="-05:00">Eastern Standard Time (EST) -05:00</option>
+                <option value="-04:00">Eastern Daylight Time (EDT) -04:00</option>
+                <option value="-06:00">Central Time (CT) -06:00</option>
+                <option value="-07:00">Mountain Time (MT) -07:00</option>
+                <option value="-08:00">Pacific Time (PT) -08:00</option>
+                <option value="+00:00">UTC +00:00</option>
+              </select>
+            </div>
+
+            <div style="border-top: 1px solid #e1e8ed; padding-top: 20px; margin-top: 20px;">
+              <h4>General Admission Graphics</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                  <label for="setGADesktop">Desktop URL</label>
+                  <div class="input-group">
+                    <input type="text" id="setGADesktop" placeholder="https://example.com/image.png">
+                    <button type="button" onclick="validateUrlInForm('setGADesktop')">Validate</button>
+                  </div>
+                  <div class="validation-status" id="setGADesktop-status"></div>
+                  <div class="image-preview" id="setGADesktop-preview" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="setGAMobile">Mobile URL</label>
+                  <div class="input-group">
+                    <input type="text" id="setGAMobile" placeholder="https://example.com/image.png">
+                    <button type="button" onclick="validateUrlInForm('setGAMobile')">Validate</button>
+                  </div>
+                  <div class="validation-status" id="setGAMobile-status"></div>
+                  <div class="image-preview" id="setGAMobile-preview" style="display: none;"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="setGAPromoText">GA Promo Text</label>
+                <input type="text" id="setGAPromoText" placeholder="Optional promotional text">
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid #e1e8ed; padding-top: 20px; margin-top: 20px;">
+              <h4>Complimentary Tickets Graphics</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                  <label for="setCompDesktop">Desktop URL</label>
+                  <div class="input-group">
+                    <input type="text" id="setCompDesktop" placeholder="https://example.com/image.png">
+                    <button type="button" onclick="validateUrlInForm('setCompDesktop')">Validate</button>
+                  </div>
+                  <div class="validation-status" id="setCompDesktop-status"></div>
+                  <div class="image-preview" id="setCompDesktop-preview" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="setCompMobile">Mobile URL</label>
+                  <div class="input-group">
+                    <input type="text" id="setCompMobile" placeholder="https://example.com/image.png">
+                    <button type="button" onclick="validateUrlInForm('setCompMobile')">Validate</button>
+                  </div>
+                  <div class="validation-status" id="setCompMobile-status"></div>
+                  <div class="image-preview" id="setCompMobile-preview" style="display: none;"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="setCompPromoText">Comp Promo Text</label>
+                <input type="text" id="setCompPromoText" placeholder="Optional promotional text">
+              </div>
+            </div>
+
+            <div class="button-group" style="margin-top: 30px;">
+              <button type="submit" class="btn-save">Save Set</button>
+              <button type="button" class="btn-reset" onclick="closeGraphicSetForm()">Cancel</button>
+            </div>
+          </form>
         </div>
-      </div>
-
-      <div class="button-group">
-        <button class="btn-save" onclick="previewConfig()">Preview Configuration</button>
-        <button class="btn-copy-next" onclick="copyAfterSwitchToBefore()">Copy all After switch to Before switch</button>
-        <button class="btn-reset" onclick="resetForm()">Reset</button>
       </div>
     </div>
 
@@ -689,46 +708,25 @@
       <div class="card">
         <h2>Graphics Preview</h2>
         <p style="color: #999; font-size: 14px; margin-bottom: 20px;">
-          This shows a side-by-side comparison of Before switch and After switch graphics. The column highlighted in blue indicates which images are currently live based on your switch date. Review your changes and click Save Configuration to persist them.
+          View the currently active graphics and the next scheduled set.
         </p>
-        <div class="side-by-side">
-          <div class="preview-item" id="previewGADesktop">
-            <h4>GA Desktop - Before switch</h4>
-            <div class="no-image">No image URL</div>
+
+        <div id="previewContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+          <!-- Current Section -->
+          <div>
+            <h3 style="color: #27ae60; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #27ae60;">● Current</h3>
+            <div id="currentSection" style="color: #999; text-align: center; padding: 20px;">Loading...</div>
           </div>
-          <div class="preview-item" id="previewGADesktopNext">
-            <h4>GA Desktop - After switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewGAMobile">
-            <h4>GA Mobile - Before switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewGAMobileNext">
-            <h4>GA Mobile - After switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewCompDesktop">
-            <h4>Comp Desktop - Before switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewCompDesktopNext">
-            <h4>Comp Desktop - After switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewCompMobile">
-            <h4>Comp Mobile - Before switch</h4>
-            <div class="no-image">No image URL</div>
-          </div>
-          <div class="preview-item" id="previewCompMobileNext">
-            <h4>Comp Mobile - After switch</h4>
-            <div class="no-image">No image URL</div>
+
+          <!-- Next Section -->
+          <div>
+            <h3 style="color: #3498db; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db;">⏱ Next</h3>
+            <div id="nextSection" style="color: #999; text-align: center; padding: 20px;">No scheduled sets</div>
           </div>
         </div>
       </div>
 
       <div class="button-group">
-        <button class="btn-save" onclick="saveConfig()">Save Configuration</button>
         <button class="btn-reset" onclick="switchTab('config')">Back to Configuration</button>
       </div>
     </div>
@@ -854,13 +852,14 @@
         minDate: new Date()
       });
 
-      // Load configuration
-      await loadConfig();
+      // Load configuration (moved to loadGraphicSets for new multi-set system)
+      // await loadConfig();
 
       // Update preview highlights based on loaded switch date
-      setTimeout(() => {
-        updatePreviewHighlights();
-      }, 100);
+      // Disabled - using new multi-set system
+      // setTimeout(() => {
+      //   updatePreviewHighlights();
+      // }, 100);
 
       // Load other settings
       await loadOtherSettings();
@@ -882,16 +881,478 @@
       });
 
       // Add listener to switch date to update config page highlighting
-      const switchDateInput = document.getElementById('switchDate');
-      if (switchDateInput) {
-        switchDateInput.addEventListener('change', () => {
-          updateConfigPageHighlights();
-        });
-      }
+      // Disabled - using new multi-set system
+      // const switchDateInput = document.getElementById('switchDate');
+      // if (switchDateInput) {
+      //   switchDateInput.addEventListener('change', () => {
+      //     updateConfigPageHighlights();
+      //   });
+      // }
 
-      // Initial highlight on load
-      updateConfigPageHighlights();
+      // Initial highlight on load - Disabled - using new multi-set system
+      // updateConfigPageHighlights();
+
+      // Load graphic sets on page load
+      await loadGraphicSets();
     });
+
+    // ============= GRAPHIC SETS MANAGEMENT =============
+
+    async function loadGraphicSets() {
+      try {
+        const response = await fetch('/api/graphic-sets');
+        if (!response.ok) {
+          console.error('Failed to fetch graphic sets:', response.status, response.statusText);
+          throw new Error(`Failed to load graphic sets: ${response.status}`);
+        }
+
+        const sets = await response.json();
+        console.log('Loaded graphic sets:', sets);
+
+        // Get the active set to mark it correctly
+        let activeSetId = null;
+        try {
+          const activeResponse = await fetch('/api/graphic-sets/active');
+          if (activeResponse.ok) {
+            const activeSet = await activeResponse.json();
+            activeSetId = activeSet.id;
+            console.log('Active set:', activeSet);
+          } else {
+            console.log('No active set found');
+          }
+        } catch (e) {
+          console.log('Error fetching active set:', e);
+          // Ignore - no active set
+        }
+
+        const setsList = document.getElementById('graphicSetsList');
+        const noSets = document.getElementById('noGraphicSets');
+
+        if (sets.length === 0) {
+          setsList.style.display = 'none';
+          noSets.style.display = 'block';
+          return;
+        }
+
+        setsList.style.display = 'block';
+        noSets.style.display = 'none';
+
+        // Sort sets in reverse order (newest first)
+        const sortedSets = [...sets].sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+        setsList.innerHTML = sortedSets.map(set => {
+          // Check if set has all 4 required images
+          const hasAllImages = set.graphics.gaDesktop && set.graphics.gaMobile &&
+                               set.graphics.compDesktop && set.graphics.compMobile;
+
+          const isActive = set.id === activeSetId;
+          const startDateObj = new Date(set.startDate);
+          const now = new Date();
+          const isFuture = startDateObj > now;
+
+          let statusBadge;
+          if (!hasAllImages) {
+            statusBadge = '<span style="color: #f39c12; font-size: 12px; font-weight: 600;">⚠ Needs Config</span>';
+          } else if (isActive) {
+            statusBadge = '<span style="color: #27ae60; font-size: 12px; font-weight: 600;">● ACTIVE NOW</span>';
+          } else if (isFuture) {
+            statusBadge = '<span style="color: #3498db; font-size: 12px;">⏱ Scheduled</span>';
+          } else {
+            statusBadge = '<span style="color: #95a5a6; font-size: 12px;">○ Past</span>';
+          }
+
+          const startDate = formatDateWithTimezone(set.startDate);
+
+          // Generate preview images HTML
+          const graphicsPreview = [set.graphics.gaDesktop, set.graphics.gaMobile, set.graphics.compDesktop, set.graphics.compMobile]
+            .filter(url => url)
+            .slice(0, 2)
+            .map((url, idx) => `<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 3px; overflow: hidden;"><img src="${url}" style="width: 100%; height: 100%; object-fit: cover;" onload="this.style.opacity=1" onerror="this.style.opacity=0.3" alt="preview" style="opacity: 0.3;"></div>`)
+            .join('');
+
+          return `
+            <div style="border: 1px solid #e1e8ed; border-radius: 4px; margin-bottom: 12px; overflow: hidden;">
+              <div style="background: #f9f9f9; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleSetDetails('${set.id}')">
+                <div style="flex: 1;">
+                  <div style="font-weight: 500; color: #333; margin-bottom: 3px;">${set.name}</div>
+                  <div style="font-size: 13px; color: #666;">Start: ${startDate}</div>
+                </div>
+                ${graphicsPreview ? `<div style="display: flex; gap: 6px; margin: 0 15px;">${graphicsPreview}</div>` : ''}
+                <div style="display: flex; align-items: center; gap: 15px;">
+                  ${statusBadge}
+                  <span style="color: #999; transform: rotate(0deg); transition: transform 0.2s;" id="arrow-${set.id}">▼</span>
+                </div>
+              </div>
+              <div id="details-${set.id}" style="display: none; padding: 15px; background: white; border-top: 1px solid #e1e8ed;">
+                ${set.description ? `<p style="color: #666; margin-bottom: 15px;"><strong>Description:</strong> ${set.description}</p>` : ''}
+                <h4 style="margin-bottom: 10px; color: #333;">Graphics</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                  <div>
+                    <strong style="font-size: 13px; color: #666;">GA Desktop:</strong><br>
+                    <span style="font-size: 12px; color: #999; word-break: break-all;">${set.graphics.gaDesktop ? set.graphics.gaDesktop.substring(0, 50) + '...' : '(not set)'}</span>
+                    ${set.graphics.gaDesktop ? `<div style="margin-top: 8px; background: #f5f5f5; border-radius: 3px; padding: 8px; max-height: 400px; overflow-y: auto;"><img src="${set.graphics.gaDesktop}" style="max-width: 100%; height: auto; display: block;" alt="GA Desktop"></div>` : ''}
+                  </div>
+                  <div>
+                    <strong style="font-size: 13px; color: #666;">GA Mobile:</strong><br>
+                    <span style="font-size: 12px; color: #999; word-break: break-all;">${set.graphics.gaMobile ? set.graphics.gaMobile.substring(0, 50) + '...' : '(not set)'}</span>
+                    ${set.graphics.gaMobile ? `<div style="margin-top: 8px; background: #f5f5f5; border-radius: 3px; padding: 8px; max-height: 400px; overflow-y: auto;"><img src="${set.graphics.gaMobile}" style="max-width: 100%; height: auto; display: block;" alt="GA Mobile"></div>` : ''}
+                  </div>
+                  <div>
+                    <strong style="font-size: 13px; color: #666;">Comp Desktop:</strong><br>
+                    <span style="font-size: 12px; color: #999; word-break: break-all;">${set.graphics.compDesktop ? set.graphics.compDesktop.substring(0, 50) + '...' : '(not set)'}</span>
+                    ${set.graphics.compDesktop ? `<div style="margin-top: 8px; background: #f5f5f5; border-radius: 3px; padding: 8px; max-height: 400px; overflow-y: auto;"><img src="${set.graphics.compDesktop}" style="max-width: 100%; height: auto; display: block;" alt="Comp Desktop"></div>` : ''}
+                  </div>
+                  <div>
+                    <strong style="font-size: 13px; color: #666;">Comp Mobile:</strong><br>
+                    <span style="font-size: 12px; color: #999; word-break: break-all;">${set.graphics.compMobile ? set.graphics.compMobile.substring(0, 50) + '...' : '(not set)'}</span>
+                    ${set.graphics.compMobile ? `<div style="margin-top: 8px; background: #f5f5f5; border-radius: 3px; padding: 8px; max-height: 400px; overflow-y: auto;"><img src="${set.graphics.compMobile}" style="max-width: 100%; height: auto; display: block;" alt="Comp Mobile"></div>` : ''}
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn-primary" onclick="editGraphicSet('${set.id}')">Edit</button>
+                  <button type="button" class="btn-secondary" onclick="duplicateGraphicSet('${set.id}')">Duplicate</button>
+                  <button type="button" class="btn-delete" onclick="deleteGraphicSet('${set.id}')">Delete</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error in loadGraphicSets:', error);
+        showMessage('Error loading graphic sets: ' + error.message, 'error');
+      }
+    }
+
+    function toggleSetDetails(setId) {
+      const details = document.getElementById(`details-${setId}`);
+      const arrow = document.getElementById(`arrow-${setId}`);
+      if (details.style.display === 'none') {
+        details.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        details.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function showNewGraphicSetForm() {
+      document.getElementById('setId').value = '';
+      document.getElementById('formModalTitle').textContent = 'New Graphic Set';
+      document.getElementById('graphicSetForm').reset();
+      document.getElementById('setTimezone').value = '-04:00'; // Default to EDT
+      document.getElementById('graphicSetFormModal').style.display = 'flex';
+
+      // Set default date/time to tomorrow at 12am
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const defaultDateTime = tomorrow.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+      document.getElementById('setStartDate').value = defaultDateTime.replace('T', ' ');
+
+      // Reinitialize flatpickr for the modal with time
+      setTimeout(() => {
+        flatpickr('#setStartDate', {
+          enableTime: true,
+          timeFormat: 'H:i',
+          dateFormat: 'Y-m-d H:i',
+          defaultDate: defaultDateTime,
+          minuteIncrement: 1
+        });
+      }, 100);
+    }
+
+    async function editGraphicSet(setId) {
+      try {
+        const sets = await (await fetch('/api/graphic-sets')).json();
+        const set = sets.find(s => s.id === setId);
+        if (!set) throw new Error('Set not found');
+
+        document.getElementById('setId').value = set.id;
+        document.getElementById('setName').value = set.name;
+        document.getElementById('setDescription').value = set.description || '';
+
+        // Parse start date and timezone
+        const dateTimePart = set.startDate.slice(0, 16); // YYYY-MM-DDTHH:MM
+        const dateDisplay = dateTimePart.replace('T', ' '); // YYYY-MM-DD HH:MM
+        document.getElementById('setStartDate').value = dateDisplay;
+
+        // Extract timezone from the full date string (e.g., -04:00)
+        const tzMatch = set.startDate.match(/([+-]\d{2}:\d{2})$/);
+        if (tzMatch) {
+          document.getElementById('setTimezone').value = tzMatch[1];
+        } else {
+          document.getElementById('setTimezone').value = '-04:00'; // Default
+        }
+
+        document.getElementById('setGADesktop').value = set.graphics.gaDesktop || '';
+        document.getElementById('setGAMobile').value = set.graphics.gaMobile || '';
+        document.getElementById('setGAPromoText').value = set.promoText.ga || '';
+        document.getElementById('setCompDesktop').value = set.graphics.compDesktop || '';
+        document.getElementById('setCompMobile').value = set.graphics.compMobile || '';
+        document.getElementById('setCompPromoText').value = set.promoText.comp || '';
+
+        document.getElementById('formModalTitle').textContent = 'Edit Graphic Set';
+        document.getElementById('graphicSetFormModal').style.display = 'flex';
+
+        // Initialize date picker
+        setTimeout(() => {
+          flatpickr('#setStartDate', {
+            enableTime: true,
+            timeFormat: 'H:i',
+            dateFormat: 'Y-m-d H:i',
+            minuteIncrement: 1
+          });
+        }, 100);
+      } catch (error) {
+        showMessage('Error loading set: ' + error.message, 'error');
+      }
+    }
+
+    async function saveGraphicSet(event) {
+      event.preventDefault();
+      try {
+        const setId = document.getElementById('setId').value;
+        const dateTimeStr = document.getElementById('setStartDate').value; // YYYY-MM-DD HH:MM
+        const timezone = document.getElementById('setTimezone').value; // -04:00 format
+
+        // Convert "YYYY-MM-DD HH:MM" to "YYYY-MM-DDTHH:MM:00{timezone}"
+        const [datePart, timePart] = dateTimeStr.split(' ');
+        const startDate = `${datePart}T${timePart}:00${timezone}`;
+
+        const data = {
+          name: document.getElementById('setName').value,
+          description: document.getElementById('setDescription').value,
+          startDate: startDate,
+          graphics: {
+            gaDesktop: document.getElementById('setGADesktop').value,
+            gaMobile: document.getElementById('setGAMobile').value,
+            compDesktop: document.getElementById('setCompDesktop').value,
+            compMobile: document.getElementById('setCompMobile').value
+          },
+          promoText: {
+            ga: document.getElementById('setGAPromoText').value,
+            comp: document.getElementById('setCompPromoText').value
+          }
+        };
+
+        const method = setId ? 'PUT' : 'POST';
+        const url = setId ? `/api/graphic-sets/${setId}` : '/api/graphic-sets';
+
+        const response = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          showMessage(`Graphic set ${setId ? 'updated' : 'created'} successfully!`, 'success');
+          closeGraphicSetForm();
+          await loadGraphicSets();
+        } else {
+          const error = await response.json();
+          showMessage(error.error || 'Failed to save set', 'error');
+        }
+      } catch (error) {
+        showMessage('Error saving set: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteGraphicSet(setId) {
+      if (!confirm('Are you sure you want to delete this graphic set?')) return;
+
+      try {
+        const response = await fetch(`/api/graphic-sets/${setId}`, { method: 'DELETE' });
+        if (response.ok) {
+          showMessage('Graphic set deleted successfully!', 'success');
+          await loadGraphicSets();
+        } else {
+          showMessage('Failed to delete set', 'error');
+        }
+      } catch (error) {
+        showMessage('Error deleting set: ' + error.message, 'error');
+      }
+    }
+
+    async function duplicateGraphicSet(setId) {
+      try {
+        const sets = await (await fetch('/api/graphic-sets')).json();
+        const set = sets.find(s => s.id === setId);
+        if (!set) throw new Error('Set not found');
+
+        document.getElementById('setId').value = '';
+        document.getElementById('setName').value = set.name + ' (Copy)';
+        document.getElementById('setDescription').value = set.description || '';
+
+        // Set default date/time to tomorrow at 12am
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const defaultDateTime = tomorrow.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+        document.getElementById('setStartDate').value = defaultDateTime.replace('T', ' ');
+
+        document.getElementById('setTimezone').value = '-04:00'; // Default to EDT
+
+        document.getElementById('setGADesktop').value = set.graphics.gaDesktop || '';
+        document.getElementById('setGAMobile').value = set.graphics.gaMobile || '';
+        document.getElementById('setGAPromoText').value = set.promoText.ga || '';
+        document.getElementById('setCompDesktop').value = set.graphics.compDesktop || '';
+        document.getElementById('setCompMobile').value = set.graphics.compMobile || '';
+        document.getElementById('setCompPromoText').value = set.promoText.comp || '';
+
+        document.getElementById('formModalTitle').textContent = 'New Graphic Set (Duplicated)';
+        document.getElementById('graphicSetFormModal').style.display = 'flex';
+
+        // Initialize date picker
+        setTimeout(() => {
+          flatpickr('#setStartDate', {
+            enableTime: true,
+            timeFormat: 'H:i',
+            dateFormat: 'Y-m-d H:i',
+            defaultDate: defaultDateTime,
+            minuteIncrement: 1
+          });
+        }, 100);
+      } catch (error) {
+        showMessage('Error duplicating set: ' + error.message, 'error');
+      }
+    }
+
+    function closeGraphicSetForm() {
+      document.getElementById('graphicSetFormModal').style.display = 'none';
+      document.getElementById('graphicSetForm').reset();
+    }
+
+    function validateUrlInForm(fieldId) {
+      // Reuse existing validation logic
+      validateUrl(fieldId);
+    }
+
+    async function loadPreviewData() {
+      try {
+        const response = await fetch('/api/graphic-sets');
+        if (!response.ok) throw new Error('Failed to load sets');
+
+        const sets = await response.json();
+        const now = new Date();
+
+        // Find active set (most recent with all images and startDate <= now)
+        let activeSet = null;
+        let nextSet = null;
+
+        // Sort sets by startDate descending (most recent first)
+        const sortedSets = [...sets].sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+        for (const set of sortedSets) {
+          const hasAllImages = set.graphics.gaDesktop && set.graphics.gaMobile &&
+                               set.graphics.compDesktop && set.graphics.compMobile;
+          const startDate = new Date(set.startDate);
+
+          // Find the most recent set with startDate <= now and all images
+          if (startDate <= now && hasAllImages && !activeSet) {
+            activeSet = set;
+          }
+        }
+
+        // Find the earliest future set with all images
+        const sortedAscending = [...sets].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        for (const set of sortedAscending) {
+          const hasAllImages = set.graphics.gaDesktop && set.graphics.gaMobile &&
+                               set.graphics.compDesktop && set.graphics.compMobile;
+          const startDate = new Date(set.startDate);
+
+          if (startDate > now && hasAllImages && !nextSet) {
+            nextSet = set;
+          }
+        }
+
+        // Render current section
+        const currentSection = document.getElementById('currentSection');
+        if (activeSet) {
+          currentSection.innerHTML = `
+            <div style="text-align: left;">
+              <div style="margin-bottom: 10px; color: #333; font-weight: 500;">${activeSet.name}</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div>
+                  <strong style="font-size: 12px; color: #666;">GA Desktop</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${activeSet.graphics.gaDesktop}" style="max-width: 100%; height: auto; display: block;" alt="GA Desktop">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">GA Mobile</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${activeSet.graphics.gaMobile}" style="max-width: 100%; height: auto; display: block;" alt="GA Mobile">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">Comp Desktop</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${activeSet.graphics.compDesktop}" style="max-width: 100%; height: auto; display: block;" alt="Comp Desktop">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">Comp Mobile</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${activeSet.graphics.compMobile}" style="max-width: 100%; height: auto; display: block;" alt="Comp Mobile">
+                  </div>
+                </div>
+              </div>
+              <div style="font-size: 12px; color: #999;">Live since ${new Date(activeSet.startDate).toLocaleDateString()}</div>
+            </div>
+          `;
+        } else {
+          currentSection.innerHTML = '<div style="color: #e74c3c;">No graphics are currently live</div>';
+        }
+
+        // Render next section
+        const nextSection = document.getElementById('nextSection');
+        if (nextSet) {
+          nextSection.innerHTML = `
+            <div style="text-align: left;">
+              <div style="margin-bottom: 10px; color: #333; font-weight: 500;">${nextSet.name}</div>
+              <div style="background: #ecf0f1; padding: 10px; border-radius: 3px; margin-bottom: 15px; color: #333; font-size: 13px;">
+                <strong>Goes live:</strong> ${formatDateWithTimezone(nextSet.startDate)}
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div>
+                  <strong style="font-size: 12px; color: #666;">GA Desktop</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${nextSet.graphics.gaDesktop}" style="max-width: 100%; height: auto; display: block;" alt="GA Desktop">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">GA Mobile</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${nextSet.graphics.gaMobile}" style="max-width: 100%; height: auto; display: block;" alt="GA Mobile">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">Comp Desktop</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${nextSet.graphics.compDesktop}" style="max-width: 100%; height: auto; display: block;" alt="Comp Desktop">
+                  </div>
+                </div>
+                <div>
+                  <strong style="font-size: 12px; color: #666;">Comp Mobile</strong><br>
+                  <div style="background: #f5f5f5; border-radius: 3px; padding: 8px; margin-top: 6px; max-height: 250px; overflow-y: auto;">
+                    <img src="${nextSet.graphics.compMobile}" style="max-width: 100%; height: auto; display: block;" alt="Comp Mobile">
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          nextSection.innerHTML = '<div style="color: #999;">No scheduled sets</div>';
+        }
+      } catch (error) {
+        console.error('Error loading preview:', error);
+        document.getElementById('currentSection').innerHTML = '<div style="color: #e74c3c;">Error loading preview</div>';
+      }
+    }
+
+    // Reload preview when switching to preview tab
+    function switchToPreviewTab() {
+      switchTab('preview');
+      loadPreviewData();
+    }
 
     async function loadConfig() {
       try {
@@ -1274,6 +1735,27 @@
         saveBtn.disabled = false;
         saveBtn.textContent = originalText;
       }
+    }
+
+    function formatDateWithTimezone(isoString) {
+      // Parse ISO string like "2025-02-13T12:00:00-04:00" and display with timezone
+      const match = isoString.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})([+-]\d{2}:\d{2})$/);
+      if (!match) return isoString;
+
+      const [, year, month, day, hour, minute, , tz] = match;
+      const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00`);
+      const formatted = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }) + ', ' +
+      date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+
+      return formatted + ' ' + tz;
     }
 
     function resetForm() {
