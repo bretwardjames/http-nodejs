@@ -35,7 +35,6 @@ dotenv.config();
 initializeDatabase();
 
 const serverUrl = process.env.SERVER_URL || 'http://localhost:3000';
-console.log('Server URL:', serverUrl);
 
 const app = express();
 
@@ -202,7 +201,6 @@ app.post('/update-ple', requireAuth, async (req, res) => {
 
     res.json({ success: true, message: 'Variables updated successfully' });
   } catch (error) {
-    console.error('Error updating PLE variables:', error);
     res.status(500).json({ error: 'Failed to update variables' });
   }
 });
@@ -214,7 +212,6 @@ app.get('/config-history', requireAuth, (req, res) => {
     const history = getChangeHistory(limit);
     res.json(history);
   } catch (error) {
-    console.error('Error fetching change history:', error);
     res.status(500).json({ error: 'Failed to fetch history' });
   }
 });
@@ -237,7 +234,6 @@ app.post('/validate-url', requireAuth, async (req, res) => {
     const isValid = response.status >= 200 && response.status < 300;
     res.json({ valid: isValid, status: response.status });
   } catch (error) {
-    console.error('Error validating URL:', error.message);
     res.json({ valid: false, error: error.message });
   }
 });
@@ -248,7 +244,6 @@ app.get('/admin/users', requireAuth, (req, res) => {
     const users = getAllUsers();
     res.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
@@ -278,7 +273,6 @@ app.post('/admin/create-user', requireAuth, (req, res) => {
 
     res.json({ success: true, message: `User '${username}' created successfully` });
   } catch (error) {
-    console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
   }
 });
@@ -415,7 +409,6 @@ app.post('/proxy', async (req, res) => {
 
     res.status(response.status).send(response.data);
   } catch (error) {
-    console.error('Error making API request:', error);
     res.status(500).send('An error occurred while making the API request.');
   }
 });
@@ -669,6 +662,4 @@ app.get('/get-sheet-row', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => {});

@@ -1,5 +1,12 @@
-[build]
-cmd = "npm ci"
+[phases.setup]
+nixPkgs = ["nodejs"]
 
-[start]
-cmd = "npm start"
+[phases.install]
+# Use npm explicitly
+cmds = ["npm install --production=false"]
+
+[phases.build]
+# Skip build phase
+
+[phases.start]
+cmd = "node server.mjs"
