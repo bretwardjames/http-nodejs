@@ -119,28 +119,30 @@ export function setConfigValue(key, value, username = 'system') {
 
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
 
-    // Log to change history
-    let history = [];
-    if (fs.existsSync(HISTORY_FILE)) {
-      const data = fs.readFileSync(HISTORY_FILE, 'utf8');
-      history = JSON.parse(data);
+    // Only log to change history if value actually changed
+    if (oldValue !== value) {
+      let history = [];
+      if (fs.existsSync(HISTORY_FILE)) {
+        const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+        history = JSON.parse(data);
+      }
+
+      history.unshift({
+        id: history.length + 1,
+        key,
+        old_value: oldValue,
+        new_value: value,
+        username,
+        changed_at: new Date().toISOString()
+      });
+
+      // Keep only last 500 entries to avoid huge file
+      if (history.length > 500) {
+        history = history.slice(0, 500);
+      }
+
+      fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
     }
-
-    history.unshift({
-      id: history.length + 1,
-      key,
-      old_value: oldValue,
-      new_value: value,
-      username,
-      changed_at: new Date().toISOString()
-    });
-
-    // Keep only last 500 entries to avoid huge file
-    if (history.length > 500) {
-      history = history.slice(0, 500);
-    }
-
-    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
 
     return true;
   } catch (err) {

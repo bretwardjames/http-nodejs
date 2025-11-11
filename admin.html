@@ -1434,7 +1434,7 @@
         html += `
           <div class="form-group">
             <label for="${fieldId}">${label}</label>
-            <input type="text" id="${fieldId}" value="${value || ''}" placeholder="Enter value">
+            <input type="text" id="${fieldId}" value="${value || ''}" data-original-value="${value || ''}" placeholder="Enter value">
             ${isImage ? `<div class="image-preview" id="${fieldId}-preview" style="display: none;"></div>` : ''}
           </div>
         `;
@@ -1508,9 +1508,22 @@
           const fieldId = input.id;
           if (fieldId.startsWith('setting_')) {
             const pleKey = fieldId.replace('setting_', '');
-            updates[pleKey] = input.value.trim();
+            const newValue = input.value.trim();
+            // Get the data attribute that stores the original value
+            const originalValue = input.getAttribute('data-original-value') || '';
+            // Only include in updates if value actually changed
+            if (newValue !== originalValue) {
+              updates[pleKey] = newValue;
+            }
           }
         });
+
+        // If no changes, show message and return
+        if (Object.keys(updates).length === 0) {
+          showMessage('No changes to save', 'info');
+          window.scrollTo(0, 0);
+          return;
+        }
 
         const response = await fetch('/update-ple', {
           method: 'POST',
