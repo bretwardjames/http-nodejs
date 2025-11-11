@@ -22,7 +22,13 @@ import {
   authenticateUser,
   getUserById,
   createUser,
-  getAllUsers
+  getAllUsers,
+  getAllGraphicSets,
+  getActiveGraphicSet,
+  addGraphicSet,
+  updateGraphicSet,
+  deleteGraphicSet,
+  isGraphicSetComplete
 } from './database.mjs';
 
 // ES6 __dirname workaround
@@ -58,51 +64,59 @@ app.use(
 
 const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
-app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
-  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
-  const switchDate = new Date(switchDateStr);
-  const currentDate = new Date();
+// Helper function to get the URL for a specific graphic from active set
+function getActiveGraphicUrl(graphicKey) {
+  const activeSet = getActiveGraphicSet();
+  if (!activeSet) {
+    // Fallback to old structure if no active set found
+    return getConfigValue(`PLE_promo_${graphicKey}`);
+  }
 
-  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_ticketGraphicDesktop_next')) {
-    res.redirect(getConfigValue('PLE_promo_ticketGraphicDesktop_next'));
+  // Map old keys to new set structure
+  const keyMap = {
+    'ticketGraphicDesktop': 'gaDesktop',
+    'ticketGraphicMobile': 'gaMobile',
+    'compTicketGraphicDesktop': 'compDesktop',
+    'compTicketGraphicMobile': 'compMobile'
+  };
+
+  const newKey = keyMap[graphicKey];
+  return activeSet.graphics[newKey] || '';
+}
+
+app.get('/ticket-graphic-ga-desktop.png', (req, res) => {
+  const url = getActiveGraphicUrl('ticketGraphicDesktop');
+  if (url) {
+    res.redirect(url);
   } else {
-    res.redirect(getConfigValue('PLE_promo_ticketGraphicDesktop'));
+    res.status(404).send('Graphic not found');
   }
 });
 
 app.get('/ticket-graphic-ga-mobile.png', (req, res) => {
-  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
-  const switchDate = new Date(switchDateStr);
-  const currentDate = new Date();
-
-  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_ticketGraphicMobile_next')) {
-    res.redirect(getConfigValue('PLE_promo_ticketGraphicMobile_next'));
+  const url = getActiveGraphicUrl('ticketGraphicMobile');
+  if (url) {
+    res.redirect(url);
   } else {
-    res.redirect(getConfigValue('PLE_promo_ticketGraphicMobile'));
+    res.status(404).send('Graphic not found');
   }
 });
 
 app.get('/ticket-graphic-comp-desktop.png', (req, res) => {
-  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
-  const switchDate = new Date(switchDateStr);
-  const currentDate = new Date();
-
-  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_compTicketGraphicDesktop_next')) {
-    res.redirect(getConfigValue('PLE_promo_compTicketGraphicDesktop_next'));
+  const url = getActiveGraphicUrl('compTicketGraphicDesktop');
+  if (url) {
+    res.redirect(url);
   } else {
-    res.redirect(getConfigValue('PLE_promo_compTicketGraphicDesktop'));
+    res.status(404).send('Graphic not found');
   }
 });
 
 app.get('/ticket-graphic-comp-mobile.png', (req, res) => {
-  const switchDateStr = getConfigValue('PLE_promo_promo_switchDate');
-  const switchDate = new Date(switchDateStr);
-  const currentDate = new Date();
-
-  if (switchDateStr !== 'TBD' && switchDate < currentDate && getConfigValue('PLE_promo_compTicketGraphicMobile_next')) {
-    res.redirect(getConfigValue('PLE_promo_compTicketGraphicMobile_next'));
+  const url = getActiveGraphicUrl('compTicketGraphicMobile');
+  if (url) {
+    res.redirect(url);
   } else {
-    res.redirect(getConfigValue('PLE_promo_compTicketGraphicMobile'));
+    res.status(404).send('Graphic not found');
   }
 });
 
@@ -217,6 +231,104 @@ app.get('/config-history', requireAuth, (req, res) => {
     res.json(history);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch history' });
+  }
+});
+
+// ============= GRAPHIC SETS API =============
+
+// Get all graphic sets
+app.get('/api/graphic-sets', requireAuth, (req, res) => {
+  try {
+    const sets = getAllGraphicSets();
+    res.json(sets);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch graphic sets' });
+  }
+});
+
+// Get active graphic set
+app.get('/api/graphic-sets/active', requireAuth, (req, res) => {
+  try {
+    const activeSet = getActiveGraphicSet();
+    if (activeSet) {
+      res.json(activeSet);
+    } else {
+      res.status(404).json({ error: 'No active graphic set found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch active graphic set' });
+  }
+});
+
+// Create a new graphic set
+app.post('/api/graphic-sets', requireAuth, (req, res) => {
+  try {
+    const { name, description, startDate, graphics, promoText } = req.body;
+    const username = req.session.username;
+
+    if (!name || !startDate) {
+      return res.status(400).json({ error: 'Name and startDate are required' });
+    }
+
+    const newSet = {
+      name,
+      description: description || '',
+      startDate,
+      graphics: graphics || {
+        gaDesktop: '',
+        gaMobile: '',
+        compDesktop: '',
+        compMobile: ''
+      },
+      promoText: promoText || {
+        ga: '',
+        comp: ''
+      }
+    };
+
+    const success = addGraphicSet(newSet, username);
+    if (success) {
+      res.json({ success: true, message: 'Graphic set created successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to create graphic set' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create graphic set' });
+  }
+});
+
+// Update a graphic set
+app.put('/api/graphic-sets/:setId', requireAuth, (req, res) => {
+  try {
+    const { setId } = req.params;
+    const updates = req.body;
+    const username = req.session.username;
+
+    const success = updateGraphicSet(setId, updates, username);
+    if (success) {
+      res.json({ success: true, message: 'Graphic set updated successfully' });
+    } else {
+      res.status(404).json({ error: 'Graphic set not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update graphic set' });
+  }
+});
+
+// Delete a graphic set
+app.delete('/api/graphic-sets/:setId', requireAuth, (req, res) => {
+  try {
+    const { setId } = req.params;
+    const username = req.session.username;
+
+    const success = deleteGraphicSet(setId, username);
+    if (success) {
+      res.json({ success: true, message: 'Graphic set deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Graphic set not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete graphic set' });
   }
 });
 
@@ -419,30 +531,27 @@ app.post('/proxy', async (req, res) => {
 
 app.get('/ple-data', (req, res) => {
   const pleVariables = getAllConfig();
-
   const today = new Date();
 
-  // Check if PLE_endDate is present and if it's in the past
-  if (pleVariables.PLE_endDate) {
-    const endDate = new Date(pleVariables.PLE_endDate);
-    if (endDate < today) {
-      // Switch to _next variables if the event is past
-      Object.keys(pleVariables).forEach(key => {
-        if (!key.startsWith('PLE_promo') && key.endsWith('_next')) {
-          const baseKey = key.replace('_next', '');
-          pleVariables[baseKey] = pleVariables[key];
-        }
-      });
-    }
+  // Get the active graphic set from new multi-set system
+  const activeSet = getActiveGraphicSet();
+  if (activeSet) {
+    // Populate PLE_promo_ fields from the active set
+    pleVariables.PLE_promo_ticketGraphicDesktop = activeSet.graphics.gaDesktop || '';
+    pleVariables.PLE_promo_ticketGraphicMobile = activeSet.graphics.gaMobile || '';
+    pleVariables.PLE_promo_compTicketGraphicDesktop = activeSet.graphics.compDesktop || '';
+    pleVariables.PLE_promo_compTicketGraphicMobile = activeSet.graphics.compMobile || '';
+    pleVariables.PLE_promo_ticketPromoLine = activeSet.promoText.ga || '';
+    pleVariables.PLE_promo_compTicketPromoLine = activeSet.promoText.comp || '';
   }
 
-  // Check if PLE_promo_switchDate is present and if it's in the past
-  if (pleVariables.PLE_promo_switchDate && pleVariables.PLE_promo_switchDate !== '') {
-    const promoSwitchDate = new Date(pleVariables.PLE_promo_switchDate);
-    if (promoSwitchDate < today) {
-      // Switch to _next variables for promo if the switch date is past
+  // Check if PLE_endDate is present and if it's in the past (using <= for same-day switch)
+  if (pleVariables.PLE_endDate) {
+    const endDate = new Date(pleVariables.PLE_endDate);
+    if (endDate <= today) {
+      // Switch to _next variables if the event is today or past
       Object.keys(pleVariables).forEach(key => {
-        if (key.startsWith('PLE_promo') && key.endsWith('_next')) {
+        if (!key.startsWith('PLE_promo') && key.endsWith('_next')) {
           const baseKey = key.replace('_next', '');
           pleVariables[baseKey] = pleVariables[key];
         }
@@ -456,6 +565,10 @@ app.get('/ple-data', (req, res) => {
       delete pleVariables[key];
     }
   });
+
+  // Remove internal system fields
+  delete pleVariables.PLE_promo_graphicSets;
+  delete pleVariables.PLE_MIGRATION_TO_MULTISET_COMPLETE;
 
   res.json(pleVariables);
 });

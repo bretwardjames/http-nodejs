@@ -5,10 +5,10 @@
   "PLE_checkoutPageSidebarGraphic_next": "https://davidbayer.com/wp-content/uploads/2024/07/ple-sidebar-next.png",
   "PLE_eventDates_next": "TBD",
   "PLE_eventDatesNoYear": "March 26-29",
-  "PLE_eventDatesWithYear": "March 26-29, 2026",
+  "PLE_eventDatesWithYear": "March 26-2s9, 2026",
   "PLE_eventDayOne": "Friday, March 27, 2026",
   "PLE_eventDayOne_next": "TBD",
-  "PLE_eventDayThree": "Sunday, March 29, 2026",
+  "PLE_eventDayThree": "Sunday, March 29s, 2026",
   "PLE_eventDayThree_next": "TBD",
   "PLE_eventDayTwo": "Saturday, March 28, 2026",
   "PLE_eventDayTwo_next": "TBD",
@@ -36,5 +36,72 @@
   "PLE_promo_ticketGraphicMobile": "https://davidbayer.com/wp-content/uploads/2025/02/2025-30DT-BUS-GA-MOBILE.png",
   "PLE_promo_ticketGraphicMobile_next": "https://davidbayer.com/wp-content/uploads/2025/03/2026_gen_ga_mobile.png",
   "PLE_promo_ticketPromoLine": "Super Early Bird Limited Time Get $7,000+ in Bonuses",
-  "PLE_promo_ticketPromoLine_next": "TBD"
+  "PLE_promo_ticketPromoLine_next": "TBD",
+  "PLE_promo_graphicSets": [
+    {
+      "id": "59cae823-9d6a-4dd5-bf62-42dcdcceff81",
+      "name": "Previous Promo",
+      "description": "",
+      "startDate": "2020-01-01T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/02/2025-30DT-BUS-GA-DESKTOP.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/02/2025-30DT-BUS-GA-MOBILE.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/02/2025-30DT-BUS-COMP-DESKTOP.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/02/2025-30DT-BUS-COMP-MOBILE.png"
+      },
+      "promoText": {
+        "ga": "Super Early Bird Limited Time Get $7,000+ in Bonuses",
+        "comp": "TBD"
+      }
+    },
+    {
+      "id": "1cf67dfa-4cb2-4f49-bd8f-ccc8a8aee989",
+      "name": "Current Promo",
+      "description": "",
+      "startDate": "2025-02-14T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/03/2026_gen_ga_desktop.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/03/2026_gen_ga_mobile.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/03/2026_gen_comp_desktop.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/03/2026_gen_comp_mobile.png"
+      },
+      "promoText": {
+        "ga": "TBD",
+        "comp": "TBD"
+      }
+    },
+    {
+      "id": "77853294-7733-4d0a-945f-33bcc9d6c1eb",
+      "name": "NEW THING",
+      "description": "",
+      "startDate": "2025-11-10T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    }
+  ],
+  "PLE_MIGRATION_TO_MULTISET_COMPLETE": "2025-11-11T16:00:08.147Z"
 }

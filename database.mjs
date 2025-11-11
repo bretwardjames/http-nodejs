@@ -268,3 +268,290 @@ export function getAllUsers() {
     return [];
   }
 }
+
+// ============= MULTI-SET GRAPHIC SYSTEM =============
+
+// Generate UUID for graphic sets
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Check if migration is needed and perform it
+function checkAndMigrateToMultiSet(config) {
+  // If graphicSets already exists, migration is done
+  if (config.PLE_promo_graphicSets && Array.isArray(config.PLE_promo_graphicSets)) {
+    return false; // No migration needed
+  }
+
+  // Check if old structure exists
+  if (!config.PLE_promo_ticketGraphicDesktop && !config.PLE_promo_ticketGraphicDesktop_next) {
+    return false; // No old data to migrate
+  }
+
+  // Perform migration
+  const graphicSets = [];
+
+  // Create Set 1: Current (Before Switch) graphics with far-past start date
+  const set1 = {
+    id: generateUUID(),
+    name: 'Previous Promo',
+    description: '',
+    startDate: '2020-01-01T00:00:00-04:00',
+    graphics: {
+      gaDesktop: config.PLE_promo_ticketGraphicDesktop || '',
+      gaMobile: config.PLE_promo_ticketGraphicMobile || '',
+      compDesktop: config.PLE_promo_compTicketGraphicDesktop || '',
+      compMobile: config.PLE_promo_compTicketGraphicMobile || ''
+    },
+    promoText: {
+      ga: config.PLE_promo_ticketPromoLine || '',
+      comp: config.PLE_promo_compTicketPromoLine || ''
+    }
+  };
+  graphicSets.push(set1);
+
+  // Create Set 2: Next (After Switch) graphics with current switch date
+  const switchDate = config.PLE_promo_promo_switchDate || new Date().toISOString();
+  const set2 = {
+    id: generateUUID(),
+    name: 'Current Promo',
+    description: '',
+    startDate: switchDate,
+    graphics: {
+      gaDesktop: config.PLE_promo_ticketGraphicDesktop_next || '',
+      gaMobile: config.PLE_promo_ticketGraphicMobile_next || '',
+      compDesktop: config.PLE_promo_compTicketGraphicDesktop_next || '',
+      compMobile: config.PLE_promo_compTicketGraphicMobile_next || ''
+    },
+    promoText: {
+      ga: config.PLE_promo_ticketPromoLine_next || '',
+      comp: config.PLE_promo_compTicketPromoLine_next || ''
+    }
+  };
+  graphicSets.push(set2);
+
+  // Store the new structure
+  config.PLE_promo_graphicSets = graphicSets;
+
+  // Keep the old fields for backward compatibility but mark them as deprecated
+  config.PLE_MIGRATION_TO_MULTISET_COMPLETE = new Date().toISOString();
+
+  return true; // Migration was performed
+}
+
+// Get all graphic sets
+export function getAllGraphicSets() {
+  try {
+    let config = {};
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      config = JSON.parse(data);
+    }
+
+    const migrationPerformed = checkAndMigrateToMultiSet(config);
+
+    // If migration was performed, save the config back to the file
+    if (migrationPerformed) {
+      fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+    }
+
+    if (Array.isArray(config.PLE_promo_graphicSets)) {
+      return config.PLE_promo_graphicSets;
+    }
+    return [];
+  } catch (err) {
+    console.error('Error getting graphic sets:', err);
+    return [];
+  }
+}
+
+// Check if a graphic set is complete (has all 4 required images)
+export function isGraphicSetComplete(set) {
+  return set &&
+         set.graphics &&
+         set.graphics.gaDesktop && set.graphics.gaDesktop.trim() &&
+         set.graphics.gaMobile && set.graphics.gaMobile.trim() &&
+         set.graphics.compDesktop && set.graphics.compDesktop.trim() &&
+         set.graphics.compMobile && set.graphics.compMobile.trim();
+}
+
+// Get the active graphic set based on current date
+export function getActiveGraphicSet() {
+  try {
+    const sets = getAllGraphicSets();
+    if (sets.length === 0) return null;
+
+    const now = new Date();
+
+    // Filter to sets with startDate <= now AND have all 4 images (complete)
+    const eligibleSets = sets.filter(set => {
+      const startDate = new Date(set.startDate);
+      return startDate <= now && isGraphicSetComplete(set);
+    });
+
+    // If no eligible sets, return null
+    if (eligibleSets.length === 0) return null;
+
+    // Sort by startDate descending (most recent first)
+    eligibleSets.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+    // Return the most recent eligible set
+    return eligibleSets[0];
+  } catch (err) {
+    console.error('Error getting active graphic set:', err);
+    return null;
+  }
+}
+
+// Add a new graphic set
+export function addGraphicSet(set, username = 'system') {
+  try {
+    let config = {};
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      config = JSON.parse(data);
+    }
+
+    const migrationPerformed = checkAndMigrateToMultiSet(config);
+
+    if (!Array.isArray(config.PLE_promo_graphicSets)) {
+      config.PLE_promo_graphicSets = [];
+    }
+
+    // Ensure set has required fields
+    const newSet = {
+      id: set.id || generateUUID(),
+      name: set.name || 'New Set',
+      description: set.description || '',
+      startDate: set.startDate || new Date().toISOString(),
+      graphics: set.graphics || {
+        gaDesktop: '',
+        gaMobile: '',
+        compDesktop: '',
+        compMobile: ''
+      },
+      promoText: set.promoText || {
+        ga: '',
+        comp: ''
+      }
+    };
+
+    config.PLE_promo_graphicSets.push(newSet);
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+
+    // Log to history
+    logToHistory('PLE_promo_graphicSets', null, `Added set: ${newSet.name}`, username);
+
+    return true;
+  } catch (err) {
+    console.error('Error adding graphic set:', err);
+    return false;
+  }
+}
+
+// Update a graphic set
+export function updateGraphicSet(setId, updates, username = 'system') {
+  try {
+    let config = {};
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      config = JSON.parse(data);
+    }
+
+    checkAndMigrateToMultiSet(config);
+
+    if (!Array.isArray(config.PLE_promo_graphicSets)) {
+      return false;
+    }
+
+    const setIndex = config.PLE_promo_graphicSets.findIndex(set => set.id === setId);
+    if (setIndex === -1) {
+      return false;
+    }
+
+    const oldSet = JSON.parse(JSON.stringify(config.PLE_promo_graphicSets[setIndex]));
+    const updatedSet = {
+      ...config.PLE_promo_graphicSets[setIndex],
+      ...updates,
+      id: setId // Ensure ID doesn't change
+    };
+
+    config.PLE_promo_graphicSets[setIndex] = updatedSet;
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+
+    // Log to history
+    logToHistory('PLE_promo_graphicSets', oldSet, updatedSet, username);
+
+    return true;
+  } catch (err) {
+    console.error('Error updating graphic set:', err);
+    return false;
+  }
+}
+
+// Delete a graphic set
+export function deleteGraphicSet(setId, username = 'system') {
+  try {
+    let config = {};
+    if (fs.existsSync(CONFIG_FILE)) {
+      const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+      config = JSON.parse(data);
+    }
+
+    checkAndMigrateToMultiSet(config);
+
+    if (!Array.isArray(config.PLE_promo_graphicSets)) {
+      return false;
+    }
+
+    const setIndex = config.PLE_promo_graphicSets.findIndex(set => set.id === setId);
+    if (setIndex === -1) {
+      return false;
+    }
+
+    const deletedSet = config.PLE_promo_graphicSets[setIndex];
+    config.PLE_promo_graphicSets.splice(setIndex, 1);
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
+
+    // Log to history
+    logToHistory('PLE_promo_graphicSets', deletedSet, null, username);
+
+    return true;
+  } catch (err) {
+    console.error('Error deleting graphic set:', err);
+    return false;
+  }
+}
+
+// Helper function to log graphic set changes to history
+function logToHistory(key, oldValue, newValue, username) {
+  try {
+    let history = [];
+    if (fs.existsSync(HISTORY_FILE)) {
+      const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+      history = JSON.parse(data);
+    }
+
+    history.unshift({
+      id: history.length + 1,
+      key,
+      old_value: oldValue,
+      new_value: newValue,
+      username,
+      changed_at: new Date().toISOString()
+    });
+
+    // Keep only last 500 entries
+    if (history.length > 500) {
+      history = history.slice(0, 500);
+    }
+
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+  } catch (err) {
+    console.error('Error logging to history:', err);
+  }
+}

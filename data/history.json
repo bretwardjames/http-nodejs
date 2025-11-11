@@ -1,1 +1,382 @@
-[]
+[
+  {
+    "id": 25,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13 00:00T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "username": "admin",
+    "changed_at": "2025-11-11T16:57:46.933Z"
+  },
+  {
+    "id": 24,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13 00:00T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13 00:00T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "username": "admin",
+    "changed_at": "2025-11-11T16:57:34.526Z"
+  },
+  {
+    "id": 23,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13 00:00T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "username": "admin",
+    "changed_at": "2025-11-11T16:57:22.227Z"
+  },
+  {
+    "id": 22,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-3T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": {
+      "id": "5d172d9d-20c4-4af4-aa73-dbccc27889d9",
+      "name": "NEW THING (Copy)",
+      "description": "",
+      "startDate": "2025-11-13T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "gaMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compDesktop": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png",
+        "compMobile": "https://davidbayer.com/wp-content/uploads/2025/11/PLE-2026_SEB_COMP_Desktop-scaled-e1762875234622.png"
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "username": "admin",
+    "changed_at": "2025-11-11T16:55:23.270Z"
+  },
+  {
+    "id": 21,
+    "key": "PLE_promo_graphicSets",
+    "old_value": null,
+    "new_value": "Added set: NEW THING (Copy)",
+    "username": "admin",
+    "changed_at": "2025-11-11T16:55:11.476Z"
+  },
+  {
+    "id": 20,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "72b60b71-058b-41d1-ace9-712d8c42a7cc",
+      "name": "test",
+      "description": "",
+      "startDate": "2025-11-12T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "",
+        "gaMobile": "",
+        "compDesktop": "",
+        "compMobile": ""
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": null,
+    "username": "admin",
+    "changed_at": "2025-11-11T16:55:04.002Z"
+  },
+  {
+    "id": 19,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "72b60b71-058b-41d1-ace9-712d8c42a7cc",
+      "name": "test",
+      "description": "",
+      "startDate": "T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "",
+        "gaMobile": "",
+        "compDesktop": "",
+        "compMobile": ""
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": {
+      "id": "72b60b71-058b-41d1-ace9-712d8c42a7cc",
+      "name": "test",
+      "description": "",
+      "startDate": "2025-11-12T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "",
+        "gaMobile": "",
+        "compDesktop": "",
+        "compMobile": ""
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "username": "admin",
+    "changed_at": "2025-11-11T16:13:58.107Z"
+  },
+  {
+    "id": 18,
+    "key": "PLE_promo_graphicSets",
+    "old_value": null,
+    "new_value": "Added set: test",
+    "username": "admin",
+    "changed_at": "2025-11-11T16:07:36.252Z"
+  },
+  {
+    "id": 17,
+    "key": "PLE_promo_graphicSets",
+    "old_value": {
+      "id": "e9fe96f3-389b-4cf3-8c07-7053778c472f",
+      "name": "test",
+      "description": "",
+      "startDate": "T00:00:00-04:00",
+      "graphics": {
+        "gaDesktop": "",
+        "gaMobile": "",
+        "compDesktop": "",
+        "compMobile": ""
+      },
+      "promoText": {
+        "ga": "",
+        "comp": ""
+      }
+    },
+    "new_value": null,
+    "username": "admin",
+    "changed_at": "2025-11-11T16:07:12.319Z"
+  },
+  {
+    "id": 16,
+    "key": "PLE_promo_graphicSets",
+    "old_value": null,
+    "new_value": "Added set: test",
+    "username": "admin",
+    "changed_at": "2025-11-11T16:06:59.383Z"
+  },
+  {
+    "id": 15,
+    "key": "PLE_promo_graphicSets",
+    "old_value": null,
+    "new_value": "Added set: NEW THING",
+    "username": "admin",
+    "changed_at": "2025-11-11T16:00:08.149Z"
+  },
+  {
+    "id": 14,
+    "key": "PLE_eventDatesWithYear",
+    "old_value": "March 26-29, 2026",
+    "new_value": "March 26-2s9, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:51:33.669Z"
+  },
+  {
+    "id": 13,
+    "key": "PLE_eventYear",
+    "old_value": "2026",
+    "new_value": "2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.711Z"
+  },
+  {
+    "id": 12,
+    "key": "PLE_eventVenue",
+    "old_value": "Kalahari Resort",
+    "new_value": "Kalahari Resort",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.711Z"
+  },
+  {
+    "id": 11,
+    "key": "PLE_eventStartDate",
+    "old_value": "March 26, 2026",
+    "new_value": "March 26, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.711Z"
+  },
+  {
+    "id": 10,
+    "key": "PLE_eventMonth",
+    "old_value": "March",
+    "new_value": "March",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.705Z"
+  },
+  {
+    "id": 9,
+    "key": "PLE_eventLocation",
+    "old_value": "Round Rock, TX",
+    "new_value": "Round Rock, TX",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 8,
+    "key": "PLE_eventEndDate",
+    "old_value": "March 29, 2026",
+    "new_value": "March 29, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 7,
+    "key": "PLE_eventDayTwo",
+    "old_value": "Saturday, March 28, 2026",
+    "new_value": "Saturday, March 28, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 6,
+    "key": "PLE_eventDayThree",
+    "old_value": "Sunday, March 29, 2026",
+    "new_value": "Sunday, March 29s, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 5,
+    "key": "PLE_eventDayOne",
+    "old_value": "Friday, March 27, 2026",
+    "new_value": "Friday, March 27, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 4,
+    "key": "PLE_eventDatesWithYear",
+    "old_value": "March 26-29, 2026",
+    "new_value": "March 26-29, 2026",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 3,
+    "key": "PLE_eventDatesNoYear",
+    "old_value": "March 26-29",
+    "new_value": "March 26-29",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 2,
+    "key": "PLE_checkoutPageSidebarGraphic",
+    "old_value": "https://davidbayer.com/wp-content/uploads/2025/03/checkout_page_sidebar.png",
+    "new_value": "https://davidbayer.com/wp-content/uploads/2025/03/checkout_page_sidebar.png",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.704Z"
+  },
+  {
+    "id": 1,
+    "key": "PLE_checkoutPageHeaderGraphic",
+    "old_value": "https://davidbayer.com/wp-content/uploads/2025/03/checkout_page_header.png",
+    "new_value": "https://davidbayer.com/wp-content/uploads/2025/03/checkout_page_header.png",
+    "username": "admin",
+    "changed_at": "2025-11-11T14:42:06.703Z"
+  }
+]
